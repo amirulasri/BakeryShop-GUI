@@ -12,6 +12,13 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 import java.util.Iterator;
 import java.awt.Font;
 import java.awt.Color;
@@ -48,7 +55,27 @@ public class Cashierframe extends JFrame {
 
 	public static void showdata() {
 		listordermodel.setRowCount(0);
-		for (int i = 0; i < Main.getcustomer().size(); i++) {
+		String querygetorder = "SELECT id, date, time FROM orders";
+		
+		try (Connection conn = Main.connect();
+	             Statement stmt  = conn.createStatement();
+	             ResultSet result    = stmt.executeQuery(querygetorder)){
+	            
+	            // loop through the result set
+	            while (result.next()) {
+	                //System.out.println(result.getInt("id") +  "\t" + 
+	                //				   result.getString("date") + "\t" +
+	                //				   result.getString("time"));
+	                
+	                listordermodel
+					.addRow(new Object[] { String.valueOf(result.getInt("id")), result.getString("date"),
+							result.getString("time"), "RM " + "0" });
+	            }
+	        } catch (SQLException e) {
+	            System.out.println(e.getMessage());
+	        }
+		
+		/*for (int i = 0; i < Main.getcustomer().size(); i++) {
 			// CALCULATING TOTAL ALL ITEM PRICE
 			double listpricecust = 0;
 			for (int k = 0; k < Main.getitems().size(); k++) {
@@ -65,6 +92,7 @@ public class Cashierframe extends JFrame {
 							Main.getcustomer().get(i).getorderid(), "RM " + priceformatter.format(listpricecust) });
 
 		}
+		*/
 	}
 	
 	static public NewOrder getorderframe() {
@@ -76,7 +104,20 @@ public class Cashierframe extends JFrame {
 	}
 
 	private boolean containsOrderId(final String orderid) {
-		return Main.getorders().stream().filter(order -> order.getorderid().equals(orderid)).findFirst().isPresent();
+		boolean duplicatestate = false;
+		String checkid = "SELECT id FROM orders WHERE id='"+orderid+"'";
+		try (Connection conn = Main.connect();
+	             Statement stmt  = conn.createStatement();
+	             ResultSet result    = stmt.executeQuery(checkid)){
+	            
+	            // loop through the result set
+	            while (result.next()) {
+	                duplicatestate = true;
+	            }
+	        } catch (SQLException e) {
+	            System.out.println(e.getMessage());
+	        }
+		return duplicatestate;
 	}
 
 	public void displaydata() {
@@ -227,11 +268,32 @@ public class Cashierframe extends JFrame {
 										"The Order ID you entered exists. Enter another new Order ID", "Duplicate Order ID",
 										JOptionPane.ERROR_MESSAGE);
 							} else {
-								System.out.println("NEW OBJECT CREATED");
 								Date date = new Date();
 								
-								Main.getorders().add(
-										new Ordersclass(orderid, newdateformat.format(date), newtimeformat.format(date)));
+								String insertneworder = "INSERT INTO orders(date,time) VALUES (?,?)";
+								String lastidquery = "SELECT MAX(id) AS lastid FROM orders";
+								
+								try (Connection conn = Main.connect();
+						                PreparedStatement pstmt = conn.prepareStatement(insertneworder);
+										PreparedStatement pstmt2 = conn.prepareStatement(lastidquery)) {
+						            pstmt.setString(1, newdateformat.format(date));
+						            pstmt.setString(2, newtimeformat.format(date));
+						            pstmt.executeUpdate();
+						            
+						            //GET LAST ID
+						            ResultSet result1 = pstmt2.executeQuery();
+						            String maxId = result1.getString("lastid");
+						            int intMaxId =(Integer.parseInt(maxId));
+						            String stringMaxId = Integer.toString(intMaxId);
+						            System.out.println(stringMaxId);
+						            
+						            
+						        } catch (SQLException e1) {
+						            System.out.println(e1.getMessage());
+						        } catch (Exception e1) {
+						        	System.out.println(e1.getMessage());
+						        }
+								
 								orderframe.setVisible(true);
 								btnNewButton.setEnabled(false);
 							}
@@ -280,5 +342,6 @@ public class Cashierframe extends JFrame {
 		contentPane.setLayout(gl_contentPane);
 		setLocationRelativeTo(null);
 		setIconImage(new ImageIcon(this.getClass().getResource("/main/logo/logo.png")).getImage());
+		showdata();
 	}
 }

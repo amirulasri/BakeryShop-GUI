@@ -5,13 +5,11 @@ public class Ordersclass {
     protected String orderid;
     private String date;
     private String time;
-    private String statuspaid;
     
     public Ordersclass() {
     	orderid = null;
     	date = null;
     	time = null;
-    	statuspaid = null;
     }
     
     public Ordersclass(String orderid, String date, String time) {

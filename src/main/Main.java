@@ -46,53 +46,78 @@ public class Main {
 		return listpayment;
 	}
 	
-	public static void createNewTable() {
+	public static Connection connect() {
+        // SQLite connection string
+        Connection conn = null;
+        try {
+            conn = DriverManager.getConnection(url);
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return conn;
+    }
+	
+	public static void createTable() {
         // SQL statement for creating a new table
-        String sql = "CREATE TABLE IF NOT EXISTS customer (\n"
+		String turnofffk = "PRAGMA foreign_keys=off;";
+		
+		String createordertable = "CREATE TABLE IF NOT EXISTS orders (\n"
+                + "	id integer PRIMARY KEY,\n"
+                + "	date text NOT NULL,\n"
+                + "	time text NOT NULL\n"
+                + ");";
+		
+        String createcusttable = "CREATE TABLE IF NOT EXISTS customer (\n"
                 + "	id integer PRIMARY KEY,\n"
                 + "	name text NOT NULL,\n"
                 + "	phoneno text NOT NULL,\n"
                 + "	address text NOT NULL,\n"
                 + "	gender text NOT NULL,\n"
-                + "	regularcustomer numeric NOT NULL\n"
+                + "	regularcustomer numeric NOT NULL,\n"
+                + "	orderid integer NOT NULL,\n"
+                + "	FOREIGN KEY (orderid)\n"
+                + "	  REFERENCES orders (id)\n"
                 + ");";
         
-        try (Connection conn = DriverManager.getConnection(url);
-                Statement stmt = conn.createStatement()) {
+        String createitemtable = "CREATE TABLE IF NOT EXISTS item (\n"
+                + "	id integer PRIMARY KEY,\n"
+                + "	itemname text NOT NULL,\n"
+                + "	itemnumber integer NOT NULL,\n"
+                + "	quantity integer NOT NULL,\n"
+                + "	totalitems numeric NOT NULL,\n"
+                + "	orderid integer NOT NULL,\n"
+                + "	FOREIGN KEY (orderid)\n"
+                + "	  REFERENCES orders (id)\n"
+                + ");";
+        
+        String createpaymenttable = "CREATE TABLE IF NOT EXISTS payment (\n"
+                + "	id integer PRIMARY KEY,\n"
+                + "	paymenttype text NOT NULL,\n"
+                + "	totalprice numeric NOT NULL,\n"
+                + "	custpay numeric NOT NULL,\n"
+                + "	orderid integer NOT NULL,\n"
+                + "	FOREIGN KEY (orderid)\n"
+                + "	  REFERENCES orders (id)\n"
+                + ");";
+        
+        String turnonfk = "PRAGMA foreign_keys=on;";
+        
+        try (Connection conn = connect();
+                Statement statement = conn.createStatement()) {
             // create a new table
-            stmt.execute(sql);
+        	statement.execute(turnofffk);
+        	statement.execute(createordertable);
+        	statement.execute(createcusttable);
+        	statement.execute(createitemtable);
+        	statement.execute(createpaymenttable);
+        	statement.execute(turnonfk);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
-        }
-    }
-	
-	public static void connect() {
-        Connection conn = null;
-        try {
-            // db parameters
-            // create a connection to the database
-            conn = DriverManager.getConnection(url);
-            
-            System.out.println("Connection to SQLite has been established.");
-            
-            
-            
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
-        } finally {
-            try {
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (SQLException ex) {
-                System.out.println(ex.getMessage());
-            }
         }
     }
 
 	public static void main(String[] args) {
-		createNewTable();
-		/*
+		createTable();
 		Welcomeframe welcomeframe;
 		Cashierframe cashier;
 		try {
@@ -117,6 +142,5 @@ public class Main {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		*/
 	}
 }
