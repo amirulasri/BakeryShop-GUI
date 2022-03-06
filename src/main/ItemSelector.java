@@ -17,6 +17,11 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +49,7 @@ public class ItemSelector extends JFrame {
 	private JTable table;
 	private JTextField deletenumberfield;
 	DefaultTableModel listitemmodel;
-	private String orderid;
+	private int orderid;
 	JLabel totalpricedisplay;
 	
 
@@ -52,7 +57,7 @@ public class ItemSelector extends JFrame {
 	 * Create the frame.
 	 */
 
-	public ItemSelector(final String orderid) throws IOException {
+	public ItemSelector(final int orderid) throws IOException {
 		this.orderid = orderid;
 		
 		setIconImage(Toolkit.getDefaultToolkit().getImage(ItemSelector.class.getResource("/main/logo/logo.png")));
@@ -121,18 +126,33 @@ public class ItemSelector extends JFrame {
 				
 				try {
 					if(selecteditem != 0) {
-						if(table.getRowCount() > 0) {				
+						if(table.getRowCount() > 0) {
 							lastitemnumber = (int) table.getModel().getValueAt(table.getRowCount() - 1, 0) + 1;
 						}else {
 							lastitemnumber = 1;
 						}
 						
 						//CALCULATE PRICE FOR SELECTED ITEM AND QUANTITY
-						quantityno = (Integer) quantity.getValue();
+						quantityno = (int) quantity.getValue();
 						totalitemsprice = priceperitemArray[selecteditem - 1] * quantityno;
-						Main.getitems().add(new Itemsclass(orderid, lastitemnumber, String.valueOf(itemlistnameArray[selecteditem - 1]), (Integer)quantity.getValue(), totalitemsprice));
-						quantity.setValue(1);
-						showdata();
+						
+						String insertnewitem = "INSERT INTO item(itemname,itemnumber,quantity,totalitems,orderid) VALUES (?,?,?,?,?)";
+						try (Connection conn = Main.connect();
+								PreparedStatement pstmt = conn.prepareStatement(insertnewitem)) {
+							pstmt.setString(1, String.valueOf(itemlistnameArray[selecteditem - 1]));
+							pstmt.setInt(2, lastitemnumber);
+							pstmt.setInt(3, quantityno);
+							pstmt.setDouble(4, totalitemsprice);
+							pstmt.setInt(5, orderid);
+							pstmt.executeUpdate();
+							
+						} catch (SQLException e1) {
+							System.out.println("SQL ERROR: " + e1.getMessage());
+						} catch (Exception e1) {
+							System.out.println(e1.getMessage());
+						}						
+						quantity.setValue(1); // RESET FIELD TO 1 quantity
+						showdata(); // UPDATE TABLE
 					}else {
 						JOptionPane.showMessageDialog(null, "Please select item", "No item selected", JOptionPane.ERROR_MESSAGE);
 					}
@@ -171,8 +191,8 @@ public class ItemSelector extends JFrame {
 				int deletenumber;
 				try {
 					deletenumber = Integer.parseInt(deletenumberfield.getText());
-					Predicate<Itemsclass> condition2 = p->p.getitemnumber()==deletenumber && p.orderid == orderid;
-					Main.getitems().removeIf(condition2);
+					//Predicate<Itemsclass> condition2 = p->p.getitemnumber()==deletenumber && p.orderid == orderid;
+					//Main.getitems().removeIf(condition2);
 					calctotalprice();
 					showdata();
 				}catch (Exception e1) {
@@ -300,10 +320,17 @@ public class ItemSelector extends JFrame {
 	private void showdata() {
 		//ADD DATA HERE
 		listitemmodel.setRowCount(0);
-		for(int i = 0; i < Main.getitems().size(); i++) {
-			if(String.valueOf(Main.getitems().get(i).getorderid()).equals(orderid)) {				
-				listitemmodel.addRow(new Object[]{Main.getitems().get(i).getitemnumber(), Main.getitems().get(i).getitemname(), Main.getitems().get(i).getquantity(), "RM " + priceformatter.format(Main.getitems().get(i).gettotalitems())});
+		String querygetlistitem = "SELECT itemnumber, itemname, quantity, totalitems FROM item";
+		try (Connection conn = Main.connect();
+				Statement stmt = conn.createStatement();
+				ResultSet result = stmt.executeQuery(querygetlistitem)) {
+
+			// loop through the result set
+			while (result.next()) {
+				listitemmodel.addRow(new Object[]{result.getInt("itemnumber"), result.getString("itemname"), result.getInt("quantity"), "RM " + priceformatter.format(result.getDouble("totalitems"))});
 			}
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
 		}
 	}
 }

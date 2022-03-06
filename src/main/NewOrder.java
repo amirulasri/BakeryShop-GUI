@@ -12,6 +12,10 @@ import java.awt.Font;
 import java.awt.Color;
 import java.awt.Toolkit;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.DecimalFormat;
 
 import javax.swing.ImageIcon;
@@ -54,7 +58,7 @@ public class NewOrder extends JFrame {
 		finalprice = totalprice;
 	}
 
-	public NewOrder(String orderid) throws IOException {
+	public NewOrder(int orderid) throws IOException {
 		ItemSelector itemselector = new ItemSelector(orderid);
 		addWindowListener(new WindowAdapter() {
 			@Override
@@ -71,11 +75,26 @@ public class NewOrder extends JFrame {
 						JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, selectorbutton,
 						selectorbutton[1]);
 				if (PromptResult == JOptionPane.YES_OPTION) {
-					Main.getorders().removeIf(Orders -> Orders.getorderid().equals(orderid));
-					Main.getitems().removeIf(Items -> Items.getorderid().equals(orderid));
-					Main.getcustomer().removeIf(Customer -> Customer.getorderid().equals(orderid));
+					//SQL FOR DELETING ORDER
+					String sqlonfk = "PRAGMA foreign_keys=on;";
+					String sqldeleteorder = "DELETE FROM orders WHERE id = ?";
+
+			        try (Connection conn = Main.connect();
+			        		Statement stmt = conn.createStatement();
+			                PreparedStatement pstmt = conn.prepareStatement(sqldeleteorder)) {
+
+			        	stmt.execute(sqlonfk);
+			            // set the corresponding parameter
+			            pstmt.setInt(1, orderid);
+			            // execute the statement
+			            pstmt.executeUpdate();
+
+			        } catch (SQLException e1) {
+			            System.out.println(e1.getMessage());
+			        }
+			        Cashierframe.showdata();
 					dispose();
-					System.out.println("ORDER DELETED");
+					System.out.println("SQL orders DELETED");
 				}
 			}
 		});
@@ -281,13 +300,23 @@ public class NewOrder extends JFrame {
 
 				// IF TRUE, SAVE THE RECORD
 				if (process == true) {
-					// System.out.println("Name: " + customername + "\nPhone no: " + phoneno +
-					// "\nAddress: " + address + "\nGender: " + gender + "Regular customer: " +
-					// regularcustomer);
-					Main.getcustomer().add(new Customerclass(orderid, customername, phoneno, address, gender, regularcustomer));
+					String insertnewcust = "INSERT INTO customer(name,phoneno,address,gender,regularcustomer,orderid) VALUES (?,?,?,?,?,?)";
+					try (Connection conn = Main.connect();
+							PreparedStatement pstmt = conn.prepareStatement(insertnewcust)) {
+						pstmt.setString(1, customername);
+						pstmt.setString(2, phoneno);
+						pstmt.setString(3, address);
+						pstmt.setString(4, gender);
+						pstmt.setBoolean(5, regularcustomer);
+						pstmt.setInt(6, orderid);
+						pstmt.executeUpdate();
+						
+					} catch (SQLException e1) {
+						System.out.println(e1.getMessage());
+					} catch (Exception e1) {
+						System.out.println(e1.getMessage());
+					}
 					Cashierframe.getbuttoncreate().setEnabled(true);
-					// orderlistrefresh();
-					// dispose();
 					if(paymentframe == null) {						
 						paymentframe = new Payment(orderid, finalprice);
 						paymentframe.setVisible(true);

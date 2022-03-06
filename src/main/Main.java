@@ -64,7 +64,8 @@ public class Main {
 		String createordertable = "CREATE TABLE IF NOT EXISTS orders (\n"
                 + "	id integer PRIMARY KEY,\n"
                 + "	date text NOT NULL,\n"
-                + "	time text NOT NULL\n"
+                + "	time text NOT NULL,\n"
+                + "	statuspaid text NOT NULL\n"
                 + ");";
 		
         String createcusttable = "CREATE TABLE IF NOT EXISTS customer (\n"
@@ -76,7 +77,7 @@ public class Main {
                 + "	regularcustomer numeric NOT NULL,\n"
                 + "	orderid integer NOT NULL,\n"
                 + "	FOREIGN KEY (orderid)\n"
-                + "	  REFERENCES orders (id)\n"
+                + "	  REFERENCES orders (id) ON DELETE CASCADE\n"
                 + ");";
         
         String createitemtable = "CREATE TABLE IF NOT EXISTS item (\n"
@@ -87,7 +88,7 @@ public class Main {
                 + "	totalitems numeric NOT NULL,\n"
                 + "	orderid integer NOT NULL,\n"
                 + "	FOREIGN KEY (orderid)\n"
-                + "	  REFERENCES orders (id)\n"
+                + "	  REFERENCES orders (id) ON DELETE CASCADE\n"
                 + ");";
         
         String createpaymenttable = "CREATE TABLE IF NOT EXISTS payment (\n"
@@ -97,7 +98,7 @@ public class Main {
                 + "	custpay numeric NOT NULL,\n"
                 + "	orderid integer NOT NULL,\n"
                 + "	FOREIGN KEY (orderid)\n"
-                + "	  REFERENCES orders (id)\n"
+                + "	  REFERENCES orders (id) ON DELETE CASCADE\n"
                 + ");";
         
         String turnonfk = "PRAGMA foreign_keys=on;";

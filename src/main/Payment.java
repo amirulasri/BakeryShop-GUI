@@ -32,7 +32,7 @@ public class Payment extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public Payment(String orderid, double payment) {
+	public Payment(int orderid, double payment) {
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
@@ -190,9 +190,9 @@ public class Payment extends JFrame {
 				
 				//PAYMENT PROCESS DATA
 				if(process == true) {
-					Main.getpayment().add(new Paymentclass(orderid, paymenttype, payment, custpayvalue));
-					Receipt receiptframe = new Receipt(orderid);
-					receiptframe.setVisible(true);
+					//Main.getpayment().add(new Paymentclass(orderid, paymenttype, payment, custpayvalue));
+					//Receipt receiptframe = new Receipt(orderid);
+					//receiptframe.setVisible(true);
 					Cashierframe.getorderframe().dispose();
 					Cashierframe.showdata();
 					dispose();

@@ -51,81 +51,67 @@ public class Cashierframe extends JFrame {
 	static NewOrder orderframe = null;
 
 	static DecimalFormat priceformatter = new DecimalFormat("#0.00");
-	static private String orderidmain = null;
+	static private int orderidmain = 0;
 
 	public static void showdata() {
 		listordermodel.setRowCount(0);
 		String querygetorder = "SELECT id, date, time FROM orders";
-		
-		try (Connection conn = Main.connect();
-	             Statement stmt  = conn.createStatement();
-	             ResultSet result    = stmt.executeQuery(querygetorder)){
-	            
-	            // loop through the result set
-	            while (result.next()) {
-	                //System.out.println(result.getInt("id") +  "\t" + 
-	                //				   result.getString("date") + "\t" +
-	                //				   result.getString("time"));
-	                
-	                listordermodel
-					.addRow(new Object[] { String.valueOf(result.getInt("id")), result.getString("date"),
-							result.getString("time"), "RM " + "0" });
-	            }
-	        } catch (SQLException e) {
-	            System.out.println(e.getMessage());
-	        }
-		
-		/*for (int i = 0; i < Main.getcustomer().size(); i++) {
-			// CALCULATING TOTAL ALL ITEM PRICE
-			double listpricecust = 0;
-			for (int k = 0; k < Main.getitems().size(); k++) {
-				if (String.valueOf(Main.getitems().get(k).getorderid())
-						.equals(Main.getcustomer().get(i).getorderid())) {
-					listpricecust = listpricecust + Main.getitems().get(k).gettotalitems();
-				}
-			}
-			if (Main.getcustomer().get(i).getregularcustomer() == true) {
-				listpricecust = listpricecust - (listpricecust * Main.getdiscountvalue());
-			}
-			listordermodel
-					.addRow(new Object[] { Main.getcustomer().get(i).getname(), Main.getcustomer().get(i).getphoneno(),
-							Main.getcustomer().get(i).getorderid(), "RM " + priceformatter.format(listpricecust) });
 
+		try (Connection conn = Main.connect();
+				Statement stmt = conn.createStatement();
+				ResultSet result = stmt.executeQuery(querygetorder)) {
+
+			// loop through the result set
+			while (result.next()) {
+
+				listordermodel.addRow(new Object[] { String.valueOf(result.getInt("id")), result.getString("date"),
+						result.getString("time"), "RM " + "0" });
+			}
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
 		}
-		*/
+
+		/*
+		 * for (int i = 0; i < Main.getcustomer().size(); i++) { // CALCULATING TOTAL
+		 * ALL ITEM PRICE double listpricecust = 0; for (int k = 0; k <
+		 * Main.getitems().size(); k++) { if
+		 * (String.valueOf(Main.getitems().get(k).getorderid())
+		 * .equals(Main.getcustomer().get(i).getorderid())) { listpricecust =
+		 * listpricecust + Main.getitems().get(k).gettotalitems(); } } if
+		 * (Main.getcustomer().get(i).getregularcustomer() == true) { listpricecust =
+		 * listpricecust - (listpricecust * Main.getdiscountvalue()); } listordermodel
+		 * .addRow(new Object[] { Main.getcustomer().get(i).getname(),
+		 * Main.getcustomer().get(i).getphoneno(),
+		 * Main.getcustomer().get(i).getorderid(), "RM " +
+		 * priceformatter.format(listpricecust) });
+		 * 
+		 * }
+		 */
 	}
-	
+
 	static public NewOrder getorderframe() {
 		return orderframe;
 	}
-	
+
 	static public JButton getbuttoncreate() {
 		return btnNewButton;
 	}
 
-	private boolean containsOrderId(final String orderid) {
+	private boolean containsOrderId(final int orderid) {
 		boolean duplicatestate = false;
-		String checkid = "SELECT id FROM orders WHERE id='"+orderid+"'";
+		String checkid = "SELECT id FROM orders WHERE id='" + orderid + "'";
 		try (Connection conn = Main.connect();
-	             Statement stmt  = conn.createStatement();
-	             ResultSet result    = stmt.executeQuery(checkid)){
-	            
-	            // loop through the result set
-	            while (result.next()) {
-	                duplicatestate = true;
-	            }
-	        } catch (SQLException e) {
-	            System.out.println(e.getMessage());
-	        }
-		return duplicatestate;
-	}
+				Statement stmt = conn.createStatement();
+				ResultSet result = stmt.executeQuery(checkid)) {
 
-	public void displaydata() {
-		Iterator itrcustomer = Main.getcustomer().iterator();
-		while (itrcustomer.hasNext()) {
-			String customerdatalist = (String) itrcustomer.next();
-			System.out.println(customerdatalist);
+			// loop through the result set
+			while (result.next()) {
+				duplicatestate = true;
+			}
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
 		}
+		return duplicatestate;
 	}
 
 	public Cashierframe() throws IOException {
@@ -134,7 +120,7 @@ public class Cashierframe extends JFrame {
 			public void windowClosing(WindowEvent e) {
 				String selectorbutton[] = { "Yes", "No" };
 				int PromptResult = JOptionPane.showOptionDialog(null,
-						"Are you sure you want to exit?. All saved order will be lost.", "Exit " + Main.getappname(),
+						"Are you sure you want to exit?", "Exit " + Main.getappname(),
 						JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, selectorbutton,
 						selectorbutton[1]);
 				if (PromptResult == JOptionPane.YES_OPTION) {
@@ -142,7 +128,6 @@ public class Cashierframe extends JFrame {
 				}
 			}
 		});
-		displaydata();
 		setTitle(Main.getappname());
 		try {
 			for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -173,19 +158,32 @@ public class Cashierframe extends JFrame {
 		mntmNewMenuItem.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-				//GET RECEIPT FROM OLDER ORDER
-				String orderid = JOptionPane.showInputDialog(null, "Enter existence Order ID",
-						"Receipt", JOptionPane.INFORMATION_MESSAGE);
-				if (!(orderid == null)) {
+				// GET RECEIPT FROM OLDER ORDER
+				String orderid = JOptionPane.showInputDialog(null, "Enter existence Order ID", "Receipt",
+						JOptionPane.INFORMATION_MESSAGE);
+				int intorderid = 0;
+				boolean processstate = false;
+				
+				
+				try {
+					intorderid = Integer.parseInt(orderid);
+					orderidmain = intorderid;
+					processstate = true;
+				}catch(Exception e1) {
+					System.out.println("Error CONVERT TO INT: " + e1.getMessage());
+					processstate = false;
+				}
+				
+				
+				if (!(orderid == null) && processstate == true) {
 					if (!orderid.isEmpty()) {
-						boolean duplicateorderid = containsOrderId(orderid);
+						boolean duplicateorderid = containsOrderId(intorderid);
 						if (duplicateorderid) {
 							Receipt receiptframe = new Receipt(orderid);
 							receiptframe.setVisible(true);
 						} else {
-							JOptionPane.showMessageDialog(null,
-									"The Order ID you entered not found. Refer Order table", "Order ID not found",
-									JOptionPane.ERROR_MESSAGE);
+							JOptionPane.showMessageDialog(null, "The Order ID you entered not found. Refer Order table",
+									"Order ID not found", JOptionPane.ERROR_MESSAGE);
 						}
 					} else {
 						JOptionPane.showMessageDialog(null, "Please enter Order ID", "Empty Order ID field",
@@ -249,57 +247,89 @@ public class Cashierframe extends JFrame {
 		btnNewButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if(btnNewButton.isEnabled()) {
-					String orderid = JOptionPane.showInputDialog(null, "To create new order, enter new order ID",
+				if (btnNewButton.isEnabled()) {
+					String orderid = JOptionPane.showInputDialog(null,
+							"To create new order, enter new order ID.\nOr leave blank to generate unique ID",
 							"Enter new order ID", JOptionPane.INFORMATION_MESSAGE);
-					orderidmain = orderid;
-					try {
-						orderframe = new NewOrder(orderidmain);
-					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
+					
+					int intorderid = 0;
+					boolean processstate = false;
 
 					if (!(orderid == null)) {
+						Date date = new Date();
 						if (!orderid.isEmpty()) {
-							boolean duplicateorderid = containsOrderId(orderid);
-							if (duplicateorderid) {
-								JOptionPane.showMessageDialog(null,
-										"The Order ID you entered exists. Enter another new Order ID", "Duplicate Order ID",
-										JOptionPane.ERROR_MESSAGE);
-							} else {
-								Date date = new Date();
-								
-								String insertneworder = "INSERT INTO orders(date,time) VALUES (?,?)";
-								String lastidquery = "SELECT MAX(id) AS lastid FROM orders";
-								
-								try (Connection conn = Main.connect();
-						                PreparedStatement pstmt = conn.prepareStatement(insertneworder);
-										PreparedStatement pstmt2 = conn.prepareStatement(lastidquery)) {
-						            pstmt.setString(1, newdateformat.format(date));
-						            pstmt.setString(2, newtimeformat.format(date));
-						            pstmt.executeUpdate();
-						            
-						            //GET LAST ID
-						            ResultSet result1 = pstmt2.executeQuery();
-						            String maxId = result1.getString("lastid");
-						            int intMaxId =(Integer.parseInt(maxId));
-						            String stringMaxId = Integer.toString(intMaxId);
-						            System.out.println(stringMaxId);
-						            
-						            
-						        } catch (SQLException e1) {
-						            System.out.println(e1.getMessage());
-						        } catch (Exception e1) {
-						        	System.out.println(e1.getMessage());
-						        }
-								
-								orderframe.setVisible(true);
-								btnNewButton.setEnabled(false);
+							try {
+								intorderid = Integer.parseInt(orderid);
+								orderidmain = intorderid;
+								processstate = true;
+							}catch(Exception e1) {
+								System.out.println("Error CONVERT TO INT: " + e1.getMessage());
+								JOptionPane.showMessageDialog(null, "Order IDs can only be entered in numbers", "Invalid Order ID", JOptionPane.ERROR_MESSAGE);
+								processstate = false;
 							}
+							
+							if(processstate == true) {
+								boolean duplicateorderid = containsOrderId(intorderid);
+								if (duplicateorderid) {
+									JOptionPane.showMessageDialog(null,
+											"The Order ID you entered exists. Enter another new Order ID",
+											"Duplicate Order ID", JOptionPane.ERROR_MESSAGE);
+								} else {
+									String insertneworder = "INSERT INTO orders(id,date,time,statuspaid) VALUES (?,?,?,'unpaid')";
+									
+									try (Connection conn = Main.connect();
+											PreparedStatement pstmt = conn.prepareStatement(insertneworder)) {
+										pstmt.setInt(1, intorderid);
+										pstmt.setString(2, newdateformat.format(date));
+										pstmt.setString(3, newtimeformat.format(date));
+										pstmt.executeUpdate();
+										
+										try {
+											orderframe = new NewOrder(intorderid);
+										} catch (IOException e1) {
+											System.out.println(e1.getMessage());
+										}
+										
+									} catch (SQLException e1) {
+										System.out.println(e1.getMessage());
+									} catch (Exception e1) {
+										System.out.println(e1.getMessage());
+									}
+									showdata();
+									orderframe.setVisible(true);
+									btnNewButton.setEnabled(false);
+								}
+							}
+							
 						} else {
-							JOptionPane.showMessageDialog(null, "Please enter Order ID", "Empty Order ID field",
-									JOptionPane.ERROR_MESSAGE);
+							String insertneworder = "INSERT INTO orders(date,time,statuspaid) VALUES (?,?, 'unpaid')";
+							String lastidquery = "SELECT MAX(id) AS lastid FROM orders";
+
+							try (Connection conn = Main.connect();
+									PreparedStatement pstmt = conn.prepareStatement(insertneworder);
+									PreparedStatement pstmt2 = conn.prepareStatement(lastidquery)) {
+								pstmt.setString(1, newdateformat.format(date));
+								pstmt.setString(2, newtimeformat.format(date));
+								pstmt.executeUpdate();
+
+								// GET LAST ID
+								ResultSet result1 = pstmt2.executeQuery();
+								String maxId = result1.getString("lastid");
+								int intMaxnewId = Integer.parseInt(maxId);
+								try {
+									orderframe = new NewOrder(intMaxnewId);
+								} catch (IOException e1) {
+									System.out.println(e1.getMessage());
+								}
+
+							} catch (SQLException e1) {
+								System.out.println(e1.getMessage());
+							} catch (Exception e1) {
+								System.out.println(e1.getMessage());
+							}
+							showdata();
+							orderframe.setVisible(true);
+							btnNewButton.setEnabled(false);
 						}
 					}
 				}
