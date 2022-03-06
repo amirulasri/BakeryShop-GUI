@@ -319,6 +319,7 @@ public class Receipt extends JFrame {
 		contentPane.setLayout(gl_contentPane);
 
 		listitemmodel.setRowCount(0);
+		
 		for (int i = 0; i < itemsdata.size(); i++) {
 			listitemmodel.addRow(new Object[] { itemsdata.get(i).getitemnumber(), itemsdata.get(i).getitemname(),
 					itemsdata.get(i).getquantity(), "RM " + priceformatter.format(itemsdata.get(i).gettotalitems()) });
