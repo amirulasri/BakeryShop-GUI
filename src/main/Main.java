@@ -112,6 +112,7 @@ public class Main {
         	statement.execute(createitemtable);
         	statement.execute(createpaymenttable);
         	statement.execute(turnonfk);
+        	conn.close();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }

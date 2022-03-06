@@ -51,7 +51,6 @@ public class Cashierframe extends JFrame {
 	static NewOrder orderframe = null;
 
 	static DecimalFormat priceformatter = new DecimalFormat("#0.00");
-	static private int orderidmain = 0;
 
 	public static void showdata() {
 		listordermodel.setRowCount(0);
@@ -67,26 +66,10 @@ public class Cashierframe extends JFrame {
 				listordermodel.addRow(new Object[] { String.valueOf(result.getInt("id")), result.getString("date"),
 						result.getString("time"), "RM " + "0" });
 			}
+			conn.close();
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
-
-		/*
-		 * for (int i = 0; i < Main.getcustomer().size(); i++) { // CALCULATING TOTAL
-		 * ALL ITEM PRICE double listpricecust = 0; for (int k = 0; k <
-		 * Main.getitems().size(); k++) { if
-		 * (String.valueOf(Main.getitems().get(k).getorderid())
-		 * .equals(Main.getcustomer().get(i).getorderid())) { listpricecust =
-		 * listpricecust + Main.getitems().get(k).gettotalitems(); } } if
-		 * (Main.getcustomer().get(i).getregularcustomer() == true) { listpricecust =
-		 * listpricecust - (listpricecust * Main.getdiscountvalue()); } listordermodel
-		 * .addRow(new Object[] { Main.getcustomer().get(i).getname(),
-		 * Main.getcustomer().get(i).getphoneno(),
-		 * Main.getcustomer().get(i).getorderid(), "RM " +
-		 * priceformatter.format(listpricecust) });
-		 * 
-		 * }
-		 */
 	}
 
 	static public NewOrder getorderframe() {
@@ -108,6 +91,7 @@ public class Cashierframe extends JFrame {
 			while (result.next()) {
 				duplicatestate = true;
 			}
+			conn.close();
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
@@ -167,7 +151,6 @@ public class Cashierframe extends JFrame {
 				
 				try {
 					intorderid = Integer.parseInt(orderid);
-					orderidmain = intorderid;
 					processstate = true;
 				}catch(Exception e1) {
 					System.out.println("Error CONVERT TO INT: " + e1.getMessage());
@@ -179,7 +162,7 @@ public class Cashierframe extends JFrame {
 					if (!orderid.isEmpty()) {
 						boolean duplicateorderid = containsOrderId(intorderid);
 						if (duplicateorderid) {
-							Receipt receiptframe = new Receipt(orderid);
+							Receipt receiptframe = new Receipt(intorderid);
 							receiptframe.setVisible(true);
 						} else {
 							JOptionPane.showMessageDialog(null, "The Order ID you entered not found. Refer Order table",
@@ -260,7 +243,6 @@ public class Cashierframe extends JFrame {
 						if (!orderid.isEmpty()) {
 							try {
 								intorderid = Integer.parseInt(orderid);
-								orderidmain = intorderid;
 								processstate = true;
 							}catch(Exception e1) {
 								System.out.println("Error CONVERT TO INT: " + e1.getMessage());
@@ -283,7 +265,7 @@ public class Cashierframe extends JFrame {
 										pstmt.setString(2, newdateformat.format(date));
 										pstmt.setString(3, newtimeformat.format(date));
 										pstmt.executeUpdate();
-										
+										conn.close();
 										try {
 											orderframe = new NewOrder(intorderid);
 										} catch (IOException e1) {
@@ -291,9 +273,9 @@ public class Cashierframe extends JFrame {
 										}
 										
 									} catch (SQLException e1) {
-										System.out.println(e1.getMessage());
+										System.out.println("Error SQL: "+e1.getMessage());
 									} catch (Exception e1) {
-										System.out.println(e1.getMessage());
+										System.out.println("Error SQL: "+e1.getMessage());
 									}
 									showdata();
 									orderframe.setVisible(true);
@@ -311,11 +293,11 @@ public class Cashierframe extends JFrame {
 								pstmt.setString(1, newdateformat.format(date));
 								pstmt.setString(2, newtimeformat.format(date));
 								pstmt.executeUpdate();
-
 								// GET LAST ID
 								ResultSet result1 = pstmt2.executeQuery();
 								String maxId = result1.getString("lastid");
 								int intMaxnewId = Integer.parseInt(maxId);
+								conn.close();
 								try {
 									orderframe = new NewOrder(intMaxnewId);
 								} catch (IOException e1) {
@@ -323,9 +305,9 @@ public class Cashierframe extends JFrame {
 								}
 
 							} catch (SQLException e1) {
-								System.out.println(e1.getMessage());
+								System.out.println("Error SQL: "+e1.getMessage());
 							} catch (Exception e1) {
-								System.out.println(e1.getMessage());
+								System.out.println("Error SQL: "+e1.getMessage());
 							}
 							showdata();
 							orderframe.setVisible(true);

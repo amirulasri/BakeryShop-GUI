@@ -18,6 +18,9 @@ import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -190,12 +193,26 @@ public class Payment extends JFrame {
 				
 				//PAYMENT PROCESS DATA
 				if(process == true) {
-					//Main.getpayment().add(new Paymentclass(orderid, paymenttype, payment, custpayvalue));
-					//Receipt receiptframe = new Receipt(orderid);
-					//receiptframe.setVisible(true);
-					Cashierframe.getorderframe().dispose();
-					Cashierframe.showdata();
-					dispose();
+					String insertnewitem = "INSERT INTO payment(paymenttype,totalprice,custpay,orderid) VALUES (?,?,?,?)";
+					try (Connection conn = Main.connect();
+							PreparedStatement pstmt = conn.prepareStatement(insertnewitem)) {
+						pstmt.setString(1, paymenttype);
+						pstmt.setDouble(2, payment);
+						pstmt.setDouble(3, custpayvalue);
+						pstmt.setInt(4, orderid);
+						pstmt.executeUpdate();
+						conn.close();
+						
+						Receipt receiptframe = new Receipt(orderid);
+						receiptframe.setVisible(true);
+						Cashierframe.getorderframe().dispose();
+						Cashierframe.showdata();
+						dispose();
+					} catch (SQLException e1) {
+						System.out.println("SQL ERROR: " + e1.getMessage());
+					} catch (Exception e1) {
+						System.out.println(e1.getMessage());
+					}	
 				}
 			}
 		});

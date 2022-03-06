@@ -93,11 +93,7 @@ public class ItemSelector extends JFrame {
 			}
 		}
 		catch (FileNotFoundException e) {
-			// DISABLE WHEN IN WINDOWBUILDER EDITING
-			// JOptionPane.showMessageDialog(null, "Error: File bakery.txt not found. Go to
-			// jar file location and create bakery.txt");
 			System.err.println("Error, file didn't exist.");
-			// System.exit(0);
 		} finally {
 			itemlistinput.close();
 		}
@@ -145,6 +141,7 @@ public class ItemSelector extends JFrame {
 							pstmt.setDouble(4, totalitemsprice);
 							pstmt.setInt(5, orderid);
 							pstmt.executeUpdate();
+							conn.close();
 							
 						} catch (SQLException e1) {
 							System.out.println("SQL ERROR: " + e1.getMessage());
@@ -191,8 +188,20 @@ public class ItemSelector extends JFrame {
 				int deletenumber;
 				try {
 					deletenumber = Integer.parseInt(deletenumberfield.getText());
-					//Predicate<Itemsclass> condition2 = p->p.getitemnumber()==deletenumber && p.orderid == orderid;
-					//Main.getitems().removeIf(condition2);
+					String sqldeleteitem = "DELETE FROM item WHERE itemnumber = ? AND orderid = ?";
+
+			        try (Connection conn = Main.connect();
+			                PreparedStatement pstmt = conn.prepareStatement(sqldeleteitem)) {
+			            // set the corresponding parameter
+			            pstmt.setInt(1, deletenumber);
+			            pstmt.setInt(2, orderid);
+			            // execute the statement
+			            pstmt.executeUpdate();
+			            conn.close();
+
+			        } catch (SQLException e1) {
+			            System.out.println(e1.getMessage());
+			        }
 					calctotalprice();
 					showdata();
 				}catch (Exception e1) {
@@ -308,10 +317,18 @@ public class ItemSelector extends JFrame {
 	
 	private void calctotalprice() {
 		double listpricecust = 0;
-		for(int i = 0; i < Main.getitems().size(); i++) {
-			if(String.valueOf(Main.getitems().get(i).getorderid()).equals(orderid)) {				
-				listpricecust = listpricecust + Main.getitems().get(i).gettotalitems();
+		String querygetpriceitem = "SELECT totalitems FROM item";
+		try (Connection conn = Main.connect();
+				Statement stmt = conn.createStatement();
+				ResultSet result = stmt.executeQuery(querygetpriceitem)) {
+
+			// loop through the result set
+			while (result.next()) {
+				listpricecust = listpricecust + result.getDouble("totalitems");
 			}
+			conn.close();
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
 		}
 		totalpricedisplay.setText("Total Price: RM " + priceformatter.format(listpricecust));
 		NewOrder.calctotalprice(listpricecust);
@@ -329,6 +346,7 @@ public class ItemSelector extends JFrame {
 			while (result.next()) {
 				listitemmodel.addRow(new Object[]{result.getInt("itemnumber"), result.getString("itemname"), result.getInt("quantity"), "RM " + priceformatter.format(result.getDouble("totalitems"))});
 			}
+			conn.close();
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
 		}
