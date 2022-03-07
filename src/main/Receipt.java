@@ -35,15 +35,15 @@ public class Receipt extends JFrame {
 	 */
 	public Receipt(int orderid) {
 		// DECLARE ALL DATA FOR RECEIPT
-		String name;
-		String phoneno;
-		String date;
-		String time;
-		String paymenttype;
-		double totalprice;
-		double customerpay;
-		String address;
-		String gender;
+		String name = null;
+		String phoneno = null;
+		String date = null;
+		String time = null;
+		String paymenttype = null;
+		double totalprice = 0;
+		double customerpay = 0;
+		String address = null;
+		String gender = null;
 		boolean regularcuststate = false;
 		
 		DefaultTableModel listitemmodel = new DefaultTableModel(new Object[][] {},
@@ -56,9 +56,9 @@ public class Receipt extends JFrame {
 		};
 
 		// GET ALL DATA FROM DATABASE
-		String querygetlistitem = "SELECT id, date, time FROM orders INNER JOIN customer ON orders.id=customer.idorder INNER JOIN item ON orders.id=item.orderid INNER JOIN payment ON orders.id=payment.orderid WHERE orders.id = ?";
+		String querygetdata = "SELECT id, date, time FROM orders INNER JOIN customer ON orders.id=customer.idorder INNER JOIN item ON orders.id=item.orderid INNER JOIN payment ON orders.id=payment.orderid WHERE orders.id = ?";
 		try (Connection conn = Main.connect();
-				PreparedStatement pstmt = conn.prepareStatement(querygetlistitem)) {
+				PreparedStatement pstmt = conn.prepareStatement(querygetdata)) {
 			
 			pstmt.setInt(1, orderid);
 			ResultSet result  = pstmt.executeQuery();
@@ -79,6 +79,11 @@ public class Receipt extends JFrame {
 			conn.close();
 		} catch (SQLException e) {
 			System.out.println(e.getMessage());
+		}
+		
+		String regularcustomer = "";
+		if(regularcuststate) {
+			regularcustomer = "Yes";
 		}
 
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Receipt.class.getResource("/main/logo/logo.png")));
@@ -320,10 +325,21 @@ public class Receipt extends JFrame {
 
 		listitemmodel.setRowCount(0);
 		
-		for (int i = 0; i < itemsdata.size(); i++) {
-			listitemmodel.addRow(new Object[] { itemsdata.get(i).getitemnumber(), itemsdata.get(i).getitemname(),
-					itemsdata.get(i).getquantity(), "RM " + priceformatter.format(itemsdata.get(i).gettotalitems()) });
-		}
+		String querygetlistitem = "SELECT itemnumber,itemname,quantity,totalitems FROM item WHERE orderid = ?";
+		try (Connection conn = Main.connect();
+				PreparedStatement pstmt = conn.prepareStatement(querygetlistitem)) {
+			
+			pstmt.setInt(1, orderid);
+			ResultSet result  = pstmt.executeQuery();
 
+			// loop through the result set
+			while (result.next()) {
+				listitemmodel.addRow(new Object[] { result.getInt("itemnumber"), result.getString("itemname"),
+						result.getInt("quantity"), "RM " + priceformatter.format(result.getDouble("totalitems")) });
+			}
+			conn.close();
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
 	}
 }

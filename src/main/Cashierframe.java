@@ -177,6 +177,9 @@ public class Cashierframe extends JFrame {
 		});
 		mntmNewMenuItem.setIcon(new ImageIcon(Cashierframe.class.getResource("/main/logo/receipt.png")));
 		mnNewMenu.add(mntmNewMenuItem);
+		
+		JMenuItem mntmNewMenuItem_3 = new JMenuItem("Delete order");
+		mnNewMenu.add(mntmNewMenuItem_3);
 
 		JMenu mnNewMenu_1 = new JMenu("Help");
 		menuBar.add(mnNewMenu_1);

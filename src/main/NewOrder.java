@@ -14,6 +14,7 @@ import java.awt.Toolkit;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DecimalFormat;
@@ -56,6 +57,24 @@ public class NewOrder extends JFrame {
 		totalpricedisplay.setText("RM " + priceformatter.format(totalprice));
 		listpricecust = totalprice;
 		finalprice = totalprice;
+	}
+	
+	private boolean containsOrderId(final int orderid) {
+		boolean duplicatestate = false;
+		String checkid = "SELECT idorder FROM customer WHERE idorder='" + orderid + "'";
+		try (Connection conn = Main.connect();
+				Statement stmt = conn.createStatement();
+				ResultSet result = stmt.executeQuery(checkid)) {
+
+			// loop through the result set
+			while (result.next()) {
+				duplicatestate = true;
+			}
+			conn.close();
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
+		return duplicatestate;
 	}
 
 	public NewOrder(int orderid) throws IOException {
@@ -300,28 +319,37 @@ public class NewOrder extends JFrame {
 
 				// IF TRUE, SAVE THE RECORD
 				if (process == true) {
+					boolean duplicateorderid = containsOrderId(orderid);
 					String insertnewcust = "INSERT INTO customer(name,phoneno,address,gender,regularcustomer,orderid) VALUES (?,?,?,?,?,?)";
-					try (Connection conn = Main.connect();
-							PreparedStatement pstmt = conn.prepareStatement(insertnewcust)) {
-						pstmt.setString(1, customername);
-						pstmt.setString(2, phoneno);
-						pstmt.setString(3, address);
-						pstmt.setString(4, gender);
-						pstmt.setBoolean(5, regularcustomer);
-						pstmt.setInt(6, orderid);
-						pstmt.executeUpdate();
-						
-					} catch (SQLException e1) {
-						System.out.println(e1.getMessage());
-					} catch (Exception e1) {
-						System.out.println(e1.getMessage());
-					}
-					Cashierframe.getbuttoncreate().setEnabled(true);
-					if(paymentframe == null) {						
-						paymentframe = new Payment(orderid, finalprice);
-						paymentframe.setVisible(true);
-					}else {
-						paymentframe.setVisible(true);
+					if (duplicateorderid) {
+						if(paymentframe == null) {						
+							paymentframe = new Payment(orderid, finalprice);
+							paymentframe.setVisible(true);
+						}else {
+							paymentframe.setVisible(true);
+						}
+					} else {						
+						try (Connection conn = Main.connect();
+								PreparedStatement pstmt = conn.prepareStatement(insertnewcust)) {
+							pstmt.setString(1, customername);
+							pstmt.setString(2, phoneno);
+							pstmt.setString(3, address);
+							pstmt.setString(4, gender);
+							pstmt.setBoolean(5, regularcustomer);
+							pstmt.setInt(6, orderid);
+							pstmt.executeUpdate();
+							
+						} catch (SQLException e1) {
+							System.out.println(e1.getMessage());
+						} catch (Exception e1) {
+							System.out.println(e1.getMessage());
+						}
+						if(paymentframe == null) {						
+							paymentframe = new Payment(orderid, finalprice);
+							paymentframe.setVisible(true);
+						}else {
+							paymentframe.setVisible(true);
+						}
 					}
 				}
 			}

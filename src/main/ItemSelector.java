@@ -202,6 +202,7 @@ public class ItemSelector extends JFrame {
 			        } catch (SQLException e1) {
 			            System.out.println(e1.getMessage());
 			        }
+			        
 					calctotalprice();
 					showdata();
 				}catch (Exception e1) {
