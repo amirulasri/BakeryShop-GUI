@@ -86,7 +86,6 @@ public class Receipt extends JFrame {
 				address = result.getString("address");
 				gender = result.getString("gender");
 				regularcuststate = result.getBoolean("regularcustomer");
-				System.out.println(regularcuststate);
 			}
 			conn.close();
 		} catch (SQLException e) {
@@ -111,7 +110,7 @@ public class Receipt extends JFrame {
 			System.out.println("Receipt SQL ERROR: " + e.getMessage());
 		}
 
-		String regularcustomer = "";
+		String regularcustomer = "No";
 		if (regularcuststate == true) {
 			regularcustomer = "Yes";
 		}

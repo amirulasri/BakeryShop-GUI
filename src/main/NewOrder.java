@@ -112,6 +112,10 @@ public class NewOrder extends JFrame {
 			            System.out.println(e1.getMessage());
 			        }
 			        Cashierframe.showdata();
+			        if(paymentframe != null) {						
+						paymentframe.dispose();
+						paymentframe = null;
+					}
 					dispose();
 					System.out.println("SQL orders DELETED");
 				}

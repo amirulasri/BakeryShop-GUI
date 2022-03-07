@@ -338,7 +338,7 @@ public class ItemSelector extends JFrame {
 	private void showdata() {
 		//ADD DATA HERE
 		listitemmodel.setRowCount(0);
-		String querygetlistitem = "SELECT itemnumber, itemname, quantity, totalitems FROM item";
+		String querygetlistitem = "SELECT itemnumber, itemname, quantity, totalitems FROM item WHERE orderid = '"+orderid+"'";
 		try (Connection conn = Main.connect();
 				Statement stmt = conn.createStatement();
 				ResultSet result = stmt.executeQuery(querygetlistitem)) {
