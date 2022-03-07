@@ -61,7 +61,7 @@ public class NewOrder extends JFrame {
 	
 	private boolean containsOrderId(final int orderid) {
 		boolean duplicatestate = false;
-		String checkid = "SELECT idorder FROM customer WHERE idorder='" + orderid + "'";
+		String checkid = "SELECT orderid FROM customer WHERE orderid='" + orderid + "'";
 		try (Connection conn = Main.connect();
 				Statement stmt = conn.createStatement();
 				ResultSet result = stmt.executeQuery(checkid)) {
@@ -283,10 +283,18 @@ public class NewOrder extends JFrame {
 
 				// CHECK IF ITEM ADDED
 				int quantitycount = 0;
-				for (int i = 0; i < Main.getitems().size(); i++) {
-					if (String.valueOf(Main.getitems().get(i).getorderid()).equals(orderid)) {
-						quantitycount = quantitycount + Main.getitems().get(i).getquantity();
+				String checkid = "SELECT orderid,itemnumber,quantity FROM item WHERE orderid='" + orderid + "'";
+				try (Connection conn = Main.connect();
+						Statement stmt = conn.createStatement();
+						ResultSet result = stmt.executeQuery(checkid)) {
+
+					// loop through the result set
+					while (result.next()) {
+						quantitycount = quantitycount + result.getInt("quantity");
 					}
+					conn.close();
+				} catch (SQLException e1) {
+					System.out.println(e1.getMessage());
 				}
 
 				// CHECK QUANTITY ITEMS ADDED

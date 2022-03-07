@@ -45,7 +45,7 @@ public class Receipt extends JFrame {
 		String address = null;
 		String gender = null;
 		boolean regularcuststate = false;
-		
+
 		DefaultTableModel listitemmodel = new DefaultTableModel(new Object[][] {},
 				new String[] { "Item Number", "Item Name", "Quantity", "Price" }) {
 			private static final long serialVersionUID = 1L;
@@ -55,40 +55,70 @@ public class Receipt extends JFrame {
 			}
 		};
 
-		// GET ALL DATA FROM DATABASE
-		String querygetdata = "SELECT id, date, time FROM orders INNER JOIN customer ON orders.id=customer.idorder INNER JOIN item ON orders.id=item.orderid INNER JOIN payment ON orders.id=payment.orderid WHERE orders.id = ?";
-		try (Connection conn = Main.connect();
-				PreparedStatement pstmt = conn.prepareStatement(querygetdata)) {
-			
+		// GET ORDER DATA FROM DATABASE
+		String querygetdataorders = "SELECT * FROM orders WHERE id = ?";
+		try (Connection conn = Main.connect(); PreparedStatement pstmt = conn.prepareStatement(querygetdataorders)) {
+
 			pstmt.setInt(1, orderid);
-			ResultSet result  = pstmt.executeQuery();
+			ResultSet result = pstmt.executeQuery();
+
+			// loop through the result set
+			while (result.next()) {
+				date = result.getString("date");
+				time = result.getString("time");
+			}
+			conn.close();
+		} catch (SQLException e) {
+			System.out.println("Receipt SQL ERROR: " + e.getMessage());
+		}
+
+		// GET CUSTOMER DATA FROM DATABASE
+		String querygetdatacustomer = "SELECT * FROM customer WHERE orderid = ?";
+		try (Connection conn = Main.connect(); PreparedStatement pstmt = conn.prepareStatement(querygetdatacustomer)) {
+
+			pstmt.setInt(1, orderid);
+			ResultSet result = pstmt.executeQuery();
 
 			// loop through the result set
 			while (result.next()) {
 				name = result.getString("name");
 				phoneno = result.getString("phoneno");
-				date = result.getString("date");
-				time = result.getString("time");
-				paymenttype = result.getString("paymenttype");
-				totalprice = result.getDouble("totalprice");
-				customerpay = result.getDouble("custpay");
 				address = result.getString("address");
 				gender = result.getString("gender");
 				regularcuststate = result.getBoolean("regularcustomer");
+				System.out.println(regularcuststate);
 			}
 			conn.close();
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			System.out.println("Receipt SQL ERROR: " + e.getMessage());
 		}
-		
+
+		// GET PAYMENT DATA FROM DATABASE
+		String querygetdatapayment = "SELECT * FROM payment WHERE orderid = ?";
+		try (Connection conn = Main.connect(); PreparedStatement pstmt = conn.prepareStatement(querygetdatapayment)) {
+
+			pstmt.setInt(1, orderid);
+			ResultSet result = pstmt.executeQuery();
+
+			// loop through the result set
+			while (result.next()) {
+				paymenttype = result.getString("paymenttype");
+				totalprice = result.getDouble("totalprice");
+				customerpay = result.getDouble("custpay");
+			}
+			conn.close();
+		} catch (SQLException e) {
+			System.out.println("Receipt SQL ERROR: " + e.getMessage());
+		}
+
 		String regularcustomer = "";
-		if(regularcuststate) {
+		if (regularcuststate == true) {
 			regularcustomer = "Yes";
 		}
 
 		setIconImage(Toolkit.getDefaultToolkit().getImage(Receipt.class.getResource("/main/logo/logo.png")));
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 936, 636);
+		setBounds(100, 100, 936, 727);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(230, 184, 156));
 		setContentPane(contentPane);
@@ -159,20 +189,18 @@ public class Receipt extends JFrame {
 		lblNewLabel_4_1.setFont(new Font("SansSerif", Font.BOLD, 18));
 		lblNewLabel_4_1.setBackground(Color.WHITE);
 
-		JLabel custpaiddisplay = new JLabel(
-				"Customer paid: RM" + priceformatter.format(customerpay));
+		JLabel custpaiddisplay = new JLabel("Customer paid: RM" + priceformatter.format(customerpay));
 		custpaiddisplay.setFont(new Font("Tahoma", Font.PLAIN, 14));
 
-		JLabel balancedisp = new JLabel("Balance: RM"
-				+ priceformatter.format(customerpay - totalprice));
+		JLabel balancedisp = new JLabel("Balance: RM" + priceformatter.format(customerpay - totalprice));
 		balancedisp.setFont(new Font("Tahoma", Font.PLAIN, 14));
 
 		JLabel lblNewLabel_2_1 = new JLabel("Address:");
 		lblNewLabel_2_1.setForeground(Color.BLACK);
 		lblNewLabel_2_1.setFont(new Font("SansSerif", Font.PLAIN, 16));
 
-		String addressline = "<html>" + address.replaceAll("<", "&lt;").replaceAll(">", "&gt;")
-				.replaceAll("\n", "<br/>") + "</html>";
+		String addressline = "<html>"
+				+ address.replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\n", "<br/>") + "</html>";
 		JLabel addressdisplay = new JLabel(addressline);
 		addressdisplay.setVerticalAlignment(SwingConstants.TOP);
 		addressdisplay.setForeground(Color.BLACK);
@@ -185,6 +213,13 @@ public class Receipt extends JFrame {
 		JLabel lblGendeDisp = new JLabel(gender);
 		lblGendeDisp.setForeground(Color.BLACK);
 		lblGendeDisp.setFont(new Font("SansSerif", Font.PLAIN, 14));
+
+		JLabel lblNewLabel_2_1_1 = new JLabel("Regular Customer:");
+		lblNewLabel_2_1_1.setForeground(Color.BLACK);
+		lblNewLabel_2_1_1.setFont(new Font("SansSerif", Font.PLAIN, 16));
+
+		JLabel regularcustdisp = new JLabel(regularcustomer);
+		regularcustdisp.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane
 				.setHorizontalGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
@@ -206,26 +241,29 @@ public class Receipt extends JFrame {
 										.addComponent(balancedisp, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 598,
 												Short.MAX_VALUE))
 								.addContainerGap(312, Short.MAX_VALUE))
-						.addGroup(gl_contentPane.createSequentialGroup().addContainerGap()
-								.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-										.addGroup(gl_contentPane.createSequentialGroup()
+						.addGroup(gl_contentPane.createSequentialGroup().addContainerGap().addGroup(gl_contentPane
+								.createParallelGroup(Alignment.LEADING)
+								.addGroup(gl_contentPane.createSequentialGroup()
+										.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 												.addComponent(lblNewLabel_2_2, GroupLayout.PREFERRED_SIZE, 108,
 														GroupLayout.PREFERRED_SIZE)
-												.addPreferredGap(ComponentPlacement.UNRELATED)
-												.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-														.addComponent(addressdisplay, GroupLayout.PREFERRED_SIZE, 465,
-																GroupLayout.PREFERRED_SIZE)
-														.addComponent(lblGendeDisp, GroupLayout.PREFERRED_SIZE, 207,
-																GroupLayout.PREFERRED_SIZE)))
-										.addGroup(gl_contentPane.createSequentialGroup()
-												.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-														.addComponent(lblNewLabel_2).addComponent(lblNewLabel_1))
-												.addPreferredGap(ComponentPlacement.UNRELATED)
-												.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-														.addComponent(namedisplay, GroupLayout.PREFERRED_SIZE, 333,
-																GroupLayout.PREFERRED_SIZE)
-														.addComponent(phonenodisplay, GroupLayout.PREFERRED_SIZE, 207,
-																GroupLayout.PREFERRED_SIZE))))
+												.addComponent(lblNewLabel_2_1, GroupLayout.PREFERRED_SIZE, 73,
+														GroupLayout.PREFERRED_SIZE))
+										.addPreferredGap(ComponentPlacement.UNRELATED)
+										.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+												.addComponent(addressdisplay, GroupLayout.PREFERRED_SIZE, 465,
+														GroupLayout.PREFERRED_SIZE)
+												.addComponent(lblGendeDisp, GroupLayout.PREFERRED_SIZE, 207,
+														GroupLayout.PREFERRED_SIZE)))
+								.addGroup(gl_contentPane.createSequentialGroup()
+										.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+												.addComponent(lblNewLabel_2).addComponent(lblNewLabel_1))
+										.addPreferredGap(ComponentPlacement.UNRELATED)
+										.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+												.addComponent(phonenodisplay, GroupLayout.PREFERRED_SIZE, 207,
+														GroupLayout.PREFERRED_SIZE)
+												.addComponent(namedisplay, GroupLayout.PREFERRED_SIZE, 333,
+														GroupLayout.PREFERRED_SIZE))))
 								.addGap(16)
 								.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
 										.addGroup(gl_contentPane.createSequentialGroup().addComponent(lblNewLabel_1_2)
@@ -244,11 +282,13 @@ public class Receipt extends JFrame {
 												.addGap(90).addComponent(paymenttypedisplay, GroupLayout.PREFERRED_SIZE,
 														96, GroupLayout.PREFERRED_SIZE)))
 								.addContainerGap())
+						.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 920, Short.MAX_VALUE)
 						.addGroup(gl_contentPane.createSequentialGroup().addContainerGap()
-								.addComponent(lblNewLabel_2_1, GroupLayout.PREFERRED_SIZE, 73,
+								.addComponent(lblNewLabel_2_1_1, GroupLayout.PREFERRED_SIZE, 138,
 										GroupLayout.PREFERRED_SIZE)
-								.addContainerGap(837, Short.MAX_VALUE))
-						.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 920, Short.MAX_VALUE));
+								.addPreferredGap(ComponentPlacement.RELATED).addComponent(regularcustdisp,
+										GroupLayout.PREFERRED_SIZE, 107, GroupLayout.PREFERRED_SIZE)
+								.addContainerGap(659, Short.MAX_VALUE)));
 		gl_contentPane.setVerticalGroup(gl_contentPane.createParallelGroup(Alignment.LEADING).addGroup(gl_contentPane
 				.createSequentialGroup().addComponent(panel, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
 				.addPreferredGap(ComponentPlacement.UNRELATED)
@@ -280,7 +320,8 @@ public class Receipt extends JFrame {
 												GroupLayout.PREFERRED_SIZE)))
 						.addGroup(gl_contentPane.createSequentialGroup()
 								.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-										.addComponent(lblNewLabel_2).addComponent(phonenodisplay))
+										.addComponent(lblNewLabel_2).addComponent(phonenodisplay,
+												GroupLayout.PREFERRED_SIZE, 21, GroupLayout.PREFERRED_SIZE))
 								.addPreferredGap(ComponentPlacement.RELATED)
 								.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
 										.addComponent(lblNewLabel_2_2, GroupLayout.PREFERRED_SIZE, 21,
@@ -288,13 +329,18 @@ public class Receipt extends JFrame {
 										.addComponent(lblGendeDisp, GroupLayout.PREFERRED_SIZE, 21,
 												GroupLayout.PREFERRED_SIZE))
 								.addPreferredGap(ComponentPlacement.RELATED)
-								.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+								.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 										.addComponent(lblNewLabel_2_1, GroupLayout.PREFERRED_SIZE, 21,
 												GroupLayout.PREFERRED_SIZE)
 										.addComponent(addressdisplay, GroupLayout.PREFERRED_SIZE, 65,
 												GroupLayout.PREFERRED_SIZE))))
 				.addPreferredGap(ComponentPlacement.UNRELATED)
-				.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE)
+				.addGroup(
+						gl_contentPane.createParallelGroup(Alignment.BASELINE)
+								.addComponent(lblNewLabel_2_1_1, GroupLayout.PREFERRED_SIZE, 21,
+										GroupLayout.PREFERRED_SIZE)
+								.addComponent(regularcustdisp))
+				.addGap(20).addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 293, Short.MAX_VALUE)
 				.addPreferredGap(ComponentPlacement.RELATED)
 				.addComponent(lblNewLabel_4_1, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE)
 				.addPreferredGap(ComponentPlacement.RELATED).addComponent(custpaiddisplay)
@@ -324,13 +370,12 @@ public class Receipt extends JFrame {
 		contentPane.setLayout(gl_contentPane);
 
 		listitemmodel.setRowCount(0);
-		
+
 		String querygetlistitem = "SELECT itemnumber,itemname,quantity,totalitems FROM item WHERE orderid = ?";
-		try (Connection conn = Main.connect();
-				PreparedStatement pstmt = conn.prepareStatement(querygetlistitem)) {
-			
+		try (Connection conn = Main.connect(); PreparedStatement pstmt = conn.prepareStatement(querygetlistitem)) {
+
 			pstmt.setInt(1, orderid);
-			ResultSet result  = pstmt.executeQuery();
+			ResultSet result = pstmt.executeQuery();
 
 			// loop through the result set
 			while (result.next()) {

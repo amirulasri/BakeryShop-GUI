@@ -179,6 +179,13 @@ public class Cashierframe extends JFrame {
 		mnNewMenu.add(mntmNewMenuItem);
 		
 		JMenuItem mntmNewMenuItem_3 = new JMenuItem("Delete order");
+		mntmNewMenuItem_3.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				//DELETE ORDER FROM DATABASE
+			}
+		});
+		mntmNewMenuItem_3.setIcon(new ImageIcon(Cashierframe.class.getResource("/main/logo/delete.png")));
 		mnNewMenu.add(mntmNewMenuItem_3);
 
 		JMenu mnNewMenu_1 = new JMenu("Help");

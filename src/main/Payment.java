@@ -211,7 +211,7 @@ public class Payment extends JFrame {
 					} catch (SQLException e1) {
 						System.out.println("SQL ERROR: " + e1.getMessage());
 					} catch (Exception e1) {
-						System.out.println(e1.getMessage());
+						System.out.println("ERROR OPENING RECEIPT: "+e1.getMessage());
 					}	
 				}
 			}
