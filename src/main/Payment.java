@@ -21,6 +21,7 @@ import java.awt.event.WindowEvent;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.DecimalFormat;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -194,13 +195,16 @@ public class Payment extends JFrame {
 				//PAYMENT PROCESS DATA
 				if(process == true) {
 					String insertnewitem = "INSERT INTO payment(paymenttype,totalprice,custpay,orderid) VALUES (?,?,?,?)";
+					String updatepaidstatus = "UPDATE orders SET statuspaid = 'paid'";
 					try (Connection conn = Main.connect();
-							PreparedStatement pstmt = conn.prepareStatement(insertnewitem)) {
+							PreparedStatement pstmt = conn.prepareStatement(insertnewitem);
+							Statement stmt = conn.createStatement()) {
 						pstmt.setString(1, paymenttype);
 						pstmt.setDouble(2, payment);
 						pstmt.setDouble(3, custpayvalue);
 						pstmt.setInt(4, orderid);
 						pstmt.executeUpdate();
+						stmt.execute(updatepaidstatus);
 						conn.close();
 						
 						Receipt receiptframe = new Receipt(orderid);

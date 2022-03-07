@@ -54,17 +54,17 @@ public class Cashierframe extends JFrame {
 
 	public static void showdata() {
 		listordermodel.setRowCount(0);
-		String querygetorder = "SELECT id, date, time FROM orders";
-
+		String querygetorder = "SELECT name, phoneno, orderid FROM customer";
 		try (Connection conn = Main.connect();
 				Statement stmt = conn.createStatement();
 				ResultSet result = stmt.executeQuery(querygetorder)) {
 
 			// loop through the result set
 			while (result.next()) {
-
-				listordermodel.addRow(new Object[] { String.valueOf(result.getInt("id")), result.getString("date"),
-						result.getString("time"), "RM " + "0" });
+				//String querygetpriceperitem = "SELECT ";
+				//ResultSet result2 = stmt.executeQuery(querygetpriceperitem);
+				listordermodel.addRow(new Object[] { String.valueOf(result.getString("name")), result.getString("phoneno"),
+						result.getInt("orderid"), "RM " + "0" });
 			}
 			conn.close();
 		} catch (SQLException e) {
