@@ -107,6 +107,7 @@ public class NewOrder extends JFrame {
 			            pstmt.setInt(1, orderid);
 			            // execute the statement
 			            pstmt.executeUpdate();
+			            conn.close();
 
 			        } catch (SQLException e1) {
 			            System.out.println(e1.getMessage());

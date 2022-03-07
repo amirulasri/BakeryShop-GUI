@@ -57,18 +57,28 @@ public class Cashierframe extends JFrame {
 		String querygetorder = "SELECT name, phoneno, orderid FROM customer";
 		try (Connection conn = Main.connect();
 				Statement stmt = conn.createStatement();
+				Statement stmt2 = conn.createStatement();
 				ResultSet result = stmt.executeQuery(querygetorder)) {
 
 			// loop through the result set
 			while (result.next()) {
-				//String querygetpriceperitem = "SELECT ";
-				//ResultSet result2 = stmt.executeQuery(querygetpriceperitem);
+				double totalprice = 0;
+				try {				
+					String querygetpriceperitem = "SELECT totalprice, orderid FROM payment WHERE orderid = '"+result.getInt("orderid")+"'";
+					ResultSet result2 = stmt2.executeQuery(querygetpriceperitem);
+					while (result2.next()) {
+						totalprice = result2.getDouble("totalprice");
+					}
+					
+				}catch(SQLException e) {
+					System.out.println(e.getMessage());
+				}
 				listordermodel.addRow(new Object[] { String.valueOf(result.getString("name")), result.getString("phoneno"),
-						result.getInt("orderid"), "RM " + "0" });
+						result.getInt("orderid"), "RM " + priceformatter.format(totalprice)});
 			}
 			conn.close();
 		} catch (SQLException e) {
-			System.out.println(e.getMessage());
+			System.out.println("ERROR SQL CASHIER FRAME: " + e.getMessage());
 		}
 	}
 
@@ -148,12 +158,12 @@ public class Cashierframe extends JFrame {
 				int intorderid = 0;
 				boolean processstate = false;
 				
-				
 				try {
 					intorderid = Integer.parseInt(orderid);
 					processstate = true;
 				}catch(Exception e1) {
 					System.out.println("Error CONVERT TO INT: " + e1.getMessage());
+					JOptionPane.showMessageDialog(null, "Order IDs can only be entered in numbers", "Invalid Order ID", JOptionPane.ERROR_MESSAGE);
 					processstate = false;
 				}
 				
@@ -183,6 +193,54 @@ public class Cashierframe extends JFrame {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				//DELETE ORDER FROM DATABASE
+				String orderid = JOptionPane.showInputDialog(null, "Enter existence Order ID", "Receipt",
+						JOptionPane.INFORMATION_MESSAGE);
+				int intorderid = 0;
+				boolean processstate = false;
+				
+				try {
+					intorderid = Integer.parseInt(orderid);
+					processstate = true;
+				}catch(Exception e1) {
+					System.out.println("Error CONVERT TO INT: " + e1.getMessage());
+					JOptionPane.showMessageDialog(null, "Order IDs can only be entered in numbers", "Invalid Order ID", JOptionPane.ERROR_MESSAGE);
+					processstate = false;
+				}
+				
+				if(processstate == true) {
+					boolean duplicateorderid = containsOrderId(intorderid);
+					if (duplicateorderid) {
+						String selectorbutton[] = { "Yes", "No" };
+						int PromptResult = JOptionPane.showOptionDialog(null,
+								"Are you sure you want to delete this order?. This action cannot be undone.", "Delete Order ID: " + orderid,
+								JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, selectorbutton,
+								selectorbutton[1]);
+						if (PromptResult == JOptionPane.YES_OPTION) {
+							//SQL FOR DELETING ORDER
+							String sqlonfk = "PRAGMA foreign_keys=on;";
+							String sqldeleteorder = "DELETE FROM orders WHERE id = ?";
+							
+							try (Connection conn = Main.connect();
+									Statement stmt = conn.createStatement();
+									PreparedStatement pstmt = conn.prepareStatement(sqldeleteorder)) {
+								
+								stmt.execute(sqlonfk);
+								// set the corresponding parameter
+								pstmt.setInt(1, intorderid);
+								// execute the statement
+								pstmt.executeUpdate();
+								conn.close();
+								
+							} catch (SQLException e1) {
+								System.out.println(e1.getMessage());
+							}
+							showdata();
+						}
+					} else {
+						JOptionPane.showMessageDialog(null, "The Order ID you entered not found. Refer Order table",
+								"Order ID not found", JOptionPane.ERROR_MESSAGE);
+					}
+				}
 			}
 		});
 		mntmNewMenuItem_3.setIcon(new ImageIcon(Cashierframe.class.getResource("/main/logo/delete.png")));
