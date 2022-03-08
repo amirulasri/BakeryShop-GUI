@@ -46,7 +46,7 @@ public class NewOrder extends JFrame {
 	static private double finalprice = 0;
 	static private JLabel titletotalprice;
 	static private JLabel totalpricedisplay;
-	Payment paymentframe = null;
+	static Payment paymentframe = null;
 
 	/**
 	 * Create the frame.
@@ -57,6 +57,10 @@ public class NewOrder extends JFrame {
 		totalpricedisplay.setText("RM " + priceformatter.format(totalprice));
 		listpricecust = totalprice;
 		finalprice = totalprice;
+	}
+	
+	static public void setpaymentframenull() {
+		paymentframe = null;
 	}
 	
 	private boolean containsOrderId(final int orderid) {

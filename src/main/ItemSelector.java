@@ -318,7 +318,7 @@ public class ItemSelector extends JFrame {
 	
 	private void calctotalprice() {
 		double listpricecust = 0;
-		String querygetpriceitem = "SELECT totalitems FROM item";
+		String querygetpriceitem = "SELECT totalitems FROM item WHERE orderid='"+orderid+"'";
 		try (Connection conn = Main.connect();
 				Statement stmt = conn.createStatement();
 				ResultSet result = stmt.executeQuery(querygetpriceitem)) {

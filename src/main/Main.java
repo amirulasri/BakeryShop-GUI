@@ -6,7 +6,6 @@ import java.sql.Statement;
 
 public class Main {
 	
-	
 	//CONFIGURATION
 	static private double discount = 0.10;
 	static private String appname = "Bakery Shop";
