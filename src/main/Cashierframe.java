@@ -8,6 +8,8 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.JLabel;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -18,8 +20,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-
-import java.util.Iterator;
 import java.awt.Font;
 import java.awt.Color;
 import javax.swing.JTable;
@@ -41,6 +41,10 @@ import java.awt.event.WindowEvent;
 
 public class Cashierframe extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	SimpleDateFormat newdateformat = new SimpleDateFormat("dd-MM-yyyy");
 	SimpleDateFormat newtimeformat = new SimpleDateFormat("hh:mm a");
 
@@ -51,6 +55,18 @@ public class Cashierframe extends JFrame {
 	static NewOrder orderframe = null;
 
 	static DecimalFormat priceformatter = new DecimalFormat("#0.00");
+	
+	public static void savereceipt() {
+		JFrame saveframe = new JFrame();
+		saveframe.setIconImage(new ImageIcon(Cashierframe.class.getResource("/main/logo/logo.png")).getImage());
+		JFileChooser fileChooser = new JFileChooser();
+		fileChooser.setDialogTitle("Save Receipt PDF file");
+		int userSelection = fileChooser.showSaveDialog(saveframe);
+		if (userSelection == JFileChooser.APPROVE_OPTION) {
+		    File fileToSave = fileChooser.getSelectedFile();
+		    System.out.println("Save as file: " + fileToSave.getAbsolutePath());
+		}
+	}
 
 	public static void showdata() {
 		listordermodel.setRowCount(0);
@@ -144,6 +160,13 @@ public class Cashierframe extends JFrame {
 
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
+		
+		JMenu mnNewMenu_2 = new JMenu("Tools");
+		menuBar.add(mnNewMenu_2);
+		
+		JMenuItem mntmNewMenuItem_4 = new JMenuItem("Delete All Order");
+		mntmNewMenuItem_4.setIcon(new ImageIcon(Cashierframe.class.getResource("/main/logo/multiply.png")));
+		mnNewMenu_2.add(mntmNewMenuItem_4);
 
 		JMenu mnNewMenu = new JMenu("Order");
 		menuBar.add(mnNewMenu);
@@ -243,6 +266,16 @@ public class Cashierframe extends JFrame {
 				}
 			}
 		});
+		
+		JMenuItem savetopdf = new JMenuItem("Save Receipt To PDF");
+		savetopdf.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mousePressed(MouseEvent e) {
+				savereceipt();
+			}
+		});
+		savetopdf.setIcon(new ImageIcon(Cashierframe.class.getResource("/main/logo/document.png")));
+		mnNewMenu.add(savetopdf);
 		mntmNewMenuItem_3.setIcon(new ImageIcon(Cashierframe.class.getResource("/main/logo/delete.png")));
 		mnNewMenu.add(mntmNewMenuItem_3);
 
