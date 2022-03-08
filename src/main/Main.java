@@ -1,16 +1,11 @@
 package main;
-
-import java.util.ArrayList;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
 public class Main {
-	static ArrayList<Customerclass> customers = new ArrayList<Customerclass>();
-	static ArrayList<Itemsclass> listitems = new ArrayList<Itemsclass>();
-	static ArrayList<Ordersclass> listorders = new ArrayList<Ordersclass>();
-	static ArrayList<Paymentclass> listpayment = new ArrayList<Paymentclass>();
+	
 	
 	//CONFIGURATION
 	static private double discount = 0.10;
@@ -28,22 +23,6 @@ public class Main {
 	
 	static public double getdiscountvalue() {
 		return discount;
-	}
-
-	public static ArrayList<Customerclass> getcustomer() {
-		return customers;
-	}
-
-	public static ArrayList<Itemsclass> getitems() {
-		return listitems;
-	}
-	
-	public static ArrayList<Ordersclass> getorders() {
-		return listorders;
-	}
-	
-	public static ArrayList<Paymentclass> getpayment(){
-		return listpayment;
 	}
 	
 	public static Connection connect() {
