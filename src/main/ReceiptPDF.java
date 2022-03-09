@@ -1,6 +1,7 @@
 package main;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
@@ -12,6 +13,7 @@ import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -123,8 +125,8 @@ public class ReceiptPDF {
 		document.addPage(page);
 
 		page = document.getPage(0);
-		PDPageContentStream contentStream = new PDPageContentStream(document, page);
-
+		//PDPageContentStream contentStream = new PDPageContentStream(document, page);
+		/*
 		// Begin the Content stream
 		contentStream.beginText();
 
@@ -134,7 +136,7 @@ public class ReceiptPDF {
 		// Setting the position for the line
 		contentStream.newLineAtOffset(90, 740);
 
-		String text = "HARRIS";
+		String text = "AIN";
 
 		// Adding text in the form of string
 		contentStream.showText(text);
@@ -143,41 +145,83 @@ public class ReceiptPDF {
 		contentStream.endText();
 
 		// Closing the content stream
-		contentStream.close();
+		contentStream.close();*/
 		
-		//Initialize table
-        float margin = 10;
-        float tableWidth = page.getMediaBox().getWidth() - (2 * margin);
-        float yStartNewPage = page.getMediaBox().getHeight() - (2 * margin);
-        float yStart = yStartNewPage;
-        float bottomMargin = 0;
+		// Initialize table
+		float margin = 10;
+		float tableWidth = page.getMediaBox().getWidth() - (2 * margin);
+		float yStartNewPage = page.getMediaBox().getHeight() - (2 * margin);
+		float yStart = yStartNewPage;
+		float bottomMargin = 0;
 
-		BaseTable table = new BaseTable(yStart, yStartNewPage, bottomMargin, tableWidth, margin, document, page, true,
+		BaseTable table = new BaseTable(700, yStartNewPage, bottomMargin, tableWidth, margin, document, page, true,
 				true);
-		
-		//Create Header row
+
+		// Create Header row
 		Row<PDPage> headerRow = table.createRow(15f);
-		Cell<PDPage> cell = headerRow.createCell(100, "Awesome Facts About Belgium");
+		Cell<PDPage> cell = headerRow.createCell(100, "TEST");
 		cell.setFont(PDType1Font.HELVETICA_BOLD);
-		cell.setFillColor(Color.BLACK);
+		cell.setFillColor(Color.ORANGE);
 		table.addHeaderRow(headerRow);
+		Row<PDPage> row = table.createRow(10f);
+		cell = row.createCell((100 / 3.0f), "HAHAHA" );
+		cell = row.createCell((100 / 3.0f), "HAHAHA" );
+		Row<PDPage> row1 = table.createRow(200f);
+		cell = row1.createCell((100 / 3.0f), "HAHAHA" );
+		cell = row1.createCell((100 / 3.0f), "HAHAHA" );
 		table.draw();
 
 		JFrame saveframe = new JFrame();
 		saveframe.setIconImage(new ImageIcon(Cashierframe.class.getResource("/main/logo/logo.png")).getImage());
-		JFileChooser fileChooser = new JFileChooser();
+		JFileChooser fileChooser = new JFileChooser() {
+			/**
+			 * 
+			 */
+			private static final long serialVersionUID = -894233845899825024L;
+
+			public void approveSelection(){
+
+			    File file = getSelectedFile();
+			            String filestring = file.toString();
+
+			            String[] left_side_of_dot = filestring.split("\\.");
+
+			            file = new File(left_side_of_dot[0] + ".pdf");
+
+
+			    if(file.exists() && getDialogType() == SAVE_DIALOG){
+			        int result = JOptionPane.showConfirmDialog(saveframe,"The file exists, overwrite?","Existing file",JOptionPane.YES_NO_CANCEL_OPTION);
+			        switch(result){
+			            case JOptionPane.YES_OPTION:
+			                super.approveSelection();
+			                return;
+			            case JOptionPane.NO_OPTION:
+			                return;
+			            case JOptionPane.CLOSED_OPTION:
+			                return;
+			            case JOptionPane.CANCEL_OPTION:
+			                cancelSelection();
+			                return;
+			        }
+			    }
+			    super.approveSelection();
+			 }
+		};
 		fileChooser.setDialogTitle("Save Receipt PDF file");
 		fileChooser.setSelectedFile(new File("Receipt ID " + orderid));
 		fileChooser.setFileFilter(new FileNameExtensionFilter("pdf file", "pdf"));
 		int userSelection = fileChooser.showSaveDialog(saveframe);
 		if (userSelection == JFileChooser.APPROVE_OPTION) {
 			File fileToSave = fileChooser.getSelectedFile();
+			// CHECK IF EXISTS
+
 			String filename = fileChooser.getSelectedFile().toString();
 			if (!filename.endsWith(".pdf")) {
 				filename += ".pdf";
 				fileToSave = new File(filename);
+				document.save(new File(fileToSave.getAbsolutePath()));
 			}
-			document.save(new File(fileToSave.getAbsolutePath()));
+
 		}
 
 		// Closing the document
