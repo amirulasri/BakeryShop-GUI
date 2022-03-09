@@ -1,16 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="lib" path="lib/sqlite-jdbc-3.36.0.3.jar"/>
-	<classpathentry kind="lib" path="lib/debugger-app-3.0.0-alpha2.jar"/>
-	<classpathentry kind="lib" path="lib/fontbox-3.0.0-alpha2.jar"/>
-	<classpathentry kind="lib" path="lib/pdfbox-3.0.0-alpha2.jar"/>
-	<classpathentry kind="lib" path="lib/pdfbox-app-3.0.0-alpha2.jar"/>
-	<classpathentry kind="lib" path="lib/pdfbox-debugger-3.0.0-alpha2.jar"/>
-	<classpathentry kind="lib" path="lib/pdfbox-tools-3.0.0-alpha2.jar"/>
-	<classpathentry kind="lib" path="lib/preflight-3.0.0-alpha2.jar"/>
-	<classpathentry kind="lib" path="lib/preflight-app-3.0.0-alpha2.jar"/>
-	<classpathentry kind="lib" path="lib/xmpbox-3.0.0-alpha2.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/debugger-app-2.0.25.jar"/>
+	<classpathentry kind="lib" path="lib/fontbox-2.0.25.jar"/>
+	<classpathentry kind="lib" path="lib/pdfbox-2.0.25.jar"/>
+	<classpathentry kind="lib" path="lib/pdfbox-app-2.0.25.jar"/>
+	<classpathentry kind="lib" path="lib/pdfbox-debugger-2.0.25.jar"/>
+	<classpathentry kind="lib" path="lib/pdfbox-tools-2.0.25.jar"/>
+	<classpathentry kind="lib" path="lib/preflight-2.0.25.jar"/>
+	<classpathentry kind="lib" path="lib/preflight-app-2.0.25.jar"/>
+	<classpathentry kind="lib" path="lib/xmpbox-2.0.25.jar"/>
+	<classpathentry kind="lib" path="lib/boxable-1.6.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-api-1.7.32.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-simple-1.6.1.jar"/>
+	<classpathentry kind="lib" path="lib/guava/base-1.0.0.jar"/>
+	<classpathentry kind="lib" path="lib/guava/checker-qual-3.12.0.jar"/>
+	<classpathentry kind="lib" path="lib/guava/elemental2-promise-1.1.0.jar"/>
+	<classpathentry kind="lib" path="lib/guava/error_prone_annotations-2.11.0.jar"/>
+	<classpathentry kind="lib" path="lib/guava/failureaccess-1.0.1.jar"/>
+	<classpathentry kind="lib" path="lib/guava/guava-31.1-jre.jar"/>
+	<classpathentry kind="lib" path="lib/guava/guava-gwt-31.1-jre.jar"/>
+	<classpathentry kind="lib" path="lib/guava/j2objc-annotations-1.3.jar"/>
+	<classpathentry kind="lib" path="lib/guava/jsinterop-annotations-2.0.0.jar"/>
+	<classpathentry kind="lib" path="lib/guava/jsr305-3.0.2.jar"/>
+	<classpathentry kind="lib" path="lib/guava/listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

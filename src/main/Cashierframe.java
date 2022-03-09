@@ -57,14 +57,11 @@ public class Cashierframe extends JFrame {
 	static DecimalFormat priceformatter = new DecimalFormat("#0.00");
 	
 	public static void savereceipt() {
-		JFrame saveframe = new JFrame();
-		saveframe.setIconImage(new ImageIcon(Cashierframe.class.getResource("/main/logo/logo.png")).getImage());
-		JFileChooser fileChooser = new JFileChooser();
-		fileChooser.setDialogTitle("Save Receipt PDF file");
-		int userSelection = fileChooser.showSaveDialog(saveframe);
-		if (userSelection == JFileChooser.APPROVE_OPTION) {
-		    File fileToSave = fileChooser.getSelectedFile();
-		    System.out.println("Save as file: " + fileToSave.getAbsolutePath());
+		try {
+			ReceiptPDF pdftest = new ReceiptPDF(5);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
