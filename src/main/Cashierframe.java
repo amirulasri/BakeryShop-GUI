@@ -8,7 +8,6 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.JLabel;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JButton;
-import javax.swing.JFileChooser;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -58,7 +57,7 @@ public class Cashierframe extends JFrame {
 	
 	public static void savereceipt() {
 		try {
-			ReceiptPDF pdftest = new ReceiptPDF(5);
+			new ReceiptPDF(5);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

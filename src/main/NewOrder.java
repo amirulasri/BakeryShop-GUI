@@ -36,6 +36,10 @@ import java.awt.event.ItemEvent;
 
 public class NewOrder extends JFrame {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -331137392899726080L;
 	static DecimalFormat priceformatter = new DecimalFormat("#0.00");
 	DecimalFormat discountnumber = new DecimalFormat("#0");
 

@@ -28,6 +28,11 @@ import java.awt.event.MouseEvent;
 
 public class Payment extends JFrame {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -5779497443670977835L;
+
 	static DecimalFormat priceformatter = new DecimalFormat("#0.00");
 
 	private JPanel contentPane;

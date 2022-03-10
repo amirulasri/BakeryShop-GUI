@@ -9,10 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.text.DecimalFormat;
-import java.util.List;
-import java.util.stream.Collectors;
 import java.awt.Color;
 import javax.swing.JLabel;
 import java.awt.Font;
@@ -24,6 +21,11 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 public class Receipt extends JFrame {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6032298494297862194L;
 
 	DecimalFormat priceformatter = new DecimalFormat("#0.00");
 

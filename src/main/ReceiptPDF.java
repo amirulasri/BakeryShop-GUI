@@ -1,13 +1,14 @@
 package main;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.ImageIcon;
@@ -20,6 +21,7 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 
 import be.quodlibet.boxable.BaseTable;
 import be.quodlibet.boxable.Cell;
@@ -27,6 +29,7 @@ import be.quodlibet.boxable.Row;
 
 public class ReceiptPDF {
 	public ReceiptPDF(int orderid) throws IOException {
+		DecimalFormat priceformatter = new DecimalFormat("#0.00");
 		try {
 			for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
 				if ("Windows".equals(info.getName())) {
@@ -125,50 +128,175 @@ public class ReceiptPDF {
 		document.addPage(page);
 
 		page = document.getPage(0);
-		//PDPageContentStream contentStream = new PDPageContentStream(document, page);
-		/*
-		// Begin the Content stream
+		PDPageContentStream contentStream = new PDPageContentStream(document, page);
+		PDImageXObject logoimage = PDImageXObject.createFromFile("src/main/logo/logo.png", document);
+		contentStream.drawImage(logoimage, 25, 730, 45, 45);
+
+		// ADD TITLE STORE
 		contentStream.beginText();
+		contentStream.setFont(PDType1Font.HELVETICA, 30);
+		contentStream.newLineAtOffset(74, 738);
+		contentStream.showText("Bakery Shop");
+		contentStream.endText();
 
-		// Setting the font to the Content stream
-		contentStream.setFont(PDType1Font.TIMES_ROMAN, 12);
+		// ADD CUSTOMER NAME TITLE
+		contentStream.beginText();
+		contentStream.setFont(PDType1Font.HELVETICA, 11);
+		contentStream.newLineAtOffset(25, 700);
+		contentStream.showText("Name: ");
+		contentStream.endText();
 
-		// Setting the position for the line
-		contentStream.newLineAtOffset(90, 740);
+		// ADD CUSTOMER NAME GET FROM SQL
+		contentStream.beginText();
+		contentStream.setFont(PDType1Font.HELVETICA, 11);
+		contentStream.newLineAtOffset(63, 700);
+		contentStream.showText(name);
+		contentStream.endText();
 
-		String text = "AIN";
+		// ADD PHONE NO TITLE
+		contentStream.beginText();
+		contentStream.setFont(PDType1Font.HELVETICA, 11);
+		contentStream.newLineAtOffset(25, 685);
+		contentStream.showText("Phone number: ");
+		contentStream.endText();
 
-		// Adding text in the form of string
-		contentStream.showText(text);
+		// ADD PHONE NO GET FROM SQL
+		contentStream.beginText();
+		contentStream.setFont(PDType1Font.HELVETICA, 11);
+		contentStream.newLineAtOffset(105, 685);
+		contentStream.showText(phoneno);
+		contentStream.endText();
 
-		// Ending the content stream
+		// ADD GENDER TITLE
+		contentStream.beginText();
+		contentStream.setFont(PDType1Font.HELVETICA, 11);
+		contentStream.newLineAtOffset(25, 670);
+		contentStream.showText("Gender: ");
+		contentStream.endText();
+
+		// ADD GENDER GET FROM SQL
+		contentStream.beginText();
+		contentStream.setFont(PDType1Font.HELVETICA, 11);
+		contentStream.newLineAtOffset(70, 670);
+		contentStream.showText(gender);
+		contentStream.endText();
+
+		// ADD ADDRESS TITLE
+		contentStream.beginText();
+		contentStream.setFont(PDType1Font.HELVETICA, 11);
+		contentStream.newLineAtOffset(25, 655);
+		contentStream.showText("Address: ");
+		contentStream.endText();
+
+		// SEPARATE LINE \n
+		String addresslines[] = address.split("\\r?\\n");
+		contentStream.beginText();
+		contentStream.setFont(PDType1Font.HELVETICA, 11);
+		contentStream.newLineAtOffset(72, 655);
+		for (int i = 0; i < addresslines.length; i++) {
+			// ADD ADDRESS GET FROM SQL
+			contentStream.showText(addresslines[i]);
+			contentStream.newLine();
+		}
+		contentStream.endText();
+
+		// ADD ORDER ID TITLE
+		contentStream.beginText();
+		contentStream.setFont(PDType1Font.HELVETICA, 11);
+		contentStream.newLineAtOffset(400, 700);
+		contentStream.showText("Order ID: ");
+		contentStream.endText();
+
+		// ADD ORDER ID
+		contentStream.beginText();
+		contentStream.setFont(PDType1Font.HELVETICA, 11);
+		contentStream.newLineAtOffset(450, 700);
+		contentStream.showText(String.valueOf(orderid));
+		contentStream.endText();
+
+		// ADD ORDER ID TITLE
+		contentStream.beginText();
+		contentStream.setFont(PDType1Font.HELVETICA, 11);
+		contentStream.newLineAtOffset(400, 685);
+		contentStream.showText("Order date: ");
+		contentStream.endText();
+
+		// ADD ORDER ID
+		contentStream.beginText();
+		contentStream.setFont(PDType1Font.HELVETICA, 11);
+		contentStream.newLineAtOffset(460, 685);
+		contentStream.showText(date + " " + time);
+		contentStream.endText();
+
+		// ADD REGULAR CUSTOMER TITLE
+		contentStream.beginText();
+		contentStream.setFont(PDType1Font.HELVETICA, 11);
+		contentStream.newLineAtOffset(400, 670);
+		contentStream.showText("Regular Customer: ");
+		contentStream.endText();
+
+		// ADD REGULAR CUSTOMER GET FROM SQL
+		contentStream.beginText();
+		contentStream.setFont(PDType1Font.HELVETICA, 11);
+		contentStream.newLineAtOffset(495, 670);
+		contentStream.showText(regularcustomer);
 		contentStream.endText();
 
 		// Closing the content stream
-		contentStream.close();*/
-		
+		contentStream.close();
+
 		// Initialize table
-		float margin = 10;
+		float margin = 40;
 		float tableWidth = page.getMediaBox().getWidth() - (2 * margin);
 		float yStartNewPage = page.getMediaBox().getHeight() - (2 * margin);
-		float yStart = yStartNewPage;
 		float bottomMargin = 0;
 
-		BaseTable table = new BaseTable(700, yStartNewPage, bottomMargin, tableWidth, margin, document, page, true,
+		BaseTable table = new BaseTable(600, yStartNewPage, bottomMargin, tableWidth, margin, document, page, true,
 				true);
 
 		// Create Header row
 		Row<PDPage> headerRow = table.createRow(15f);
-		Cell<PDPage> cell = headerRow.createCell(100, "TEST");
+		Cell<PDPage> cell = headerRow.createCell(100, "Items Ordered");
 		cell.setFont(PDType1Font.HELVETICA_BOLD);
-		cell.setFillColor(Color.ORANGE);
+		cell.setFillColor(new Color(254, 232, 170));
 		table.addHeaderRow(headerRow);
 		Row<PDPage> row = table.createRow(10f);
-		cell = row.createCell((100 / 3.0f), "HAHAHA" );
-		cell = row.createCell((100 / 3.0f), "HAHAHA" );
-		Row<PDPage> row1 = table.createRow(200f);
-		cell = row1.createCell((100 / 3.0f), "HAHAHA" );
-		cell = row1.createCell((100 / 3.0f), "HAHAHA" );
+		cell = row.createCell(7, "No.");
+		cell.setFont(PDType1Font.HELVETICA_BOLD);
+		cell.setFillColor(new Color(255, 102, 186));
+		cell = row.createCell(68, "Item name");
+		cell.setFont(PDType1Font.HELVETICA_BOLD);
+		cell.setFillColor(new Color(255, 102, 186));
+		cell = row.createCell(10, "Quantity");
+		cell.setFont(PDType1Font.HELVETICA_BOLD);
+		cell.setFillColor(new Color(255, 102, 186));
+		cell = row.createCell(15, "Price");
+		cell.setFont(PDType1Font.HELVETICA_BOLD);
+		cell.setFillColor(new Color(255, 102, 186));
+		String querygetlistitem = "SELECT itemnumber,itemname,quantity,totalitems FROM item WHERE orderid = ?";
+		try (Connection conn = Main.connect(); PreparedStatement pstmt = conn.prepareStatement(querygetlistitem)) {
+
+			pstmt.setInt(1, orderid);
+			ResultSet result = pstmt.executeQuery();
+
+			Color itemcolor = new Color(171, 255, 255);
+
+			// loop through the result set
+			while (result.next()) {
+				Row<PDPage> row1 = table.createRow(10f);
+				cell = row1.createCell(7, result.getString("itemnumber"));
+				cell.setFillColor(itemcolor);
+				cell = row1.createCell(68, result.getString("itemname"));
+				cell.setFillColor(itemcolor);
+				cell = row1.createCell(10, String.valueOf(result.getInt("quantity")));
+				cell.setFillColor(itemcolor);
+				cell = row1.createCell(15, "RM " + priceformatter.format(result.getDouble("totalitems")));
+				cell.setFillColor(itemcolor);
+			}
+			conn.close();
+		} catch (SQLException e) {
+			System.out.println(e.getMessage());
+		}
 		table.draw();
 
 		JFrame saveframe = new JFrame();
@@ -179,33 +307,33 @@ public class ReceiptPDF {
 			 */
 			private static final long serialVersionUID = -894233845899825024L;
 
-			public void approveSelection(){
+			public void approveSelection() {
 
-			    File file = getSelectedFile();
-			            String filestring = file.toString();
+				File file = getSelectedFile();
+				String filestring = file.toString();
 
-			            String[] left_side_of_dot = filestring.split("\\.");
+				String[] left_side_of_dot = filestring.split("\\.");
 
-			            file = new File(left_side_of_dot[0] + ".pdf");
+				file = new File(left_side_of_dot[0] + ".pdf");
 
-
-			    if(file.exists() && getDialogType() == SAVE_DIALOG){
-			        int result = JOptionPane.showConfirmDialog(saveframe,"The file exists, overwrite?","Existing file",JOptionPane.YES_NO_CANCEL_OPTION);
-			        switch(result){
-			            case JOptionPane.YES_OPTION:
-			                super.approveSelection();
-			                return;
-			            case JOptionPane.NO_OPTION:
-			                return;
-			            case JOptionPane.CLOSED_OPTION:
-			                return;
-			            case JOptionPane.CANCEL_OPTION:
-			                cancelSelection();
-			                return;
-			        }
-			    }
-			    super.approveSelection();
-			 }
+				if (file.exists() && getDialogType() == SAVE_DIALOG) {
+					int result = JOptionPane.showConfirmDialog(saveframe, "The file exists, overwrite?",
+							"Existing file", JOptionPane.YES_NO_CANCEL_OPTION);
+					switch (result) {
+					case JOptionPane.YES_OPTION:
+						super.approveSelection();
+						return;
+					case JOptionPane.NO_OPTION:
+						return;
+					case JOptionPane.CLOSED_OPTION:
+						return;
+					case JOptionPane.CANCEL_OPTION:
+						cancelSelection();
+						return;
+					}
+				}
+				super.approveSelection();
+			}
 		};
 		fileChooser.setDialogTitle("Save Receipt PDF file");
 		fileChooser.setSelectedFile(new File("Receipt ID " + orderid));

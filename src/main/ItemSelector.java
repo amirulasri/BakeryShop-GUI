@@ -25,7 +25,6 @@ import java.sql.Statement;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Predicate;
 
 import javax.swing.table.DefaultTableModel;
 import javax.swing.LayoutStyle.ComponentPlacement;
@@ -57,6 +56,7 @@ public class ItemSelector extends JFrame {
 	 * Create the frame.
 	 */
 
+	@SuppressWarnings("unchecked")
 	public ItemSelector(final int orderid) throws IOException {
 		this.orderid = orderid;
 		
@@ -102,6 +102,7 @@ public class ItemSelector extends JFrame {
 		String[] itemlistnameArray = itemlistname.toArray(new String[] {});
 		Double[] priceperitemArray = priceperitem.toArray(new Double[] {});
 		
+		@SuppressWarnings("rawtypes")
 		JComboBox itemcombobox = new JComboBox(itemlistArray);
 
 		JSpinner quantity = new JSpinner();
