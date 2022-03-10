@@ -220,6 +220,7 @@ public class Payment extends JFrame {
 			            NewOrder.setpaymentframenull();
 			            NewOrder.listpricecust = 0;
 						NewOrder.finalprice = 0;
+						NewOrder.regularcustomer = false;
 					} catch (SQLException e1) {
 						System.out.println("SQL ERROR: " + e1.getMessage());
 					} catch (Exception e1) {
