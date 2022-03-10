@@ -1,5 +1,4 @@
 package main;
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -99,15 +98,7 @@ public class Main {
 
 	public static void main(String[] args) {
 		
-		try {
-			new ReceiptPDF(5);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		System.exit(0);
-		
-		/*createTable();
+		createTable();
 		Welcomeframe welcomeframe;
 		Cashierframe cashier;
 		try {
@@ -131,6 +122,6 @@ public class Main {
 
 		} catch (Exception e) {
 			e.printStackTrace();
-		}*/
+		}
 	}
 }

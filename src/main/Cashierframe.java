@@ -55,12 +55,11 @@ public class Cashierframe extends JFrame {
 
 	static DecimalFormat priceformatter = new DecimalFormat("#0.00");
 	
-	public static void savereceipt() {
+	public static void savereceipt(int orderid) {
 		try {
-			new ReceiptPDF(5);
+			new ReceiptPDF(orderid);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("ERROR PDF PRINT: " + e.getMessage());
 		}
 	}
 
@@ -161,6 +160,27 @@ public class Cashierframe extends JFrame {
 		menuBar.add(mnNewMenu_2);
 		
 		JMenuItem mntmNewMenuItem_4 = new JMenuItem("Delete All Order");
+		mntmNewMenuItem_4.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				//SQL FOR DELETING ORDER
+				String sqlonfk = "PRAGMA foreign_keys=on;";
+				String sqldeleteorder = "DELETE FROM orders";
+
+		        try (Connection conn = Main.connect();
+		        		Statement stmt = conn.createStatement()) {
+
+		        	stmt.execute(sqlonfk);
+		        	stmt.execute(sqldeleteorder);
+		        	showdata();
+		            conn.close();
+
+		        } catch (SQLException e1) {
+		            System.out.println(e1.getMessage());
+		        }
+				System.out.println("OK");
+			}
+		});
 		mntmNewMenuItem_4.setIcon(new ImageIcon(Cashierframe.class.getResource("/main/logo/multiply.png")));
 		mnNewMenu_2.add(mntmNewMenuItem_4);
 
@@ -267,7 +287,35 @@ public class Cashierframe extends JFrame {
 		savetopdf.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-				savereceipt();
+				// GET RECEIPT FROM OLDER ORDER
+				String orderid = JOptionPane.showInputDialog(null, "Enter existence Order ID", "Save Receipt As PDF",
+						JOptionPane.INFORMATION_MESSAGE);
+				int intorderid = 0;
+				boolean processstate = false;
+				
+				try {
+					intorderid = Integer.parseInt(orderid);
+					processstate = true;
+				}catch(Exception e1) {
+					System.out.println("Error CONVERT TO INT: " + e1.getMessage());
+					JOptionPane.showMessageDialog(null, "Order IDs can only be entered in numbers", "Invalid Order ID", JOptionPane.ERROR_MESSAGE);
+					processstate = false;
+				}
+				
+				if (!(orderid == null) && processstate == true) {
+					if (!orderid.isEmpty()) {
+						boolean duplicateorderid = containsOrderId(intorderid);
+						if (duplicateorderid) {
+							savereceipt(intorderid);
+						} else {
+							JOptionPane.showMessageDialog(null, "The Order ID you entered not found. Refer Order table",
+									"Order ID not found", JOptionPane.ERROR_MESSAGE);
+						}
+					} else {
+						JOptionPane.showMessageDialog(null, "Please enter Order ID", "Empty Order ID field",
+								JOptionPane.ERROR_MESSAGE);
+					}
+				}
 			}
 		});
 		savetopdf.setIcon(new ImageIcon(Cashierframe.class.getResource("/main/logo/document.png")));

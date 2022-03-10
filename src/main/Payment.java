@@ -217,6 +217,7 @@ public class Payment extends JFrame {
 						Cashierframe.getorderframe().dispose();
 						Cashierframe.showdata();
 						dispose();
+			            NewOrder.setpaymentframenull();
 					} catch (SQLException e1) {
 						System.out.println("SQL ERROR: " + e1.getMessage());
 					} catch (Exception e1) {
