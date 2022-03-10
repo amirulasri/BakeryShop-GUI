@@ -193,6 +193,7 @@ public class ReceiptPDF {
 		contentStream.beginText();
 		contentStream.setFont(PDType1Font.HELVETICA, 11);
 		contentStream.newLineAtOffset(82, 655);
+		contentStream.setLeading(15.5f);
 		for (int i = 0; i < addresslines.length; i++) {
 			// ADD ADDRESS GET FROM SQL
 			contentStream.showText(addresslines[i]);

@@ -218,6 +218,8 @@ public class Payment extends JFrame {
 						Cashierframe.showdata();
 						dispose();
 			            NewOrder.setpaymentframenull();
+			            NewOrder.listpricecust = 0;
+						NewOrder.finalprice = 0;
 					} catch (SQLException e1) {
 						System.out.println("SQL ERROR: " + e1.getMessage());
 					} catch (Exception e1) {

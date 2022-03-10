@@ -46,11 +46,13 @@ public class NewOrder extends JFrame {
 	private JPanel contentPane;
 	public JLabel lblNewLabel_2;
 
-	static private double listpricecust = 0;
-	static private double finalprice = 0;
+	static double listpricecust = 0;
+	static double finalprice = 0;
 	static private JLabel titletotalprice;
 	static private JLabel totalpricedisplay;
 	static Payment paymentframe = null;
+	
+	static boolean regularcustomer = false;
 
 	/**
 	 * Create the frame.
@@ -58,8 +60,11 @@ public class NewOrder extends JFrame {
 	 * @throws IOException
 	 */
 	static public void calctotalprice(double totalprice) {
-		totalpricedisplay.setText("RM " + priceformatter.format(totalprice));
 		listpricecust = totalprice;
+		if(regularcustomer == true) {
+			totalprice = totalprice - (totalprice*Main.getdiscountvalue());
+		}
+		totalpricedisplay.setText("RM " + priceformatter.format(totalprice));
 		finalprice = totalprice;
 	}
 	
@@ -126,6 +131,9 @@ public class NewOrder extends JFrame {
 						paymentframe = null;
 					}
 					dispose();
+					listpricecust = 0;
+					finalprice = 0;
+					Cashierframe.setorderframenull();
 					System.out.println("SQL orders DELETED");
 				}
 			}
@@ -210,12 +218,14 @@ public class NewOrder extends JFrame {
 		JTextArea addressfield = new JTextArea();
 		addressfield.setFont(new Font("Tahoma", Font.PLAIN, 11));
 
+		//CHECK IF CUSTOMER ID REGULAR
 		JCheckBox regularcustomercheck = new JCheckBox("Yes");
 		regularcustomercheck.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
-				boolean regularcustomer = false;
 				if (regularcustomercheck.isSelected()) {
 					regularcustomer = true;
+				} else {
+					regularcustomer = false;
 				}
 
 				if (regularcustomer == true) {
