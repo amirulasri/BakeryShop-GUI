@@ -133,6 +133,7 @@ public class NewOrder extends JFrame {
 					dispose();
 					listpricecust = 0;
 					finalprice = 0;
+					regularcustomer = false;
 					Cashierframe.setorderframenull();
 					System.out.println("SQL orders DELETED");
 				}

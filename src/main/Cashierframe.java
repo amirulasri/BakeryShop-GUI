@@ -440,7 +440,6 @@ public class Cashierframe extends JFrame {
 									} catch (Exception e1) {
 										System.out.println("Error SQL: "+e1.getMessage());
 									}
-									showdata();
 									orderframe.setVisible(true);
 									btnNewButton.setEnabled(false);
 								}
@@ -472,7 +471,6 @@ public class Cashierframe extends JFrame {
 							} catch (Exception e1) {
 								System.out.println("Error SQL: "+e1.getMessage());
 							}
-							showdata();
 							orderframe.setVisible(true);
 							btnNewButton.setEnabled(false);
 						}
