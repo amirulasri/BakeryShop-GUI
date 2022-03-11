@@ -37,6 +37,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import javax.swing.SwingConstants;
 
 public class Cashierframe extends JFrame {
 
@@ -52,8 +53,31 @@ public class Cashierframe extends JFrame {
 	static DefaultTableModel listordermodel;
 	private static JButton btnNewButton;
 	static NewOrder orderframe = null;
+	
+	static JLabel lastiddisplay;
 
 	static DecimalFormat priceformatter = new DecimalFormat("#0.00");
+	
+	public static void showlastorder() {
+		String lastidquery = "SELECT MAX(id) AS lastid FROM orders";
+
+		try (Connection conn = Main.connect();
+				PreparedStatement pstmt2 = conn.prepareStatement(lastidquery)) {
+			
+			// GET LAST ID
+			ResultSet result1 = pstmt2.executeQuery();
+			String maxId = result1.getString("lastid");
+			if(!maxId.equals(null) || !maxId.equals("")) {				
+				lastiddisplay.setText("Last Order ID: " + maxId);
+			}
+			conn.close();
+
+		} catch (SQLException e1) {
+			System.out.println("Error SQL: "+e1.getMessage());
+		} catch (Exception e1) {
+			System.out.println("Error SQL: "+e1.getMessage());
+		}
+	}
 	
 	public static void savereceipt(int orderid) {
 		try {
@@ -155,7 +179,7 @@ public class Cashierframe extends JFrame {
 			java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		}
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		setBounds(100, 100, 993, 511);
+		setBounds(100, 100, 993, 552);
 
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);
@@ -387,9 +411,9 @@ public class Cashierframe extends JFrame {
 		lblNewLabel.setFont(new Font("Comic Sans MS", Font.PLAIN, 24));
 
 		btnNewButton = new JButton("New Order");
-		btnNewButton.setIcon(new ImageIcon(Cashierframe.class.getResource("/main/logo/add.png")));
+		btnNewButton.setIcon(new ImageIcon(Cashierframe.class.getResource("/main/logo/plus.png")));
 		btnNewButton.setFocusable(false);
-		btnNewButton.setBackground(new Color(218, 98, 125));
+		btnNewButton.setBackground(new Color(0, 153, 255));
 		btnNewButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -480,22 +504,42 @@ public class Cashierframe extends JFrame {
 		});
 		btnNewButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		
+		lastiddisplay = new JLabel("Last Order ID: No Order");
+		lastiddisplay.setForeground(Color.WHITE);
+		lastiddisplay.setHorizontalAlignment(SwingConstants.RIGHT);
+		lastiddisplay.setFont(new Font("Comic Sans MS", Font.PLAIN, 17));
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
-		gl_contentPane
-				.setHorizontalGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-						.addGroup(Alignment.LEADING,
-								gl_contentPane.createSequentialGroup().addContainerGap().addComponent(lblNewLabel)
-										.addPreferredGap(ComponentPlacement.RELATED, 646, Short.MAX_VALUE)
-										.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 186,
-												GroupLayout.PREFERRED_SIZE)
-										.addContainerGap())
-						.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 1000, Short.MAX_VALUE));
-		gl_contentPane.setVerticalGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_contentPane.createSequentialGroup().addContainerGap()
-						.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING).addComponent(lblNewLabel)
-								.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 51, GroupLayout.PREFERRED_SIZE))
-						.addPreferredGap(ComponentPlacement.RELATED)
-						.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 391, Short.MAX_VALUE).addGap(0)));
+		gl_contentPane.setHorizontalGroup(
+			gl_contentPane.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(lblNewLabel)
+					.addPreferredGap(ComponentPlacement.RELATED, 486, Short.MAX_VALUE)
+					.addComponent(lastiddisplay, GroupLayout.PREFERRED_SIZE, 323, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap())
+				.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 977, Short.MAX_VALUE)
+				.addGroup(Alignment.TRAILING, gl_contentPane.createSequentialGroup()
+					.addContainerGap(781, Short.MAX_VALUE)
+					.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 186, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap())
+		);
+		gl_contentPane.setVerticalGroup(
+			gl_contentPane.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addContainerGap()
+							.addComponent(lblNewLabel))
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addGap(26)
+							.addComponent(lastiddisplay)))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 307, Short.MAX_VALUE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 51, GroupLayout.PREFERRED_SIZE)
+					.addGap(8))
+		);
 
 		orderlist = new JTable();
 		scrollPane.setViewportView(orderlist);
@@ -516,5 +560,6 @@ public class Cashierframe extends JFrame {
 		setLocationRelativeTo(null);
 		setIconImage(new ImageIcon(this.getClass().getResource("/main/logo/logo.png")).getImage());
 		showdata();
+		showlastorder();
 	}
 }
