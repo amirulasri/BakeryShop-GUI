@@ -11,7 +11,9 @@ import javax.swing.JOptionPane;
 import java.awt.Font;
 import java.awt.Color;
 import java.awt.Toolkit;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -23,6 +25,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
@@ -59,6 +64,19 @@ public class NewOrder extends JFrame {
 	 * 
 	 * @throws IOException
 	 */
+	
+	//SAVE FOR AUTORECOVERY IF POWER LOST ETC
+	private void saveautorecovery() {
+		try {
+			FileWriter recoveryfile = new FileWriter("autorecover/autorecovery.txt");
+			PrintWriter recoverywriter = new PrintWriter(recoveryfile);
+			recoverywriter.print("ok");
+			recoverywriter.close();
+		}catch(Exception e) {
+			
+		}
+	}
+	
 	static public void calctotalprice(double totalprice) {
 		listpricecust = totalprice;
 		if(regularcustomer == true) {
@@ -212,6 +230,20 @@ public class NewOrder extends JFrame {
 
 		JTextField custnamefield = new JTextField();
 		custnamefield.setColumns(10);
+		custnamefield.getDocument().addDocumentListener((DocumentListener) new DocumentListener() {
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				saveautorecovery();
+			}
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				saveautorecovery();
+			}
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				saveautorecovery();
+			}
+			});
 
 		JTextField phonenofield = new JTextField();
 		phonenofield.setColumns(10);

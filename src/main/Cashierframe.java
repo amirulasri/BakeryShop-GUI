@@ -216,6 +216,17 @@ public class Cashierframe extends JFrame {
 				}
 			}
 		});
+		
+		JMenuItem mntmNewMenuItem_5 = new JMenuItem("Refresh Data");
+		mntmNewMenuItem_5.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				showdata();
+				showlastorder();
+			}
+		});
+		mntmNewMenuItem_5.setIcon(new ImageIcon(Cashierframe.class.getResource("/main/logo/refresh.png")));
+		mnNewMenu_2.add(mntmNewMenuItem_5);
 		mntmNewMenuItem_4.setIcon(new ImageIcon(Cashierframe.class.getResource("/main/logo/multiply.png")));
 		mnNewMenu_2.add(mntmNewMenuItem_4);
 

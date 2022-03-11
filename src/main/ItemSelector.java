@@ -34,19 +34,20 @@ import javax.swing.JButton;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.JTextField;
+import javax.swing.JMenuBar;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 
 public class ItemSelector extends JFrame {
 	
-	DecimalFormat priceformatter = new DecimalFormat("#0.00");
-
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1088155671171769293L;
+
+	DecimalFormat priceformatter = new DecimalFormat("#0.00");
 	private JPanel contentPane;
 	private JTable table;
-	private JTextField deletenumberfield;
 	DefaultTableModel listitemmodel;
 	private int orderid;
 	JLabel totalpricedisplay;
@@ -63,7 +64,66 @@ public class ItemSelector extends JFrame {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(ItemSelector.class.getResource("/main/logo/logo.png")));
 		setTitle(Main.getappname());
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 783, 539);
+		setBounds(100, 100, 783, 587);
+		
+		JMenuBar menuBar = new JMenuBar();
+		setJMenuBar(menuBar);
+		
+		JMenu mnNewMenu = new JMenu("Item");
+		menuBar.add(mnNewMenu);
+		
+		JMenuItem mntmNewMenuItem = new JMenuItem("Delete item");
+		mntmNewMenuItem.setIcon(new ImageIcon(ItemSelector.class.getResource("/main/logo/multiply.png")));
+		mntmNewMenuItem.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				//DELETE ITEMS HERE
+				try {	        
+					String snumberitem = JOptionPane.showInputDialog(null, "Enter existence Item Number", "Delete Item Number",
+							JOptionPane.INFORMATION_MESSAGE);
+					int deletenumber = 0;
+					boolean processstate = false;
+					
+					if (!(snumberitem == null)) {
+						if (!snumberitem.isEmpty()) {
+							try {
+								deletenumber = Integer.parseInt(snumberitem);
+								processstate = true;
+							}catch(Exception e1) {
+								System.out.println("Error CONVERT TO INT: " + e1.getMessage());
+								JOptionPane.showMessageDialog(null, "Item number can only be entered in numbers", "Invalid Item Number", JOptionPane.ERROR_MESSAGE);
+								processstate = false;
+							}
+							if(processstate == true) {
+								String sqldeleteitem = "DELETE FROM item WHERE itemnumber = ? AND orderid = ?";
+
+						        try (Connection conn = Main.connect();
+						                PreparedStatement pstmt = conn.prepareStatement(sqldeleteitem)) {
+						            // set the corresponding parameter
+						            pstmt.setInt(1, deletenumber);
+						            pstmt.setInt(2, orderid);
+						            // execute the statement
+						            pstmt.executeUpdate();
+						            conn.close();
+
+						        } catch (SQLException e1) {
+						            System.out.println(e1.getMessage());
+						        }
+							}
+						} else {
+							JOptionPane.showMessageDialog(null, "Please enter Item Number", "Empty Item Number field",
+									JOptionPane.ERROR_MESSAGE);
+						}
+					}
+			        
+					calctotalprice();
+					showdata();
+				}catch (Exception e1) {
+					JOptionPane.showMessageDialog(null, "Enter a valid item number", "Invalid Item Number", JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		});
+		mnNewMenu.add(mntmNewMenuItem);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(255, 225, 168));
 		contentPane.setBorder(null);
@@ -104,6 +164,7 @@ public class ItemSelector extends JFrame {
 		
 		@SuppressWarnings("rawtypes")
 		JComboBox itemcombobox = new JComboBox(itemlistArray);
+		itemcombobox.setFont(new Font("SansSerif", Font.PLAIN, 17));
 
 		JSpinner quantity = new JSpinner();
 		quantity.setModel(new SpinnerNumberModel(1, 1, null, 1));
@@ -175,50 +236,13 @@ public class ItemSelector extends JFrame {
 			}
 		});
 		
-		deletenumberfield = new JTextField();
-		deletenumberfield.setColumns(10);
-		
-		JLabel lblNewLabel_3 = new JLabel("Item Number");
-		lblNewLabel_3.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		
-		JButton btnNewButton_2 = new JButton("Delete");
-		btnNewButton_2.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				//DELETE ITEMS HERE
-				int deletenumber;
-				try {
-					deletenumber = Integer.parseInt(deletenumberfield.getText());
-					String sqldeleteitem = "DELETE FROM item WHERE itemnumber = ? AND orderid = ?";
-
-			        try (Connection conn = Main.connect();
-			                PreparedStatement pstmt = conn.prepareStatement(sqldeleteitem)) {
-			            // set the corresponding parameter
-			            pstmt.setInt(1, deletenumber);
-			            pstmt.setInt(2, orderid);
-			            // execute the statement
-			            pstmt.executeUpdate();
-			            conn.close();
-
-			        } catch (SQLException e1) {
-			            System.out.println(e1.getMessage());
-			        }
-			        
-					calctotalprice();
-					showdata();
-				}catch (Exception e1) {
-					JOptionPane.showMessageDialog(null, "Enter a valid item number", "Invalid Item Number", JOptionPane.ERROR_MESSAGE);
-				}
-			}
-		});
-		
-		totalpricedisplay = new JLabel("Total Price: RM 0");
+		totalpricedisplay = new JLabel("Total Price: RM 0.00");
 		totalpricedisplay.setFont(new Font("Tahoma", Font.BOLD, 15));
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
-			gl_contentPane.createParallelGroup(Alignment.TRAILING)
-				.addComponent(panel, GroupLayout.DEFAULT_SIZE, 750, Short.MAX_VALUE)
-				.addGroup(Alignment.LEADING, gl_contentPane.createSequentialGroup()
+			gl_contentPane.createParallelGroup(Alignment.LEADING)
+				.addComponent(panel, GroupLayout.DEFAULT_SIZE, 767, Short.MAX_VALUE)
+				.addGroup(gl_contentPane.createSequentialGroup()
 					.addContainerGap()
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 						.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 55, GroupLayout.PREFERRED_SIZE)
@@ -226,24 +250,17 @@ public class ItemSelector extends JFrame {
 					.addGap(8)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING, false)
 						.addComponent(quantity)
-						.addComponent(itemcombobox, 0, 196, Short.MAX_VALUE))
-					.addGap(18)
-					.addComponent(btnNewButton)
-					.addGap(82)
-					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_contentPane.createSequentialGroup()
-							.addComponent(lblNewLabel_3)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(deletenumberfield, GroupLayout.PREFERRED_SIZE, 103, GroupLayout.PREFERRED_SIZE)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(btnNewButton_2))
-						.addComponent(totalpricedisplay))
-					.addGap(90))
-				.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 750, Short.MAX_VALUE)
+						.addComponent(itemcombobox, 0, 251, Short.MAX_VALUE))
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 103, GroupLayout.PREFERRED_SIZE)
+					.addGap(39)
+					.addComponent(totalpricedisplay)
+					.addGap(138))
 				.addGroup(gl_contentPane.createSequentialGroup()
-					.addContainerGap(629, Short.MAX_VALUE)
+					.addContainerGap(646, Short.MAX_VALUE)
 					.addComponent(btnNewButton_1, GroupLayout.PREFERRED_SIZE, 111, GroupLayout.PREFERRED_SIZE)
 					.addContainerGap())
+				.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 767, Short.MAX_VALUE)
 		);
 		gl_contentPane.setVerticalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
@@ -253,22 +270,19 @@ public class ItemSelector extends JFrame {
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-								.addComponent(itemcombobox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(totalpricedisplay)
+								.addComponent(btnNewButton, GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE))
+							.addGap(23))
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 								.addComponent(lblNewLabel)
-								.addComponent(btnNewButton))
+								.addComponent(itemcombobox))
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
 								.addComponent(quantity, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addComponent(lblNewLabel_1)))
-						.addGroup(gl_contentPane.createSequentialGroup()
-							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-								.addComponent(lblNewLabel_3)
-								.addComponent(deletenumberfield, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addComponent(btnNewButton_2))
-							.addPreferredGap(ComponentPlacement.UNRELATED)
-							.addComponent(totalpricedisplay)))
-					.addGap(27)
-					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 301, Short.MAX_VALUE)
+								.addComponent(lblNewLabel_1))))
+					.addGap(21)
+					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 329, Short.MAX_VALUE)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(btnNewButton_1)
 					.addGap(6))
