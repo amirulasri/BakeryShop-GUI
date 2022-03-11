@@ -57,6 +57,7 @@ public class NewOrder extends JFrame {
 	static private JLabel totalpricedisplay;
 	static Payment paymentframe = null;
 	
+	static String gender = "";
 	static boolean regularcustomer = false;
 
 	/**
@@ -66,14 +67,14 @@ public class NewOrder extends JFrame {
 	 */
 	
 	//SAVE FOR AUTORECOVERY IF POWER LOST ETC
-	private void saveautorecovery() {
+	private void saveautorecovery(String customername, String phoneno, String address, String gender, boolean regularcustomer) {
 		try {
 			FileWriter recoveryfile = new FileWriter("autorecover/autorecovery.txt");
 			PrintWriter recoverywriter = new PrintWriter(recoveryfile);
-			recoverywriter.print("ok");
+			recoverywriter.print(customername +";"+ phoneno +";"+ address.replace("\n", "\\n") +";"+ gender +";"+ regularcustomer);
 			recoverywriter.close();
 		}catch(Exception e) {
-			
+			System.out.println("ERROR SAVE RECOVERY: " + e);
 		}
 	}
 	
@@ -152,6 +153,7 @@ public class NewOrder extends JFrame {
 					listpricecust = 0;
 					finalprice = 0;
 					regularcustomer = false;
+					gender = "";
 					Cashierframe.setorderframenull();
 					System.out.println("SQL orders DELETED");
 				}
@@ -230,20 +232,6 @@ public class NewOrder extends JFrame {
 
 		JTextField custnamefield = new JTextField();
 		custnamefield.setColumns(10);
-		custnamefield.getDocument().addDocumentListener((DocumentListener) new DocumentListener() {
-			@Override
-			public void insertUpdate(DocumentEvent e) {
-				saveautorecovery();
-			}
-			@Override
-			public void removeUpdate(DocumentEvent e) {
-				saveautorecovery();
-			}
-			@Override
-			public void changedUpdate(DocumentEvent e) {
-				saveautorecovery();
-			}
-			});
 
 		JTextField phonenofield = new JTextField();
 		phonenofield.setColumns(10);
@@ -294,7 +282,6 @@ public class NewOrder extends JFrame {
 				String customername = custnamefield.getText();
 				String phoneno = phonenofield.getText();
 				String address = addressfield.getText();
-				String gender = "";
 				boolean regularcustomer = false;
 				if (regularcustomercheck.isSelected()) {
 					regularcustomer = true;
@@ -509,5 +496,20 @@ public class NewOrder extends JFrame {
 				.createSequentialGroup().addGap(21).addComponent(lblNewLabel_2).addContainerGap(19, Short.MAX_VALUE)));
 		panel.setLayout(gl_panel);
 		contentPane.setLayout(gl_contentPane);
+		
+		custnamefield.getDocument().addDocumentListener((DocumentListener) new DocumentListener() {
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				saveautorecovery(custnamefield.getText(), phonenofield.getText(), addressfield.getText(), gender, regularcustomer);
+			}
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				saveautorecovery(custnamefield.getText(), phonenofield.getText(), addressfield.getText(), gender, regularcustomer);
+			}
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				saveautorecovery(custnamefield.getText(), phonenofield.getText(), addressfield.getText(), gender, regularcustomer);
+			}
+			});
 	}
 }

@@ -221,6 +221,7 @@ public class Payment extends JFrame {
 			            NewOrder.listpricecust = 0;
 						NewOrder.finalprice = 0;
 						NewOrder.regularcustomer = false;
+						NewOrder.gender = "";
 						Cashierframe.showlastorder();
 					} catch (SQLException e1) {
 						System.out.println("SQL ERROR: " + e1.getMessage());
