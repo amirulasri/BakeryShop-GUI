@@ -11,6 +11,7 @@ import javax.swing.JOptionPane;
 import java.awt.Font;
 import java.awt.Color;
 import java.awt.Toolkit;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -156,6 +157,16 @@ public class NewOrder extends JFrame {
 					gender = "";
 					Cashierframe.setorderframenull();
 					System.out.println("SQL orders DELETED");
+					
+					//DELETE RECOVERY FILE
+					try {							
+						File recoveryfile = new File("autorecover/autorecovery.txt");
+						if(recoveryfile.exists()) {
+							recoveryfile.delete();
+						}
+					}catch(Exception e1) {
+						System.out.println("Error: " + e);
+					}
 				}
 			}
 		});
@@ -260,6 +271,8 @@ public class NewOrder extends JFrame {
 					totalpricedisplay.setText("RM " + priceformatter.format(listpricecust));
 					finalprice = listpricecust;
 				}
+				
+				saveautorecovery(custnamefield.getText(), phonenofield.getText(), addressfield.getText(), gender, regularcustomer);
 			}
 		});
 
@@ -267,13 +280,38 @@ public class NewOrder extends JFrame {
 
 		JRadioButton malevalueradio = new JRadioButton("Male");
 		JRadioButton femalevalueradio = new JRadioButton("Female");
+		
 		malevalueradio.setActionCommand("Male");
 		femalevalueradio.setActionCommand("Female");
 
 		ButtonGroup genderselector = new ButtonGroup();
 		genderselector.add(malevalueradio);
 		genderselector.add(femalevalueradio);
+		
+		malevalueradio.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				// ERROR HANDLING FOR RADIO GET ACTION COMMAND
+				try {
+					gender = genderselector.getSelection().getActionCommand();
+				} catch (Exception e1) {
+					System.out.println(e1.getMessage());
+				}
+				saveautorecovery(custnamefield.getText(), phonenofield.getText(), addressfield.getText(), gender, regularcustomer);
+			}
+		});
 
+		femalevalueradio.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				// ERROR HANDLING FOR RADIO GET ACTION COMMAND
+				try {
+					gender = genderselector.getSelection().getActionCommand();
+				} catch (Exception e1) {
+					System.out.println(e1.getMessage());
+				}
+				saveautorecovery(custnamefield.getText(), phonenofield.getText(), addressfield.getText(), gender, regularcustomer);
+			}
+		});
+		
 		JButton btnNewButton = new JButton("Pay");
 		btnNewButton.setFont(new Font("SansSerif", Font.PLAIN, 17));
 		btnNewButton.addMouseListener(new MouseAdapter() {
@@ -497,7 +535,38 @@ public class NewOrder extends JFrame {
 		panel.setLayout(gl_panel);
 		contentPane.setLayout(gl_contentPane);
 		
+		//AUTO SAVE RECOVERY		
 		custnamefield.getDocument().addDocumentListener((DocumentListener) new DocumentListener() {
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				saveautorecovery(custnamefield.getText(), phonenofield.getText(), addressfield.getText(), gender, regularcustomer);
+			}
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				saveautorecovery(custnamefield.getText(), phonenofield.getText(), addressfield.getText(), gender, regularcustomer);
+			}
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				saveautorecovery(custnamefield.getText(), phonenofield.getText(), addressfield.getText(), gender, regularcustomer);
+			}
+			});
+		
+		phonenofield.getDocument().addDocumentListener((DocumentListener) new DocumentListener() {
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				saveautorecovery(custnamefield.getText(), phonenofield.getText(), addressfield.getText(), gender, regularcustomer);
+			}
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				saveautorecovery(custnamefield.getText(), phonenofield.getText(), addressfield.getText(), gender, regularcustomer);
+			}
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				saveautorecovery(custnamefield.getText(), phonenofield.getText(), addressfield.getText(), gender, regularcustomer);
+			}
+			});
+		
+		addressfield.getDocument().addDocumentListener((DocumentListener) new DocumentListener() {
 			@Override
 			public void insertUpdate(DocumentEvent e) {
 				saveautorecovery(custnamefield.getText(), phonenofield.getText(), addressfield.getText(), gender, regularcustomer);

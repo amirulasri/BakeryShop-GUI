@@ -58,6 +58,76 @@ public class Cashierframe extends JFrame {
 
 	static DecimalFormat priceformatter = new DecimalFormat("#0.00");
 	
+	public static void checkunpaidrecover() {
+		String lastidquery = "SELECT MAX(id) AS lastid FROM orders";
+
+		try (Connection conn = Main.connect();
+				PreparedStatement pstmt2 = conn.prepareStatement(lastidquery)) {
+			
+			// GET LAST ID
+			ResultSet result1 = pstmt2.executeQuery();
+			String maxId = result1.getString("lastid");
+			conn.close();
+			
+			if(maxId!=null) {
+				String getunpaidorders = "SELECT statuspaid FROM orders WHERE id = '"+Integer.parseInt(maxId)+"'";
+				try (Connection conn1 = Main.connect();
+						PreparedStatement pstmt21 = conn1.prepareStatement(getunpaidorders)) {
+					
+					// GET LAST ID
+					ResultSet result2 = pstmt21.executeQuery();
+					String paidorder = result2.getString("statuspaid");
+					conn1.close();
+					if(paidorder.equalsIgnoreCase("unpaid")) {
+						System.out.println("RECOVERY NEEDED");
+						String selectorbutton[] = { "Yes", "No" };
+						int PromptResult = JOptionPane.showOptionDialog(null,
+								"It looks like you have incomplete order. Do you want to recover it?", "Bakery Shop - Incomplete Order ID: " + maxId,
+								JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, selectorbutton,
+								selectorbutton[1]);
+						
+						if (PromptResult == JOptionPane.YES_OPTION) {
+							System.out.println("IN RECOVERY");
+							
+						}else {
+							//SQL FOR DELETING ORDER
+							String sqlonfk = "PRAGMA foreign_keys=on;";
+							String sqldeleteorder = "DELETE FROM orders WHERE id = ?";
+							
+							try (Connection conn3 = Main.connect();
+									Statement stmt3 = conn3.createStatement();
+									PreparedStatement pstmt3 = conn3.prepareStatement(sqldeleteorder)) {
+								
+								stmt3.execute(sqlonfk);
+								// set the corresponding parameter
+								pstmt3.setInt(1, Integer.parseInt(maxId));
+								// execute the statement
+								pstmt3.executeUpdate();
+								conn3.close();
+								
+							} catch (SQLException e1) {
+								System.out.println(e1.getMessage());
+							}
+							showdata();
+							showlastorder();
+						}
+					}
+					
+
+				} catch (SQLException e1) {
+					System.out.println("Error SQL CASHIERFRAME: "+e1.getMessage());
+				} catch (Exception e1) {
+					System.out.println("Error: "+e1.getMessage());
+				}
+			}
+
+		} catch (SQLException e1) {
+			System.out.println("Error SQL CASHIERFRAME: "+e1.getMessage());
+		} catch (Exception e1) {
+			System.out.println("Error: "+e1.getMessage());
+		}
+	}
+	
 	public static void showlastorder() {
 		String lastidquery = "SELECT MAX(id) AS lastid FROM orders";
 
@@ -67,7 +137,7 @@ public class Cashierframe extends JFrame {
 			// GET LAST ID
 			ResultSet result1 = pstmt2.executeQuery();
 			String maxId = result1.getString("lastid");
-			if(!maxId.equals(null) || !maxId.equals("")) {				
+			if(maxId!=null) {				
 				lastiddisplay.setText("Last Order ID: " + maxId);
 			}
 			conn.close();
@@ -75,7 +145,7 @@ public class Cashierframe extends JFrame {
 		} catch (SQLException e1) {
 			System.out.println("Error SQL: "+e1.getMessage());
 		} catch (Exception e1) {
-			System.out.println("Error SQL: "+e1.getMessage());
+			System.out.println("Error: "+e1.getMessage());
 		}
 	}
 	
@@ -209,6 +279,8 @@ public class Cashierframe extends JFrame {
 						stmt.execute(sqldeleteorder);
 						showdata();
 						conn.close();
+						showlastorder();
+						JOptionPane.showMessageDialog(null, "All orders sucessfully DELETED", "Delete all orders", JOptionPane.INFORMATION_MESSAGE);
 						
 					} catch (SQLException e1) {
 						System.out.println(e1.getMessage());
@@ -322,6 +394,7 @@ public class Cashierframe extends JFrame {
 										System.out.println(e1.getMessage());
 									}
 									showdata();
+									showlastorder();
 								}
 							} else {
 								JOptionPane.showMessageDialog(null, "The Order ID you entered not found. Refer Order table",
@@ -416,10 +489,10 @@ public class Cashierframe extends JFrame {
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 
-		JLabel lblNewLabel = new JLabel("Orders");
+		JLabel lblNewLabel = new JLabel("Bakery Orders");
 		lblNewLabel.setIcon(new ImageIcon(Cashierframe.class.getResource("/main/logo/ordericon.png")));
 		lblNewLabel.setForeground(Color.WHITE);
-		lblNewLabel.setFont(new Font("Comic Sans MS", Font.PLAIN, 24));
+		lblNewLabel.setFont(new Font("Comic Sans MS", Font.PLAIN, 21));
 
 		btnNewButton = new JButton("New Order");
 		btnNewButton.setIcon(new ImageIcon(Cashierframe.class.getResource("/main/logo/plus.png")));
@@ -572,5 +645,6 @@ public class Cashierframe extends JFrame {
 		setIconImage(new ImageIcon(this.getClass().getResource("/main/logo/logo.png")).getImage());
 		showdata();
 		showlastorder();
+		checkunpaidrecover();
 	}
 }

@@ -64,7 +64,7 @@ public class ItemSelector extends JFrame {
 		setIconImage(Toolkit.getDefaultToolkit().getImage(ItemSelector.class.getResource("/main/logo/logo.png")));
 		setTitle(Main.getappname());
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 783, 587);
+		setBounds(100, 100, 891, 587);
 		
 		JMenuBar menuBar = new JMenuBar();
 		setJMenuBar(menuBar);

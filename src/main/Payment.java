@@ -18,6 +18,7 @@ import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -200,7 +201,7 @@ public class Payment extends JFrame {
 				//PAYMENT PROCESS DATA
 				if(process == true) {
 					String insertnewitem = "INSERT INTO payment(paymenttype,totalprice,custpay,orderid) VALUES (?,?,?,?)";
-					String updatepaidstatus = "UPDATE orders SET statuspaid = 'paid'";
+					String updatepaidstatus = "UPDATE orders SET statuspaid = 'paid' WHERE id = '"+orderid+"'";
 					try (Connection conn = Main.connect();
 							PreparedStatement pstmt = conn.prepareStatement(insertnewitem);
 							Statement stmt = conn.createStatement()) {
@@ -223,8 +224,18 @@ public class Payment extends JFrame {
 						NewOrder.regularcustomer = false;
 						NewOrder.gender = "";
 						Cashierframe.showlastorder();
+						
+						//DELETE RECOVERY FILE
+						try {							
+							File recoveryfile = new File("autorecover/autorecovery.txt");
+							if(recoveryfile.exists()) {
+								recoveryfile.delete();
+							}
+						}catch(Exception e1) {
+							System.out.println("Error: " + e);
+						}
 					} catch (SQLException e1) {
-						System.out.println("SQL ERROR: " + e1.getMessage());
+						System.out.println("SQL ERROR PAYMENT: " + e1.getMessage());
 					} catch (Exception e1) {
 						System.out.println("ERROR OPENING RECEIPT: "+e1.getMessage());
 					}	
