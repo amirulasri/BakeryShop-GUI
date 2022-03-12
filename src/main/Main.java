@@ -10,7 +10,7 @@ public class Main {
 	static private double discount = 0.10;
 	static private String appname = "Bakery Shop";
 	static private String contributor = "Amirul Asri, Harris Irfan, Sholihin Ilias, Aliff Redzuan, Mifzal Dini";
-	static String url = "jdbc:sqlite:db/bakeryorderdata.db";
+	static String url = "jdbc:sqlite::resource:db/bakeryorderdata.db";
 	private static Cashierframe cashier;
 	
 	static public String getappname() {
