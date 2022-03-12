@@ -54,6 +54,8 @@ public class Cashierframe extends JFrame {
 	private static JButton btnNewButton;
 	static NewOrder orderframe = null;
 	
+	static boolean recoverystateglobal = false;
+	
 	static JLabel lastiddisplay;
 
 	static DecimalFormat priceformatter = new DecimalFormat("#0.00");
@@ -88,7 +90,12 @@ public class Cashierframe extends JFrame {
 						
 						if (PromptResult == JOptionPane.YES_OPTION) {
 							System.out.println("IN RECOVERY");
-							
+							orderframe = new NewOrder(Integer.parseInt(maxId), true);
+							orderframe.setVisible(true);
+							btnNewButton.setEnabled(false);
+							orderframe.toFront();
+							orderframe.requestFocus();
+							recoverystateglobal = true;
 						}else {
 							//SQL FOR DELETING ORDER
 							String sqlonfk = "PRAGMA foreign_keys=on;";
@@ -218,6 +225,7 @@ public class Cashierframe extends JFrame {
 	}
 
 	public Cashierframe() throws IOException {
+		setAutoRequestFocus(false);
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
@@ -494,6 +502,7 @@ public class Cashierframe extends JFrame {
 		lblNewLabel.setForeground(Color.WHITE);
 		lblNewLabel.setFont(new Font("Comic Sans MS", Font.PLAIN, 21));
 
+		//CREATE NEW ORDER HERE
 		btnNewButton = new JButton("New Order");
 		btnNewButton.setIcon(new ImageIcon(Cashierframe.class.getResource("/main/logo/plus.png")));
 		btnNewButton.setFocusable(false);
@@ -538,7 +547,7 @@ public class Cashierframe extends JFrame {
 										pstmt.executeUpdate();
 										conn.close();
 										try {
-											orderframe = new NewOrder(intorderid);
+											orderframe = new NewOrder(intorderid, false);
 										} catch (IOException e1) {
 											System.out.println(e1.getMessage());
 										}
@@ -569,7 +578,7 @@ public class Cashierframe extends JFrame {
 								int intMaxnewId = Integer.parseInt(maxId);
 								conn.close();
 								try {
-									orderframe = new NewOrder(intMaxnewId);
+									orderframe = new NewOrder(intMaxnewId, false);
 								} catch (IOException e1) {
 									System.out.println(e1.getMessage());
 								}
@@ -646,5 +655,10 @@ public class Cashierframe extends JFrame {
 		showdata();
 		showlastorder();
 		checkunpaidrecover();
+		if(recoverystateglobal == true) {			
+			setState(JFrame.ICONIFIED);
+		}
+		
+		//MAKE CASHIERFRAME UNFOCUS WHEN NEW WINDOW OPENED
 	}
 }

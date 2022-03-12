@@ -58,7 +58,7 @@ public class ItemSelector extends JFrame {
 	 */
 
 	@SuppressWarnings("unchecked")
-	public ItemSelector(final int orderid) throws IOException {
+	public ItemSelector(final int orderid, boolean recoverystate) throws IOException {
 		this.orderid = orderid;
 		
 		setIconImage(Toolkit.getDefaultToolkit().getImage(ItemSelector.class.getResource("/main/logo/logo.png")));
@@ -329,6 +329,24 @@ public class ItemSelector extends JFrame {
 		contentPane.setLayout(gl_contentPane);
 		
 		showdata();
+		
+		if(recoverystate == true) {
+			double listpricecust = 0;
+			String querygetpriceitem = "SELECT totalitems FROM item WHERE orderid='"+orderid+"'";
+			try (Connection conn = Main.connect();
+					Statement stmt = conn.createStatement();
+					ResultSet result = stmt.executeQuery(querygetpriceitem)) {
+
+				// loop through the result set
+				while (result.next()) {
+					listpricecust = listpricecust + result.getDouble("totalitems");
+				}
+				conn.close();
+			} catch (SQLException e) {
+				System.out.println(e.getMessage());
+			}
+			totalpricedisplay.setText("Total Price: RM " + priceformatter.format(listpricecust));
+		}
 	}
 	
 	private void calctotalprice() {

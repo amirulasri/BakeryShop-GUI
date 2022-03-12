@@ -11,6 +11,7 @@ public class Main {
 	static private String appname = "Bakery Shop";
 	static private String contributor = "Amirul Asri, Harris Irfan, Sholihin Ilias, Aliff Redzuan, Mifzal Dini";
 	static String url = "jdbc:sqlite:db/bakeryorderdata.db";
+	private static Cashierframe cashier;
 	
 	static public String getappname() {
 		return appname;
@@ -22,6 +23,10 @@ public class Main {
 	
 	static public double getdiscountvalue() {
 		return discount;
+	}
+	
+	static public Cashierframe getcashierframe() {
+		return cashier;
 	}
 	
 	public static Connection connect() {
@@ -100,10 +105,8 @@ public class Main {
 		
 		createTable();
 		Welcomeframe welcomeframe;
-		Cashierframe cashier;
 		try {
 			welcomeframe = new Welcomeframe();
-			cashier = new Cashierframe();
 
 			welcomeframe.setVisible(true);
 			Thread.sleep(2000);
@@ -116,8 +119,10 @@ public class Main {
 				}
 				Thread.sleep(1000);
 				welcomeframe.setVisible(false);
+				cashier = new Cashierframe();
 				cashier.setVisible(true);
 			} catch (Exception e) {
+				e.printStackTrace();
 			}
 
 		} catch (Exception e) {

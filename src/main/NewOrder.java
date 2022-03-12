@@ -11,7 +11,9 @@ import javax.swing.JOptionPane;
 import java.awt.Font;
 import java.awt.Color;
 import java.awt.Toolkit;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -21,6 +23,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DecimalFormat;
+import java.util.StringTokenizer;
 
 import javax.swing.ImageIcon;
 import javax.swing.JTextField;
@@ -57,7 +60,7 @@ public class NewOrder extends JFrame {
 	static private JLabel titletotalprice;
 	static private JLabel totalpricedisplay;
 	static Payment paymentframe = null;
-	
+
 	static String gender = "";
 	static boolean regularcustomer = false;
 
@@ -66,32 +69,34 @@ public class NewOrder extends JFrame {
 	 * 
 	 * @throws IOException
 	 */
-	
-	//SAVE FOR AUTORECOVERY IF POWER LOST ETC
-	private void saveautorecovery(String customername, String phoneno, String address, String gender, boolean regularcustomer) {
+
+	// SAVE FOR AUTORECOVERY IF POWER LOST ETC
+	private void saveautorecovery(String customername, String phoneno, String address, String gender,
+			boolean regularcustomer) {
 		try {
 			FileWriter recoveryfile = new FileWriter("autorecover/autorecovery.txt");
 			PrintWriter recoverywriter = new PrintWriter(recoveryfile);
-			recoverywriter.print(customername +";"+ phoneno +";"+ address.replace("\n", "\\n") +";"+ gender +";"+ regularcustomer);
+			recoverywriter.print(customername + ";" + phoneno + ";" + address.replace("\n", "\\n") + ";" + gender + ";"
+					+ regularcustomer);
 			recoverywriter.close();
-		}catch(Exception e) {
-			System.out.println("ERROR SAVE RECOVERY: " + e);
+		} catch (Exception e) {
+			System.out.println("ERROR SAVE RECOVERY: " + e.getMessage());
 		}
 	}
-	
+
 	static public void calctotalprice(double totalprice) {
 		listpricecust = totalprice;
-		if(regularcustomer == true) {
-			totalprice = totalprice - (totalprice*Main.getdiscountvalue());
+		if (regularcustomer == true) {
+			totalprice = totalprice - (totalprice * Main.getdiscountvalue());
 		}
 		totalpricedisplay.setText("RM " + priceformatter.format(totalprice));
 		finalprice = totalprice;
 	}
-	
+
 	static public void setpaymentframenull() {
 		paymentframe = null;
 	}
-	
+
 	private boolean containsOrderId(final int orderid) {
 		boolean duplicatestate = false;
 		String checkid = "SELECT orderid FROM customer WHERE orderid='" + orderid + "'";
@@ -110,8 +115,14 @@ public class NewOrder extends JFrame {
 		return duplicatestate;
 	}
 
-	public NewOrder(int orderid) throws IOException {
-		ItemSelector itemselector = new ItemSelector(orderid);
+	public NewOrder(int orderid, boolean recoverystate) throws IOException {
+		ItemSelector itemselector;
+		if(recoverystate == true) {
+			itemselector = new ItemSelector(orderid, true);
+		}else {
+			itemselector = new ItemSelector(orderid, false);
+		}
+		
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosed(WindowEvent e) {
@@ -127,26 +138,26 @@ public class NewOrder extends JFrame {
 						JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, selectorbutton,
 						selectorbutton[1]);
 				if (PromptResult == JOptionPane.YES_OPTION) {
-					//SQL FOR DELETING ORDER
+					// SQL FOR DELETING ORDER
 					String sqlonfk = "PRAGMA foreign_keys=on;";
 					String sqldeleteorder = "DELETE FROM orders WHERE id = ?";
 
-			        try (Connection conn = Main.connect();
-			        		Statement stmt = conn.createStatement();
-			                PreparedStatement pstmt = conn.prepareStatement(sqldeleteorder)) {
+					try (Connection conn = Main.connect();
+							Statement stmt = conn.createStatement();
+							PreparedStatement pstmt = conn.prepareStatement(sqldeleteorder)) {
 
-			        	stmt.execute(sqlonfk);
-			            // set the corresponding parameter
-			            pstmt.setInt(1, orderid);
-			            // execute the statement
-			            pstmt.executeUpdate();
-			            conn.close();
+						stmt.execute(sqlonfk);
+						// set the corresponding parameter
+						pstmt.setInt(1, orderid);
+						// execute the statement
+						pstmt.executeUpdate();
+						conn.close();
 
-			        } catch (SQLException e1) {
-			            System.out.println(e1.getMessage());
-			        }
-			        Cashierframe.showdata();
-			        if(paymentframe != null) {						
+					} catch (SQLException e1) {
+						System.out.println(e1.getMessage());
+					}
+					Cashierframe.showdata();
+					if (paymentframe != null) {
 						paymentframe.dispose();
 						paymentframe = null;
 					}
@@ -157,15 +168,15 @@ public class NewOrder extends JFrame {
 					gender = "";
 					Cashierframe.setorderframenull();
 					System.out.println("SQL orders DELETED");
-					
-					//DELETE RECOVERY FILE
-					try {							
+
+					// DELETE RECOVERY FILE
+					try {
 						File recoveryfile = new File("autorecover/autorecovery.txt");
-						if(recoveryfile.exists()) {
+						if (recoveryfile.exists()) {
 							recoveryfile.delete();
 						}
-					}catch(Exception e1) {
-						System.out.println("Error: " + e);
+					} catch (Exception e1) {
+						System.out.println("Error: " + e1.getMessage());
 					}
 				}
 			}
@@ -250,7 +261,7 @@ public class NewOrder extends JFrame {
 		JTextArea addressfield = new JTextArea();
 		addressfield.setFont(new Font("Tahoma", Font.PLAIN, 11));
 
-		//CHECK IF CUSTOMER ID REGULAR
+		// CHECK IF CUSTOMER ID REGULAR
 		JCheckBox regularcustomercheck = new JCheckBox("Yes");
 		regularcustomercheck.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
@@ -271,8 +282,9 @@ public class NewOrder extends JFrame {
 					totalpricedisplay.setText("RM " + priceformatter.format(listpricecust));
 					finalprice = listpricecust;
 				}
-				
-				saveautorecovery(custnamefield.getText(), phonenofield.getText(), addressfield.getText(), gender, regularcustomer);
+
+				saveautorecovery(custnamefield.getText(), phonenofield.getText(), addressfield.getText(), gender,
+						regularcustomer);
 			}
 		});
 
@@ -280,14 +292,14 @@ public class NewOrder extends JFrame {
 
 		JRadioButton malevalueradio = new JRadioButton("Male");
 		JRadioButton femalevalueradio = new JRadioButton("Female");
-		
+
 		malevalueradio.setActionCommand("Male");
 		femalevalueradio.setActionCommand("Female");
 
 		ButtonGroup genderselector = new ButtonGroup();
 		genderselector.add(malevalueradio);
 		genderselector.add(femalevalueradio);
-		
+
 		malevalueradio.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				// ERROR HANDLING FOR RADIO GET ACTION COMMAND
@@ -296,7 +308,8 @@ public class NewOrder extends JFrame {
 				} catch (Exception e1) {
 					System.out.println(e1.getMessage());
 				}
-				saveautorecovery(custnamefield.getText(), phonenofield.getText(), addressfield.getText(), gender, regularcustomer);
+				saveautorecovery(custnamefield.getText(), phonenofield.getText(), addressfield.getText(), gender,
+						regularcustomer);
 			}
 		});
 
@@ -308,10 +321,11 @@ public class NewOrder extends JFrame {
 				} catch (Exception e1) {
 					System.out.println(e1.getMessage());
 				}
-				saveautorecovery(custnamefield.getText(), phonenofield.getText(), addressfield.getText(), gender, regularcustomer);
+				saveautorecovery(custnamefield.getText(), phonenofield.getText(), addressfield.getText(), gender,
+						regularcustomer);
 			}
 		});
-		
+
 		JButton btnNewButton = new JButton("Pay");
 		btnNewButton.setFont(new Font("SansSerif", Font.PLAIN, 17));
 		btnNewButton.addMouseListener(new MouseAdapter() {
@@ -411,13 +425,13 @@ public class NewOrder extends JFrame {
 					boolean duplicateorderid = containsOrderId(orderid);
 					String insertnewcust = "INSERT INTO customer(name,phoneno,address,gender,regularcustomer,orderid) VALUES (?,?,?,?,?,?)";
 					if (duplicateorderid) {
-						if(paymentframe == null) {						
+						if (paymentframe == null) {
 							paymentframe = new Payment(orderid, finalprice);
 							paymentframe.setVisible(true);
-						}else {
+						} else {
 							paymentframe.setVisible(true);
 						}
-					} else {						
+					} else {
 						try (Connection conn = Main.connect();
 								PreparedStatement pstmt = conn.prepareStatement(insertnewcust)) {
 							pstmt.setString(1, customername);
@@ -427,16 +441,16 @@ public class NewOrder extends JFrame {
 							pstmt.setBoolean(5, regularcustomer);
 							pstmt.setInt(6, orderid);
 							pstmt.executeUpdate();
-							
+
 						} catch (SQLException e1) {
 							System.out.println(e1.getMessage());
 						} catch (Exception e1) {
 							System.out.println(e1.getMessage());
 						}
-						if(paymentframe == null) {						
+						if (paymentframe == null) {
 							paymentframe = new Payment(orderid, finalprice);
 							paymentframe.setVisible(true);
-						}else {
+						} else {
 							paymentframe.setVisible(true);
 						}
 					}
@@ -534,51 +548,119 @@ public class NewOrder extends JFrame {
 				.createSequentialGroup().addGap(21).addComponent(lblNewLabel_2).addContainerGap(19, Short.MAX_VALUE)));
 		panel.setLayout(gl_panel);
 		contentPane.setLayout(gl_contentPane);
-		
-		//AUTO SAVE RECOVERY		
+
+		// AUTO SAVE RECOVERY
 		custnamefield.getDocument().addDocumentListener((DocumentListener) new DocumentListener() {
 			@Override
 			public void insertUpdate(DocumentEvent e) {
-				saveautorecovery(custnamefield.getText(), phonenofield.getText(), addressfield.getText(), gender, regularcustomer);
+				saveautorecovery(custnamefield.getText(), phonenofield.getText(), addressfield.getText(), gender,
+						regularcustomer);
 			}
+
 			@Override
 			public void removeUpdate(DocumentEvent e) {
-				saveautorecovery(custnamefield.getText(), phonenofield.getText(), addressfield.getText(), gender, regularcustomer);
+				saveautorecovery(custnamefield.getText(), phonenofield.getText(), addressfield.getText(), gender,
+						regularcustomer);
 			}
+
 			@Override
 			public void changedUpdate(DocumentEvent e) {
-				saveautorecovery(custnamefield.getText(), phonenofield.getText(), addressfield.getText(), gender, regularcustomer);
+				saveautorecovery(custnamefield.getText(), phonenofield.getText(), addressfield.getText(), gender,
+						regularcustomer);
 			}
-			});
-		
+		});
+
 		phonenofield.getDocument().addDocumentListener((DocumentListener) new DocumentListener() {
 			@Override
 			public void insertUpdate(DocumentEvent e) {
-				saveautorecovery(custnamefield.getText(), phonenofield.getText(), addressfield.getText(), gender, regularcustomer);
+				saveautorecovery(custnamefield.getText(), phonenofield.getText(), addressfield.getText(), gender,
+						regularcustomer);
 			}
+
 			@Override
 			public void removeUpdate(DocumentEvent e) {
-				saveautorecovery(custnamefield.getText(), phonenofield.getText(), addressfield.getText(), gender, regularcustomer);
+				saveautorecovery(custnamefield.getText(), phonenofield.getText(), addressfield.getText(), gender,
+						regularcustomer);
 			}
+
 			@Override
 			public void changedUpdate(DocumentEvent e) {
-				saveautorecovery(custnamefield.getText(), phonenofield.getText(), addressfield.getText(), gender, regularcustomer);
+				saveautorecovery(custnamefield.getText(), phonenofield.getText(), addressfield.getText(), gender,
+						regularcustomer);
 			}
-			});
-		
+		});
+
 		addressfield.getDocument().addDocumentListener((DocumentListener) new DocumentListener() {
 			@Override
 			public void insertUpdate(DocumentEvent e) {
-				saveautorecovery(custnamefield.getText(), phonenofield.getText(), addressfield.getText(), gender, regularcustomer);
+				saveautorecovery(custnamefield.getText(), phonenofield.getText(), addressfield.getText(), gender,
+						regularcustomer);
 			}
+
 			@Override
 			public void removeUpdate(DocumentEvent e) {
-				saveautorecovery(custnamefield.getText(), phonenofield.getText(), addressfield.getText(), gender, regularcustomer);
+				saveautorecovery(custnamefield.getText(), phonenofield.getText(), addressfield.getText(), gender,
+						regularcustomer);
 			}
+
 			@Override
 			public void changedUpdate(DocumentEvent e) {
-				saveautorecovery(custnamefield.getText(), phonenofield.getText(), addressfield.getText(), gender, regularcustomer);
+				saveautorecovery(custnamefield.getText(), phonenofield.getText(), addressfield.getText(), gender,
+						regularcustomer);
 			}
-			});
+		});
+
+		//AUTO RECOVER BACK
+		if (recoverystate == true) {
+			try {							
+				FileReader fr = new FileReader("autorecover/autorecovery.txt");
+				BufferedReader br = new BufferedReader(fr);
+				String line = br.readLine();
+				if(line != null) {
+					StringTokenizer st = new StringTokenizer(line, ";");					
+					custnamefield.setText(st.nextToken());
+					phonenofield.setText(st.nextToken());
+					addressfield.setText(st.nextToken().replace("\\n", "\n"));
+					String gender = st.nextToken();
+					if(gender.equalsIgnoreCase("Male")) {
+						malevalueradio.setSelected(true);
+					} else if(gender.equalsIgnoreCase("Female")) {
+						femalevalueradio.setSelected(true);
+					}
+					String regularcuststatecheck = st.nextToken();
+					if(regularcuststatecheck.equalsIgnoreCase("true")) {
+						regularcustomercheck.setSelected(true);
+					}
+				}
+				br.close();
+				
+				//GET TOTALPRICE
+				double listpricecust2 = 0;
+				String querygetpriceitem = "SELECT totalitems FROM item WHERE orderid='"+orderid+"'";
+				try (Connection conn = Main.connect();
+						Statement stmt = conn.createStatement();
+						ResultSet result = stmt.executeQuery(querygetpriceitem)) {
+
+					// loop through the result set
+					while (result.next()) {
+						listpricecust2 = listpricecust2 + result.getDouble("totalitems");
+					}
+					conn.close();
+					
+					listpricecust = listpricecust2;
+					if (regularcustomer == true) {
+						listpricecust2 = listpricecust2 - (listpricecust2 * Main.getdiscountvalue());
+					}
+					totalpricedisplay.setText("RM " + priceformatter.format(listpricecust2));
+					finalprice = listpricecust2;
+					
+				} catch (SQLException e) {
+					System.out.println(e.getMessage());
+				}
+				
+			}catch(Exception e1) {
+				System.out.println("Error recover: " + e1.getMessage());
+			}
+		}
 	}
 }

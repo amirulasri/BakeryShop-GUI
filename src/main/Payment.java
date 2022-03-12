@@ -224,6 +224,7 @@ public class Payment extends JFrame {
 						NewOrder.regularcustomer = false;
 						NewOrder.gender = "";
 						Cashierframe.showlastorder();
+						Main.getcashierframe().setState(JFrame.NORMAL);
 						
 						//DELETE RECOVERY FILE
 						try {							
@@ -232,7 +233,7 @@ public class Payment extends JFrame {
 								recoveryfile.delete();
 							}
 						}catch(Exception e1) {
-							System.out.println("Error: " + e);
+							System.out.println("Error: " + e1.getMessage());
 						}
 					} catch (SQLException e1) {
 						System.out.println("SQL ERROR PAYMENT: " + e1.getMessage());
