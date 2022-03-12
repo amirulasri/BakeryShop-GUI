@@ -73,6 +73,18 @@ public class NewOrder extends JFrame {
 	// SAVE FOR AUTORECOVERY IF POWER LOST ETC
 	private void saveautorecovery(String customername, String phoneno, String address, String gender,
 			boolean regularcustomer) {
+		if(customername.isEmpty()) {
+			customername = "nodata";
+		}
+		if(phoneno.isEmpty()) {
+			phoneno = "nodata";
+		}
+		if(address.isEmpty()) {
+			address = "nodata";
+		}
+		if(gender.isEmpty()) {
+			gender = "nodata";
+		}
 		try {
 			FileWriter recoveryfile = new FileWriter("autorecover/autorecovery.txt");
 			PrintWriter recoverywriter = new PrintWriter(recoveryfile);
@@ -201,7 +213,7 @@ public class NewOrder extends JFrame {
 		setTitle(Main.getappname());
 		setIconImage(Toolkit.getDefaultToolkit().getImage(NewOrder.class.getResource("/main/logo/logo.png")));
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		setBounds(100, 100, 1023, 587);
+		setBounds(100, 100, 1023, 549);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(250, 243, 221));
 		contentPane.setBorder(null);
@@ -209,47 +221,22 @@ public class NewOrder extends JFrame {
 		setLocationRelativeTo(null);
 
 		JPanel panel = new JPanel();
-		panel.setBackground(new Color(74, 124, 89));
+		panel.setBackground(new Color(59, 80, 107));
 
 		JPanel panel_1 = new JPanel();
-		panel_1.setBackground(new Color(104, 176, 171));
+		panel_1.setBackground(new Color(92, 192, 190));
 
 		JPanel panel_2 = new JPanel();
-		panel_2.setBackground(new Color(200, 213, 185));
-
-		JLabel lblNewLabel_1 = new JLabel("Customer Name");
-		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 14));
-
-		JLabel lblNewLabel_3 = new JLabel("Phone Number");
-		lblNewLabel_3.setFont(new Font("Tahoma", Font.PLAIN, 14));
-
-		JLabel lblNewLabel_4 = new JLabel("Items");
-		lblNewLabel_4.setFont(new Font("Tahoma", Font.PLAIN, 14));
-
-		JLabel lblNewLabel = new JLabel("Address");
-		lblNewLabel.setFont(new Font("Tahoma", Font.PLAIN, 14));
-
-		JLabel lblNewLabel_5 = new JLabel("Regular Customer");
-		lblNewLabel_5.setFont(new Font("Tahoma", Font.PLAIN, 14));
-
-		JLabel lblNewLabel_6 = new JLabel("Gender");
-		lblNewLabel_6.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		panel_2.setBackground(new Color(140, 47, 57));
 		GroupLayout gl_panel_2 = new GroupLayout(panel_2);
-		gl_panel_2.setHorizontalGroup(gl_panel_2.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel_2.createSequentialGroup().addContainerGap()
-						.addGroup(gl_panel_2.createParallelGroup(Alignment.LEADING).addComponent(lblNewLabel_1)
-								.addGroup(gl_panel_2.createParallelGroup(Alignment.TRAILING, false)
-										.addComponent(lblNewLabel, Alignment.LEADING, GroupLayout.DEFAULT_SIZE,
-												GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-										.addComponent(lblNewLabel_3, Alignment.LEADING, GroupLayout.DEFAULT_SIZE,
-												GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-								.addComponent(lblNewLabel_5).addComponent(lblNewLabel_4).addComponent(lblNewLabel_6))
-						.addContainerGap(64, Short.MAX_VALUE)));
-		gl_panel_2.setVerticalGroup(gl_panel_2.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_panel_2.createSequentialGroup().addGap(45).addComponent(lblNewLabel_1).addGap(18)
-						.addComponent(lblNewLabel_3).addGap(18).addComponent(lblNewLabel).addGap(62)
-						.addComponent(lblNewLabel_6).addPreferredGap(ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
-						.addComponent(lblNewLabel_4).addGap(37).addComponent(lblNewLabel_5).addGap(57)));
+		gl_panel_2.setHorizontalGroup(
+			gl_panel_2.createParallelGroup(Alignment.LEADING)
+				.addGap(0, 155, Short.MAX_VALUE)
+		);
+		gl_panel_2.setVerticalGroup(
+			gl_panel_2.createParallelGroup(Alignment.LEADING)
+				.addGap(0, 513, Short.MAX_VALUE)
+		);
 		panel_2.setLayout(gl_panel_2);
 
 		JTextField custnamefield = new JTextField();
@@ -263,6 +250,7 @@ public class NewOrder extends JFrame {
 
 		// CHECK IF CUSTOMER ID REGULAR
 		JCheckBox regularcustomercheck = new JCheckBox("Yes");
+		regularcustomercheck.setFont(new Font("SansSerif", Font.BOLD, 15));
 		regularcustomercheck.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				if (regularcustomercheck.isSelected()) {
@@ -291,7 +279,9 @@ public class NewOrder extends JFrame {
 		JScrollPane scrollPane = new JScrollPane();
 
 		JRadioButton malevalueradio = new JRadioButton("Male");
+		malevalueradio.setFont(new Font("SansSerif", Font.BOLD, 15));
 		JRadioButton femalevalueradio = new JRadioButton("Female");
+		femalevalueradio.setFont(new Font("SansSerif", Font.BOLD, 15));
 
 		malevalueradio.setActionCommand("Male");
 		femalevalueradio.setActionCommand("Female");
@@ -327,7 +317,9 @@ public class NewOrder extends JFrame {
 		});
 
 		JButton btnNewButton = new JButton("Pay");
-		btnNewButton.setFont(new Font("SansSerif", Font.PLAIN, 17));
+		btnNewButton.setIcon(new ImageIcon(NewOrder.class.getResource("/main/logo/payment-method.png")));
+		btnNewButton.setBackground(new Color(102, 102, 255));
+		btnNewButton.setFont(new Font("SansSerif", Font.BOLD, 17));
 		btnNewButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -459,6 +451,8 @@ public class NewOrder extends JFrame {
 		});
 
 		JButton btnNewButton_1 = new JButton("Open Order Item Manager");
+		btnNewButton_1.setBackground(new Color(51, 204, 255));
+		btnNewButton_1.setFont(new Font("SansSerif", Font.BOLD, 12));
 		btnNewButton_1.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				itemselector.setVisible(true);
@@ -471,69 +465,119 @@ public class NewOrder extends JFrame {
 
 		totalpricedisplay = new JLabel("RM 0.00");
 		totalpricedisplay.setFont(new Font("SansSerif", Font.BOLD, 19));
+		
+				JLabel lblNewLabel_1 = new JLabel("Customer Name");
+				lblNewLabel_1.setFont(new Font("SansSerif", Font.BOLD, 14));
+		
+				JLabel lblNewLabel_3 = new JLabel("Phone Number");
+				lblNewLabel_3.setFont(new Font("SansSerif", Font.BOLD, 14));
+		
+				JLabel lblNewLabel = new JLabel("Address");
+				lblNewLabel.setFont(new Font("SansSerif", Font.BOLD, 14));
+		
+				JLabel lblNewLabel_6 = new JLabel("Gender");
+				lblNewLabel_6.setFont(new Font("SansSerif", Font.BOLD, 14));
+		
+				JLabel lblNewLabel_4 = new JLabel("Items");
+				lblNewLabel_4.setFont(new Font("SansSerif", Font.BOLD, 14));
+		
+				JLabel lblNewLabel_5 = new JLabel("Regular Customer");
+				lblNewLabel_5.setFont(new Font("SansSerif", Font.BOLD, 14));
 
 		GroupLayout gl_panel_1 = new GroupLayout(panel_1);
-		gl_panel_1.setHorizontalGroup(gl_panel_1.createParallelGroup(Alignment.LEADING).addGroup(gl_panel_1
-				.createSequentialGroup()
-				.addComponent(panel_2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-				.addGroup(gl_panel_1.createParallelGroup(Alignment.TRAILING).addGroup(gl_panel_1.createSequentialGroup()
-						.addGap(18)
-						.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
-								.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 687, Short.MAX_VALUE)
-								.addComponent(custnamefield, GroupLayout.DEFAULT_SIZE, 687, Short.MAX_VALUE)
-								.addComponent(phonenofield, GroupLayout.DEFAULT_SIZE, 687, Short.MAX_VALUE)
-								.addGroup(gl_panel_1.createSequentialGroup().addComponent(btnNewButton_1).addGap(131)
-										.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
-												.addComponent(totalpricedisplay).addComponent(titletotalprice)))
-								.addGroup(gl_panel_1.createSequentialGroup().addComponent(malevalueradio)
-										.addPreferredGap(ComponentPlacement.UNRELATED).addComponent(femalevalueradio))
-								.addComponent(regularcustomercheck)))
-						.addGroup(gl_panel_1.createSequentialGroup().addPreferredGap(ComponentPlacement.RELATED)
-								.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 169,
-										GroupLayout.PREFERRED_SIZE)))
-				.addContainerGap()));
-		gl_panel_1
-				.setVerticalGroup(
-						gl_panel_1
-								.createParallelGroup(
-										Alignment.LEADING)
-								.addGroup(gl_panel_1.createSequentialGroup().addGap(42)
-										.addComponent(custnamefield, GroupLayout.PREFERRED_SIZE,
-												GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-										.addGap(18)
-										.addComponent(phonenofield, GroupLayout.PREFERRED_SIZE,
-												GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-										.addGap(18)
-										.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 58,
-												GroupLayout.PREFERRED_SIZE)
-										.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING).addGroup(gl_panel_1
-												.createSequentialGroup().addGap(18)
-												.addGroup(gl_panel_1.createParallelGroup(Alignment.BASELINE)
-														.addComponent(malevalueradio).addComponent(femalevalueradio))
-												.addGap(29).addComponent(btnNewButton_1).addGap(31)
-												.addComponent(regularcustomercheck))
-												.addGroup(gl_panel_1.createSequentialGroup().addGap(52)
-														.addComponent(titletotalprice)
-														.addPreferredGap(ComponentPlacement.RELATED)
-														.addComponent(totalpricedisplay).addGap(50)
-														.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 35,
-																GroupLayout.PREFERRED_SIZE)))
-										.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-								.addComponent(panel_2, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE,
-										Short.MAX_VALUE));
+		gl_panel_1.setHorizontalGroup(
+			gl_panel_1.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panel_1.createSequentialGroup()
+					.addComponent(panel_2, GroupLayout.PREFERRED_SIZE, 18, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_panel_1.createSequentialGroup()
+							.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
+								.addGroup(gl_panel_1.createSequentialGroup()
+									.addComponent(malevalueradio)
+									.addPreferredGap(ComponentPlacement.UNRELATED)
+									.addComponent(femalevalueradio))
+								.addComponent(btnNewButton_1, GroupLayout.PREFERRED_SIZE, 188, GroupLayout.PREFERRED_SIZE))
+							.addGap(143)
+							.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
+								.addComponent(titletotalprice)
+								.addGroup(gl_panel_1.createSequentialGroup()
+									.addComponent(totalpricedisplay)
+									.addGap(396)
+									.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 169, GroupLayout.PREFERRED_SIZE))
+								.addComponent(lblNewLabel_5, GroupLayout.PREFERRED_SIZE, 153, GroupLayout.PREFERRED_SIZE)
+								.addComponent(regularcustomercheck, GroupLayout.PREFERRED_SIZE, 117, GroupLayout.PREFERRED_SIZE)))
+						.addComponent(custnamefield, GroupLayout.DEFAULT_SIZE, 969, Short.MAX_VALUE)
+						.addComponent(lblNewLabel_1)
+						.addComponent(lblNewLabel_3)
+						.addComponent(phonenofield, GroupLayout.DEFAULT_SIZE, 969, Short.MAX_VALUE)
+						.addComponent(lblNewLabel)
+						.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 969, Short.MAX_VALUE)
+						.addComponent(lblNewLabel_6)
+						.addComponent(lblNewLabel_4))
+					.addContainerGap())
+		);
+		gl_panel_1.setVerticalGroup(
+			gl_panel_1.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panel_1.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(lblNewLabel_1)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(custnamefield, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addGap(18)
+					.addComponent(lblNewLabel_3)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(phonenofield, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addGap(18)
+					.addComponent(lblNewLabel)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 58, GroupLayout.PREFERRED_SIZE)
+					.addGap(18)
+					.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_panel_1.createSequentialGroup()
+							.addComponent(lblNewLabel_6)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addGroup(gl_panel_1.createParallelGroup(Alignment.BASELINE)
+								.addComponent(malevalueradio)
+								.addComponent(femalevalueradio)))
+						.addGroup(gl_panel_1.createSequentialGroup()
+							.addGap(5)
+							.addComponent(lblNewLabel_5)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(regularcustomercheck)))
+					.addGap(18)
+					.addComponent(lblNewLabel_4)
+					.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_panel_1.createSequentialGroup()
+							.addGap(10)
+							.addComponent(titletotalprice)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
+								.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)
+								.addComponent(totalpricedisplay)))
+						.addGroup(gl_panel_1.createSequentialGroup()
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(btnNewButton_1, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE)))
+					.addGap(142))
+				.addComponent(panel_2, GroupLayout.DEFAULT_SIZE, 543, Short.MAX_VALUE)
+		);
 
 		scrollPane.setViewportView(addressfield);
 		panel_1.setLayout(gl_panel_1);
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
-		gl_contentPane.setHorizontalGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+		gl_contentPane.setHorizontalGroup(
+			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addComponent(panel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+				.addComponent(panel_1, GroupLayout.DEFAULT_SIZE, 1007, Short.MAX_VALUE)
+		);
+		gl_contentPane.setVerticalGroup(
+			gl_contentPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_contentPane.createSequentialGroup()
-						.addComponent(panel_1, GroupLayout.PREFERRED_SIZE, 899, Short.MAX_VALUE).addGap(108)));
-		gl_contentPane.setVerticalGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-				.addGroup(gl_contentPane.createSequentialGroup()
-						.addComponent(panel, GroupLayout.PREFERRED_SIZE, 72, GroupLayout.PREFERRED_SIZE).addGap(39)
-						.addComponent(panel_1, GroupLayout.PREFERRED_SIZE, 376, GroupLayout.PREFERRED_SIZE)
-						.addContainerGap(61, Short.MAX_VALUE)));
+					.addComponent(panel, GroupLayout.PREFERRED_SIZE, 72, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addComponent(panel_1, GroupLayout.PREFERRED_SIZE, 416, Short.MAX_VALUE)
+					.addContainerGap())
+		);
 
 		lblNewLabel_2 = new JLabel("New order for ID: " + orderid);
 		lblNewLabel_2.setIcon(new ImageIcon(NewOrder.class.getResource("/main/logo/contract.png")));
@@ -617,15 +661,27 @@ public class NewOrder extends JFrame {
 				BufferedReader br = new BufferedReader(fr);
 				String line = br.readLine();
 				if(line != null) {
-					StringTokenizer st = new StringTokenizer(line, ";");					
-					custnamefield.setText(st.nextToken());
-					phonenofield.setText(st.nextToken());
-					addressfield.setText(st.nextToken().replace("\\n", "\n"));
+					StringTokenizer st = new StringTokenizer(line, ";");	
+					String customername = st.nextToken();
+					String phoneno = st.nextToken();
+					String address = st.nextToken();
 					String gender = st.nextToken();
-					if(gender.equalsIgnoreCase("Male")) {
-						malevalueradio.setSelected(true);
-					} else if(gender.equalsIgnoreCase("Female")) {
-						femalevalueradio.setSelected(true);
+					
+					if(!customername.equalsIgnoreCase("nodata")) {						
+						custnamefield.setText(customername);
+					}
+					if(!phoneno.equalsIgnoreCase("nodata")) {						
+						phonenofield.setText("nodata");
+					}
+					if(!address.equalsIgnoreCase("nodata")) {						
+						addressfield.setText(address.replace("\\n", "\n"));
+					}
+					if(!gender.equalsIgnoreCase("nodata")) {						
+						if(gender.equalsIgnoreCase("Male")) {
+							malevalueradio.setSelected(true);
+						} else if(gender.equalsIgnoreCase("Female")) {
+							femalevalueradio.setSelected(true);
+						}
 					}
 					String regularcuststatecheck = st.nextToken();
 					if(regularcuststatecheck.equalsIgnoreCase("true")) {

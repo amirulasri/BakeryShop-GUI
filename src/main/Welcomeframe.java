@@ -33,8 +33,8 @@ public class Welcomeframe extends JFrame {
 		setIconImage(new ImageIcon(this.getClass().getResource("/main/logo/logo.png")).getImage());
 
 		JPanel panel = new JPanel();
-		panel.setBackground(new Color(204, 51, 102));
-		panel.setBounds(0, 306, 766, 81);
+		panel.setBackground(new Color(153, 153, 255));
+		panel.setBounds(0, 307, 766, 80);
 		getContentPane().add(panel);
 		
 		lblNewLabel_3.setFont(new Font("Tahoma", Font.PLAIN, 14));
@@ -45,23 +45,27 @@ public class Welcomeframe extends JFrame {
 		gl_panel.setHorizontalGroup(
 			gl_panel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panel.createSequentialGroup()
-					.addGap(31)
 					.addGroup(gl_panel.createParallelGroup(Alignment.LEADING)
-						.addComponent(lblNewLabel_3)
-						.addComponent(progressBar, GroupLayout.PREFERRED_SIZE, 697, GroupLayout.PREFERRED_SIZE))
-					.addContainerGap(38, Short.MAX_VALUE))
+						.addGroup(gl_panel.createSequentialGroup()
+							.addGap(19)
+							.addComponent(progressBar, GroupLayout.PREFERRED_SIZE, 723, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_panel.createSequentialGroup()
+							.addGap(298)
+							.addComponent(lblNewLabel_3)))
+					.addContainerGap(24, Short.MAX_VALUE))
 		);
-		progressBar.setVisible(false);
 		gl_panel.setVerticalGroup(
 			gl_panel.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_panel.createSequentialGroup()
-					.addContainerGap(15, Short.MAX_VALUE)
+					.addContainerGap(17, Short.MAX_VALUE)
 					.addComponent(lblNewLabel_3)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(progressBar, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addGap(32))
+					.addGap(26))
 		);
-		progressBar.setForeground(new Color(51, 0, 153));
+		progressBar.setBackground(new Color(255, 255, 255));
+		progressBar.setVisible(false);
+		progressBar.setForeground(new Color(51, 0, 102));
 		panel.setLayout(gl_panel);
 
 		JPanel panel_1 = new JPanel();
@@ -74,7 +78,7 @@ public class Welcomeframe extends JFrame {
 
 		JLabel lblNewLabel_2 = new JLabel(Main.getappname());
 		lblNewLabel_2.setForeground(Color.WHITE);
-		lblNewLabel_2.setFont(new Font("Comic Sans MS", Font.PLAIN, 58));
+		lblNewLabel_2.setFont(new Font("Birthday Boy", Font.PLAIN, 82));
 
 		JLabel lblNewLabel = new JLabel("By: " + Main.getcontributor());
 		lblNewLabel.setForeground(Color.WHITE);
@@ -83,11 +87,11 @@ public class Welcomeframe extends JFrame {
 		gl_panel_1.setHorizontalGroup(
 			gl_panel_1.createParallelGroup(Alignment.TRAILING)
 				.addGroup(gl_panel_1.createSequentialGroup()
-					.addGap(140)
+					.addGap(178)
 					.addComponent(lblNewLabel_1, GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE)
-					.addGap(18)
-					.addComponent(lblNewLabel_2, GroupLayout.DEFAULT_SIZE, 509, Short.MAX_VALUE)
-					.addGap(19))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(lblNewLabel_2, GroupLayout.PREFERRED_SIZE, 344, GroupLayout.PREFERRED_SIZE)
+					.addGap(158))
 				.addGroup(gl_panel_1.createSequentialGroup()
 					.addContainerGap()
 					.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 509, GroupLayout.PREFERRED_SIZE)
@@ -96,11 +100,15 @@ public class Welcomeframe extends JFrame {
 		gl_panel_1.setVerticalGroup(
 			gl_panel_1.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_panel_1.createSequentialGroup()
-					.addGap(98)
 					.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
-						.addComponent(lblNewLabel_2, GroupLayout.PREFERRED_SIZE, 89, GroupLayout.PREFERRED_SIZE)
-						.addComponent(lblNewLabel_1))
-					.addPreferredGap(ComponentPlacement.RELATED, 93, Short.MAX_VALUE)
+						.addGroup(gl_panel_1.createSequentialGroup()
+							.addGap(98)
+							.addComponent(lblNewLabel_1)
+							.addPreferredGap(ComponentPlacement.RELATED, 102, Short.MAX_VALUE))
+						.addGroup(Alignment.TRAILING, gl_panel_1.createSequentialGroup()
+							.addContainerGap()
+							.addComponent(lblNewLabel_2, GroupLayout.PREFERRED_SIZE, 89, GroupLayout.PREFERRED_SIZE)
+							.addGap(81)))
 					.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 27, GroupLayout.PREFERRED_SIZE))
 		);
 		panel_1.setLayout(gl_panel_1);
