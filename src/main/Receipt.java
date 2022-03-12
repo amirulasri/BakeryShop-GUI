@@ -123,7 +123,7 @@ public class Receipt extends JFrame {
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(230, 184, 156));
 		setContentPane(contentPane);
-		setTitle(Main.getappname());
+		setTitle("Bakery Shop");
 		setLocationRelativeTo(null);
 
 		JPanel panel = new JPanel();

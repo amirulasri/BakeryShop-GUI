@@ -210,7 +210,7 @@ public class NewOrder extends JFrame {
 		} catch (javax.swing.UnsupportedLookAndFeelException ex) {
 			java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		}
-		setTitle(Main.getappname());
+		setTitle("Bakery Shop");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(NewOrder.class.getResource("/main/logo/logo.png")));
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setBounds(100, 100, 1023, 549);
@@ -224,7 +224,7 @@ public class NewOrder extends JFrame {
 		panel.setBackground(new Color(59, 80, 107));
 
 		JPanel panel_1 = new JPanel();
-		panel_1.setBackground(new Color(92, 192, 190));
+		panel_1.setBackground(new Color(153, 204, 204));
 
 		JPanel panel_2 = new JPanel();
 		panel_2.setBackground(new Color(140, 47, 57));
@@ -250,6 +250,7 @@ public class NewOrder extends JFrame {
 
 		// CHECK IF CUSTOMER ID REGULAR
 		JCheckBox regularcustomercheck = new JCheckBox("Yes");
+		regularcustomercheck.setBackground(new Color(204, 255, 255));
 		regularcustomercheck.setFont(new Font("SansSerif", Font.BOLD, 15));
 		regularcustomercheck.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
@@ -279,8 +280,10 @@ public class NewOrder extends JFrame {
 		JScrollPane scrollPane = new JScrollPane();
 
 		JRadioButton malevalueradio = new JRadioButton("Male");
+		malevalueradio.setBackground(new Color(204, 255, 255));
 		malevalueradio.setFont(new Font("SansSerif", Font.BOLD, 15));
 		JRadioButton femalevalueradio = new JRadioButton("Female");
+		femalevalueradio.setBackground(new Color(204, 255, 255));
 		femalevalueradio.setFont(new Font("SansSerif", Font.BOLD, 15));
 
 		malevalueradio.setActionCommand("Male");
@@ -450,9 +453,9 @@ public class NewOrder extends JFrame {
 			}
 		});
 
-		JButton btnNewButton_1 = new JButton("Open Order Item Manager");
+		JButton btnNewButton_1 = new JButton("Add Items");
 		btnNewButton_1.setBackground(new Color(51, 204, 255));
-		btnNewButton_1.setFont(new Font("SansSerif", Font.BOLD, 12));
+		btnNewButton_1.setFont(new Font("SansSerif", Font.BOLD, 14));
 		btnNewButton_1.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				itemselector.setVisible(true);
@@ -500,11 +503,12 @@ public class NewOrder extends JFrame {
 								.addComponent(btnNewButton_1, GroupLayout.PREFERRED_SIZE, 188, GroupLayout.PREFERRED_SIZE))
 							.addGap(143)
 							.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
-								.addComponent(titletotalprice)
 								.addGroup(gl_panel_1.createSequentialGroup()
-									.addComponent(totalpricedisplay)
-									.addGap(396)
-									.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 169, GroupLayout.PREFERRED_SIZE))
+									.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
+										.addComponent(titletotalprice)
+										.addComponent(totalpricedisplay))
+									.addGap(383)
+									.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 168, GroupLayout.PREFERRED_SIZE))
 								.addComponent(lblNewLabel_5, GroupLayout.PREFERRED_SIZE, 153, GroupLayout.PREFERRED_SIZE)
 								.addComponent(regularcustomercheck, GroupLayout.PREFERRED_SIZE, 117, GroupLayout.PREFERRED_SIZE)))
 						.addComponent(custnamefield, GroupLayout.DEFAULT_SIZE, 969, Short.MAX_VALUE)
@@ -532,34 +536,37 @@ public class NewOrder extends JFrame {
 					.addComponent(lblNewLabel)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 58, GroupLayout.PREFERRED_SIZE)
-					.addGap(18)
 					.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_panel_1.createSequentialGroup()
-							.addComponent(lblNewLabel_6)
-							.addPreferredGap(ComponentPlacement.UNRELATED)
-							.addGroup(gl_panel_1.createParallelGroup(Alignment.BASELINE)
-								.addComponent(malevalueradio)
-								.addComponent(femalevalueradio)))
-						.addGroup(gl_panel_1.createSequentialGroup()
-							.addGap(5)
-							.addComponent(lblNewLabel_5)
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(regularcustomercheck)))
-					.addGap(18)
-					.addComponent(lblNewLabel_4)
-					.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_panel_1.createSequentialGroup()
-							.addGap(10)
-							.addComponent(titletotalprice)
-							.addPreferredGap(ComponentPlacement.RELATED)
+							.addGap(18)
 							.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
-								.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 35, GroupLayout.PREFERRED_SIZE)
-								.addComponent(totalpricedisplay)))
+								.addGroup(gl_panel_1.createSequentialGroup()
+									.addComponent(lblNewLabel_6)
+									.addPreferredGap(ComponentPlacement.UNRELATED)
+									.addGroup(gl_panel_1.createParallelGroup(Alignment.BASELINE)
+										.addComponent(malevalueradio)
+										.addComponent(femalevalueradio)))
+								.addGroup(gl_panel_1.createSequentialGroup()
+									.addGap(5)
+									.addComponent(lblNewLabel_5)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(regularcustomercheck)))
+							.addGap(18)
+							.addComponent(lblNewLabel_4)
+							.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
+								.addGroup(gl_panel_1.createSequentialGroup()
+									.addGap(10)
+									.addComponent(titletotalprice)
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(totalpricedisplay))
+								.addGroup(gl_panel_1.createSequentialGroup()
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(btnNewButton_1, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE))))
 						.addGroup(gl_panel_1.createSequentialGroup()
-							.addPreferredGap(ComponentPlacement.RELATED)
-							.addComponent(btnNewButton_1, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE)))
+							.addGap(137)
+							.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 45, GroupLayout.PREFERRED_SIZE)))
 					.addGap(142))
-				.addComponent(panel_2, GroupLayout.DEFAULT_SIZE, 543, Short.MAX_VALUE)
+				.addComponent(panel_2, GroupLayout.DEFAULT_SIZE, 544, Short.MAX_VALUE)
 		);
 
 		scrollPane.setViewportView(addressfield);

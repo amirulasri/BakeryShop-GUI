@@ -231,7 +231,7 @@ public class Cashierframe extends JFrame {
 			public void windowClosing(WindowEvent e) {
 				String selectorbutton[] = { "Yes", "No" };
 				int PromptResult = JOptionPane.showOptionDialog(null,
-						"Are you sure you want to exit?", "Exit " + Main.getappname(),
+						"Are you sure you want to exit?", "Exit " + "Bakery Shop",
 						JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, selectorbutton,
 						selectorbutton[1]);
 				if (PromptResult == JOptionPane.YES_OPTION) {
@@ -239,7 +239,7 @@ public class Cashierframe extends JFrame {
 				}
 			}
 		});
-		setTitle(Main.getappname());
+		setTitle("Bakery Shop");
 		try {
 			for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
 				if ("Windows".equals(info.getName())) {
@@ -483,7 +483,7 @@ public class Cashierframe extends JFrame {
 			@Override
 			public void mousePressed(MouseEvent e) {
 				JOptionPane.showMessageDialog(null,
-						Main.getappname() + "\nDeveloped By: " + Main.getcontributor() + "\nProject SWC2333",
+						"Bakery Shop" + "\nCreated By: Amirul Asri, Harris Irfan, Sholihin Ilias, Aliff Redzuan, Mifzal Dini \nProject SWC2333",
 						"About App", JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
