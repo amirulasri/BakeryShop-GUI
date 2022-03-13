@@ -23,8 +23,8 @@ public class Splashscreen extends JFrame {
 	JProgressBar progressBar = new JProgressBar();
 	JLabel lblNewLabel_3 = new JLabel("Welcome!");
 	public Splashscreen() {
-		setUndecorated(true);
 		setResizable(false);
+		setUndecorated(true);
 		setTitle("Bakery Shop");
 		setBounds(100, 100, 765, 387);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -42,14 +42,14 @@ public class Splashscreen extends JFrame {
 		lblNewLabel_1.setIcon(new ImageIcon(this.getClass().getResource("/main/logo/logo.png")));
 
 		JLabel lblNewLabel_2 = new JLabel("Bakery Shop");
-		lblNewLabel_2.setBounds(289, 143, 329, 89);
+		lblNewLabel_2.setBounds(282, 143, 474, 89);
 		lblNewLabel_2.setForeground(Color.WHITE);
-		lblNewLabel_2.setFont(new Font("SansSerif", Font.BOLD, 54));
+		lblNewLabel_2.setFont(new Font("Arial", Font.BOLD, 50));
 
 		JLabel lblNewLabel = new JLabel("By: Amirul Asri, Harris Irfan, Sholihin Ilias, Aliff Redzuan, Mifzal Dini");
 		lblNewLabel.setBounds(59, 349, 559, 27);
 		lblNewLabel.setForeground(Color.WHITE);
-		lblNewLabel.setFont(new Font("SansSerif", Font.BOLD, 15));
+		lblNewLabel.setFont(new Font("Arial", Font.BOLD, 15));
 		
 				JPanel panel = new JPanel();
 				panel.setBounds(0, 0, 49, 387);

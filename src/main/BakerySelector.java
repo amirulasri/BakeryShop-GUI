@@ -5,6 +5,8 @@ import javax.swing.JPanel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import java.awt.Color;
+import java.awt.Dimension;
+
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
@@ -39,7 +41,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.SwingConstants;
 
-public class ItemSelector extends JFrame {
+public class BakerySelector extends JFrame {
 	
 	/**
 	 * 
@@ -59,10 +61,10 @@ public class ItemSelector extends JFrame {
 	 */
 
 	@SuppressWarnings("unchecked")
-	public ItemSelector(final int orderid, boolean recoverystate) throws IOException {
+	public BakerySelector(final int orderid, boolean recoverystate) throws IOException {
 		this.orderid = orderid;
 		
-		setIconImage(Toolkit.getDefaultToolkit().getImage(ItemSelector.class.getResource("/main/logo/logo.png")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(BakerySelector.class.getResource("/main/logo/logo.png")));
 		setTitle("Bakery Shop");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 927, 587);
@@ -74,7 +76,7 @@ public class ItemSelector extends JFrame {
 		menuBar.add(mnNewMenu);
 		
 		JMenuItem mntmNewMenuItem = new JMenuItem("Delete item");
-		mntmNewMenuItem.setIcon(new ImageIcon(ItemSelector.class.getResource("/main/logo/multiply.png")));
+		mntmNewMenuItem.setIcon(new ImageIcon(BakerySelector.class.getResource("/main/logo/multiply.png")));
 		mntmNewMenuItem.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
@@ -130,6 +132,8 @@ public class ItemSelector extends JFrame {
 		contentPane.setBorder(null);
 		setContentPane(contentPane);
 		setLocationRelativeTo(null);
+		setPreferredSize(new Dimension(930, 550));
+		pack();
 
 		JPanel panel = new JPanel();
 		panel.setBackground(new Color(153, 51, 51));
@@ -143,9 +147,9 @@ public class ItemSelector extends JFrame {
 		List<Double> priceperitem = new ArrayList<Double>();
 		
 		try {
-			itemlistinput = new BufferedReader(new FileReader("items.txt"));
+			itemlistinput = new BufferedReader(new FileReader("bakerylist.txt"));
 			String bakeryitemline = null;
-			itemlist.add("Select Cake");
+			itemlist.add("Choose Bakery Item");
 			while ((bakeryitemline = itemlistinput.readLine()) != null) {
 				String[] listitemcomma = bakeryitemline.split(",");
 				itemlist.add(listitemcomma[0] + " RM"+ listitemcomma[1]);
@@ -165,15 +169,15 @@ public class ItemSelector extends JFrame {
 		
 		@SuppressWarnings("rawtypes")
 		JComboBox itemcombobox = new JComboBox(itemlistArray);
-		itemcombobox.setFont(new Font("SansSerif", Font.PLAIN, 17));
+		itemcombobox.setFont(new Font("Arial", Font.PLAIN, 17));
 
 		JSpinner quantity = new JSpinner();
-		quantity.setFont(new Font("SansSerif", Font.BOLD, 14));
+		quantity.setFont(new Font("Arial", Font.BOLD, 14));
 		quantity.setModel(new SpinnerNumberModel(1, 1, null, 1));
 		
 
 		JButton btnNewButton = new JButton("Add");
-		btnNewButton.setFont(new Font("SansSerif", Font.BOLD, 13));
+		btnNewButton.setFont(new Font("Arial", Font.PLAIN, 13));
 		btnNewButton.setBackground(new Color(255, 153, 51));
 		btnNewButton.addMouseListener(new MouseAdapter() {
 			int lastitemnumber = 1;
@@ -227,14 +231,14 @@ public class ItemSelector extends JFrame {
 		});
 		
 		JLabel lblNewLabel = new JLabel("Items");
-		lblNewLabel.setFont(new Font("SansSerif", Font.BOLD, 14));
+		lblNewLabel.setFont(new Font("Arial", Font.PLAIN, 14));
 		
 		JLabel lblNewLabel_1 = new JLabel("Quantity");
-		lblNewLabel_1.setFont(new Font("SansSerif", Font.BOLD, 14));
+		lblNewLabel_1.setFont(new Font("Arial", Font.PLAIN, 14));
 		
 		JButton btnNewButton_1 = new JButton("Save");
-		btnNewButton_1.setIcon(new ImageIcon(ItemSelector.class.getResource("/main/logo/save.png")));
-		btnNewButton_1.setFont(new Font("SansSerif", Font.BOLD, 15));
+		btnNewButton_1.setIcon(new ImageIcon(BakerySelector.class.getResource("/main/logo/save.png")));
+		btnNewButton_1.setFont(new Font("Arial", Font.PLAIN, 15));
 		btnNewButton_1.setBackground(new Color(239, 149, 157));
 		btnNewButton_1.addMouseListener(new MouseAdapter() {
 			@Override
@@ -245,30 +249,30 @@ public class ItemSelector extends JFrame {
 		
 		totalpricedisplay = new JLabel("Total Price: RM 0.00");
 		totalpricedisplay.setHorizontalAlignment(SwingConstants.RIGHT);
-		totalpricedisplay.setFont(new Font("Tahoma", Font.BOLD, 15));
+		totalpricedisplay.setFont(new Font("Arial", Font.BOLD, 17));
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
 			gl_contentPane.createParallelGroup(Alignment.TRAILING)
-				.addComponent(panel, GroupLayout.DEFAULT_SIZE, 881, Short.MAX_VALUE)
+				.addComponent(panel, GroupLayout.DEFAULT_SIZE, 911, Short.MAX_VALUE)
 				.addGroup(Alignment.LEADING, gl_contentPane.createSequentialGroup()
 					.addGap(8)
 					.addComponent(lblNewLabel, GroupLayout.PREFERRED_SIZE, 55, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(itemcombobox, GroupLayout.PREFERRED_SIZE, 251, GroupLayout.PREFERRED_SIZE)
-					.addGap(28)
+					.addComponent(itemcombobox, GroupLayout.PREFERRED_SIZE, 505, GroupLayout.PREFERRED_SIZE)
+					.addGap(18)
 					.addComponent(lblNewLabel_1)
-					.addGap(18)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addComponent(quantity, GroupLayout.PREFERRED_SIZE, 139, GroupLayout.PREFERRED_SIZE)
-					.addGap(18)
+					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 103, GroupLayout.PREFERRED_SIZE)
-					.addGap(203))
+					.addContainerGap())
 				.addGroup(gl_contentPane.createSequentialGroup()
-					.addContainerGap(295, Short.MAX_VALUE)
-					.addComponent(totalpricedisplay, GroupLayout.PREFERRED_SIZE, 378, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(215, Short.MAX_VALUE)
+					.addComponent(totalpricedisplay, GroupLayout.PREFERRED_SIZE, 488, GroupLayout.PREFERRED_SIZE)
 					.addGap(18)
 					.addComponent(btnNewButton_1, GroupLayout.PREFERRED_SIZE, 180, GroupLayout.PREFERRED_SIZE)
 					.addContainerGap())
-				.addComponent(scrollPane, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 911, Short.MAX_VALUE)
+				.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 911, Short.MAX_VALUE)
 		);
 		gl_contentPane.setVerticalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
@@ -276,12 +280,12 @@ public class ItemSelector extends JFrame {
 					.addComponent(panel, GroupLayout.PREFERRED_SIZE, 73, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addComponent(lblNewLabel_1)
-						.addComponent(itemcombobox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 						.addComponent(lblNewLabel)
-						.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE, false)
-							.addComponent(quantity, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
-							.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)))
+						.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+							.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE)
+							.addComponent(quantity, GroupLayout.PREFERRED_SIZE, 32, GroupLayout.PREFERRED_SIZE))
+						.addComponent(lblNewLabel_1)
+						.addComponent(itemcombobox, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 342, Short.MAX_VALUE)
 					.addPreferredGap(ComponentPlacement.UNRELATED)
@@ -318,7 +322,7 @@ public class ItemSelector extends JFrame {
 
 		JLabel lblNewLabel_2 = new JLabel("Items for order ID: " + orderid);
 
-		lblNewLabel_2.setIcon(new ImageIcon(ItemSelector.class.getResource("/main/logo/card-payment.png")));
+		lblNewLabel_2.setIcon(new ImageIcon(BakerySelector.class.getResource("/main/logo/card-payment.png")));
 		lblNewLabel_2.setForeground(Color.WHITE);
 		lblNewLabel_2.setFont(new Font("Comic Sans MS", Font.PLAIN, 17));
 		GroupLayout gl_panel = new GroupLayout(panel);

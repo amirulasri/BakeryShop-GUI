@@ -135,57 +135,57 @@ public class Receiptwindow extends JFrame {
 
 		JLabel lblNewLabel_4 = new JLabel("Customer Details");
 		lblNewLabel_4.setBackground(Color.WHITE);
-		lblNewLabel_4.setFont(new Font("SansSerif", Font.PLAIN, 18));
+		lblNewLabel_4.setFont(new Font("Arial", Font.PLAIN, 18));
 		lblNewLabel_4.setForeground(Color.BLACK);
 
 		JLabel lblNewLabel_1 = new JLabel("Name:");
 		lblNewLabel_1.setForeground(Color.BLACK);
-		lblNewLabel_1.setFont(new Font("SansSerif", Font.PLAIN, 16));
+		lblNewLabel_1.setFont(new Font("Arial", Font.PLAIN, 16));
 
 		JLabel namedisplay = new JLabel(name);
 		namedisplay.setForeground(Color.BLACK);
-		namedisplay.setFont(new Font("SansSerif", Font.PLAIN, 14));
+		namedisplay.setFont(new Font("Arial", Font.PLAIN, 14));
 
 		JLabel lblNewLabel_2 = new JLabel("Phone Number:");
 		lblNewLabel_2.setForeground(Color.BLACK);
-		lblNewLabel_2.setFont(new Font("SansSerif", Font.PLAIN, 16));
+		lblNewLabel_2.setFont(new Font("Arial", Font.PLAIN, 16));
 
 		JLabel phonenodisplay = new JLabel(phoneno);
 		phonenodisplay.setForeground(Color.BLACK);
-		phonenodisplay.setFont(new Font("SansSerif", Font.PLAIN, 14));
+		phonenodisplay.setFont(new Font("Arial", Font.PLAIN, 14));
 
 		JLabel lblNewLabel_4_2 = new JLabel("Order Details");
 		lblNewLabel_4_2.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblNewLabel_4_2.setForeground(Color.BLACK);
-		lblNewLabel_4_2.setFont(new Font("SansSerif", Font.PLAIN, 18));
+		lblNewLabel_4_2.setFont(new Font("Arial", Font.PLAIN, 18));
 		lblNewLabel_4_2.setBackground(Color.WHITE);
 
 		JLabel lblNewLabel_1_2 = new JLabel("Order Date:");
 		lblNewLabel_1_2.setForeground(Color.BLACK);
-		lblNewLabel_1_2.setFont(new Font("SansSerif", Font.PLAIN, 16));
+		lblNewLabel_1_2.setFont(new Font("Arial", Font.PLAIN, 16));
 
 		JLabel orderdatedisplay = new JLabel(date + " " + time);
 		orderdatedisplay.setHorizontalAlignment(SwingConstants.RIGHT);
 		orderdatedisplay.setForeground(Color.BLACK);
-		orderdatedisplay.setFont(new Font("SansSerif", Font.PLAIN, 14));
+		orderdatedisplay.setFont(new Font("Arial", Font.PLAIN, 14));
 
 		JLabel lblNewLabel_1_2_1 = new JLabel("Order ID:");
 		lblNewLabel_1_2_1.setForeground(Color.BLACK);
-		lblNewLabel_1_2_1.setFont(new Font("SansSerif", Font.PLAIN, 16));
+		lblNewLabel_1_2_1.setFont(new Font("Arial", Font.PLAIN, 16));
 
 		JLabel orderiddisplay = new JLabel(String.valueOf(orderid));
 		orderiddisplay.setHorizontalAlignment(SwingConstants.RIGHT);
 		orderiddisplay.setForeground(Color.BLACK);
-		orderiddisplay.setFont(new Font("SansSerif", Font.PLAIN, 14));
+		orderiddisplay.setFont(new Font("Arial", Font.PLAIN, 14));
 
 		JLabel lblNewLabel_1_2_2 = new JLabel("Payment Type:");
 		lblNewLabel_1_2_2.setForeground(Color.BLACK);
-		lblNewLabel_1_2_2.setFont(new Font("SansSerif", Font.PLAIN, 16));
+		lblNewLabel_1_2_2.setFont(new Font("Arial", Font.PLAIN, 16));
 
 		JLabel paymenttypedisplay = new JLabel(paymenttype);
 		paymenttypedisplay.setHorizontalAlignment(SwingConstants.RIGHT);
 		paymenttypedisplay.setForeground(Color.BLACK);
-		paymenttypedisplay.setFont(new Font("SansSerif", Font.PLAIN, 14));
+		paymenttypedisplay.setFont(new Font("Arial", Font.PLAIN, 14));
 
 		JScrollPane scrollPane = new JScrollPane();
 
@@ -205,29 +205,29 @@ public class Receiptwindow extends JFrame {
 
 		JLabel lblNewLabel_2_1 = new JLabel("Address:");
 		lblNewLabel_2_1.setForeground(Color.BLACK);
-		lblNewLabel_2_1.setFont(new Font("SansSerif", Font.PLAIN, 16));
+		lblNewLabel_2_1.setFont(new Font("Arial", Font.PLAIN, 16));
 
 		String addressline = "<html>"
 				+ address.replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll("\n", "<br/>") + "</html>";
 		JLabel addressdisplay = new JLabel(addressline);
 		addressdisplay.setVerticalAlignment(SwingConstants.TOP);
 		addressdisplay.setForeground(Color.BLACK);
-		addressdisplay.setFont(new Font("SansSerif", Font.PLAIN, 14));
+		addressdisplay.setFont(new Font("Arial", Font.PLAIN, 14));
 
 		JLabel lblNewLabel_2_2 = new JLabel("Gender:");
 		lblNewLabel_2_2.setForeground(Color.BLACK);
-		lblNewLabel_2_2.setFont(new Font("SansSerif", Font.PLAIN, 16));
+		lblNewLabel_2_2.setFont(new Font("Arial", Font.PLAIN, 16));
 
 		JLabel lblGendeDisp = new JLabel(gender);
 		lblGendeDisp.setForeground(Color.BLACK);
-		lblGendeDisp.setFont(new Font("SansSerif", Font.PLAIN, 14));
+		lblGendeDisp.setFont(new Font("Arial", Font.PLAIN, 14));
 
 		JLabel lblNewLabel_2_1_1 = new JLabel("Regular Customer:");
 		lblNewLabel_2_1_1.setForeground(Color.BLACK);
-		lblNewLabel_2_1_1.setFont(new Font("SansSerif", Font.PLAIN, 16));
+		lblNewLabel_2_1_1.setFont(new Font("Arial", Font.PLAIN, 16));
 
 		JLabel regularcustdisp = new JLabel(regularcustomer);
-		regularcustdisp.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		regularcustdisp.setFont(new Font("Arial", Font.PLAIN, 14));
 		
 		JButton btnNewButton = new JButton("Save As PDF");
 		btnNewButton.addMouseListener(new MouseAdapter() {

@@ -8,7 +8,7 @@ public class Main {
 	
 	//SETTING
 	static private double discount = 0.10;
-	static String url = "jdbc:sqlite::resource:db/bakeryorderdata.db";
+	static String url = "jdbc:sqlite:src/db/bakeryorderdata.db";
 	private static Cashierwindow cashier;
 	
 	static public double getdiscountvalue() {
@@ -95,8 +95,6 @@ public class Main {
 		
 		createTable();
 		Splashscreen welcomeframe;
-		String s = new String();
-		System.out.println(s.getClass().getPackage().getSpecificationVersion());
 		try {
 			welcomeframe = new Splashscreen();
 

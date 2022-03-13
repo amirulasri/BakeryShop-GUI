@@ -10,6 +10,7 @@ import javax.swing.JOptionPane;
 
 import java.awt.Font;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.io.BufferedReader;
 import java.io.File;
@@ -128,11 +129,11 @@ public class NewOrderwindow extends JFrame {
 	}
 
 	public NewOrderwindow(int orderid, boolean recoverystate) throws IOException {
-		ItemSelector itemselector;
+		BakerySelector itemselector;
 		if(recoverystate == true) {
-			itemselector = new ItemSelector(orderid, true);
+			itemselector = new BakerySelector(orderid, true);
 		}else {
-			itemselector = new ItemSelector(orderid, false);
+			itemselector = new BakerySelector(orderid, false);
 		}
 		
 		addWindowListener(new WindowAdapter() {
@@ -213,12 +214,14 @@ public class NewOrderwindow extends JFrame {
 		setTitle("Bakery Shop");
 		setIconImage(Toolkit.getDefaultToolkit().getImage(NewOrderwindow.class.getResource("/main/logo/logo.png")));
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		setBounds(100, 100, 1023, 549);
+		setBounds(100, 100, 1019, 549);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(250, 243, 221));
 		contentPane.setBorder(null);
 		setContentPane(contentPane);
 		setLocationRelativeTo(null);
+		setPreferredSize(new Dimension(1000, 550));
+		pack();
 
 		JPanel panel = new JPanel();
 		panel.setBackground(new Color(59, 80, 107));
@@ -251,7 +254,7 @@ public class NewOrderwindow extends JFrame {
 		// CHECK IF CUSTOMER ID REGULAR
 		JCheckBox regularcustomercheck = new JCheckBox("Yes");
 		regularcustomercheck.setBackground(new Color(204, 255, 255));
-		regularcustomercheck.setFont(new Font("SansSerif", Font.BOLD, 15));
+		regularcustomercheck.setFont(new Font("SansSerif", Font.PLAIN, 15));
 		regularcustomercheck.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				if (regularcustomercheck.isSelected()) {
@@ -281,10 +284,10 @@ public class NewOrderwindow extends JFrame {
 
 		JRadioButton malevalueradio = new JRadioButton("Male");
 		malevalueradio.setBackground(new Color(204, 255, 255));
-		malevalueradio.setFont(new Font("SansSerif", Font.BOLD, 15));
+		malevalueradio.setFont(new Font("Arial", Font.PLAIN, 15));
 		JRadioButton femalevalueradio = new JRadioButton("Female");
 		femalevalueradio.setBackground(new Color(204, 255, 255));
-		femalevalueradio.setFont(new Font("SansSerif", Font.BOLD, 15));
+		femalevalueradio.setFont(new Font("Arial", Font.PLAIN, 15));
 
 		malevalueradio.setActionCommand("Male");
 		femalevalueradio.setActionCommand("Female");
@@ -321,7 +324,7 @@ public class NewOrderwindow extends JFrame {
 
 		JButton btnNewButton_1 = new JButton("Add Items");
 		btnNewButton_1.setBackground(new Color(51, 204, 255));
-		btnNewButton_1.setFont(new Font("SansSerif", Font.BOLD, 14));
+		btnNewButton_1.setFont(new Font("Arial", Font.PLAIN, 14));
 		btnNewButton_1.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				itemselector.setVisible(true);
@@ -329,29 +332,29 @@ public class NewOrderwindow extends JFrame {
 		});
 
 		titletotalprice = new JLabel("Total Price:");
-		titletotalprice.setFont(new Font("SansSerif", Font.BOLD, 16));
+		titletotalprice.setFont(new Font("Arial", Font.PLAIN, 16));
 		titletotalprice.setForeground(Color.BLACK);
 
 		totalpricedisplay = new JLabel("RM 0.00");
-		totalpricedisplay.setFont(new Font("SansSerif", Font.BOLD, 19));
+		totalpricedisplay.setFont(new Font("Arial Black", Font.PLAIN, 19));
 		
 				JLabel lblNewLabel_1 = new JLabel("Customer Name");
-				lblNewLabel_1.setFont(new Font("SansSerif", Font.BOLD, 14));
+				lblNewLabel_1.setFont(new Font("Arial", Font.PLAIN, 14));
 		
 				JLabel lblNewLabel_3 = new JLabel("Phone Number");
-				lblNewLabel_3.setFont(new Font("SansSerif", Font.BOLD, 14));
+				lblNewLabel_3.setFont(new Font("Arial", Font.PLAIN, 14));
 		
 				JLabel lblNewLabel = new JLabel("Address");
-				lblNewLabel.setFont(new Font("SansSerif", Font.BOLD, 14));
+				lblNewLabel.setFont(new Font("Arial", Font.PLAIN, 14));
 		
 				JLabel lblNewLabel_6 = new JLabel("Gender");
-				lblNewLabel_6.setFont(new Font("SansSerif", Font.BOLD, 14));
+				lblNewLabel_6.setFont(new Font("Arial", Font.PLAIN, 14));
 		
 				JLabel lblNewLabel_4 = new JLabel("Items");
-				lblNewLabel_4.setFont(new Font("SansSerif", Font.BOLD, 14));
+				lblNewLabel_4.setFont(new Font("Arial", Font.PLAIN, 14));
 		
 				JLabel lblNewLabel_5 = new JLabel("Regular Customer");
-				lblNewLabel_5.setFont(new Font("SansSerif", Font.BOLD, 14));
+				lblNewLabel_5.setFont(new Font("Arial", Font.PLAIN, 14));
 		
 		JPanel panel_3 = new JPanel();
 		panel_3.setOpaque(false);
@@ -444,7 +447,7 @@ public class NewOrderwindow extends JFrame {
 				panel_3.add(btnNewButton);
 				btnNewButton.setIcon(new ImageIcon(NewOrderwindow.class.getResource("/main/logo/payment-method.png")));
 				btnNewButton.setBackground(new Color(102, 102, 255));
-				btnNewButton.setFont(new Font("SansSerif", Font.BOLD, 17));
+				btnNewButton.setFont(new Font("Arial", Font.PLAIN, 17));
 				btnNewButton.addMouseListener(new MouseAdapter() {
 					@Override
 					public void mouseClicked(MouseEvent e) {

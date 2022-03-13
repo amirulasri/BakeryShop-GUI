@@ -163,6 +163,7 @@ public class Cashierwindow extends JFrame {
 			new ReceiptPDF(orderid);
 		} catch (IOException e) {
 			System.out.println("ERROR PDF PRINT: " + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 	
@@ -311,6 +312,39 @@ public class Cashierwindow extends JFrame {
 		mnNewMenu_2.add(mntmNewMenuItem_5);
 		mntmNewMenuItem_4.setIcon(new ImageIcon(Cashierwindow.class.getResource("/main/logo/multiply.png")));
 		mnNewMenu_2.add(mntmNewMenuItem_4);
+		
+		JMenuItem mntmNewMenuItem_6 = new JMenuItem("Edit Item List");
+		mntmNewMenuItem_6.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				File itemfile = new File("bakerylist.txt");
+				if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+					  String cmd = null;
+					try {
+						cmd = "rundll32 url.dll,FileProtocolHandler " + itemfile.getCanonicalPath();
+					} catch (IOException e2) {
+						JOptionPane.showMessageDialog(null, "Something went wrong when opening items file", "Error opening file", JOptionPane.ERROR_MESSAGE);
+						e2.printStackTrace();
+					}
+					  try {
+						Runtime.getRuntime().exec(cmd);
+					} catch (IOException e1) {
+						JOptionPane.showMessageDialog(null, "Something went wrong when opening items file", "Error opening file", JOptionPane.ERROR_MESSAGE);
+						e1.printStackTrace();
+					}
+					} 
+					else {
+					  try {
+						Desktop.getDesktop().edit(itemfile);
+					} catch (IOException e1) {
+						JOptionPane.showMessageDialog(null, "Something went wrong when opening items file", "Error opening file", JOptionPane.ERROR_MESSAGE);
+						e1.printStackTrace();
+					}
+					}
+			}
+		});
+		mntmNewMenuItem_6.setIcon(new ImageIcon(Cashierwindow.class.getResource("/main/logo/edit.png")));
+		mnNewMenu_2.add(mntmNewMenuItem_6);
 
 		JMenu mnNewMenu = new JMenu("Order");
 		menuBar.add(mnNewMenu);
@@ -598,7 +632,7 @@ public class Cashierwindow extends JFrame {
 			}
 		});
 		btnNewButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		btnNewButton.setFont(new Font("Arial", Font.PLAIN, 15));
 		
 		lastiddisplay = new JLabel("Last Order ID: No Order");
 		lastiddisplay.setForeground(Color.WHITE);

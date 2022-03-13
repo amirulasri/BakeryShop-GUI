@@ -101,7 +101,7 @@ public class Paymentwindow extends JFrame {
 		panel_2_1.setBackground(new Color(216, 226, 220));
 		
 		JLabel lblNewLabel_1_1 = new JLabel("Enter Amount (RM)");
-		lblNewLabel_1_1.setFont(new Font("SansSerif", Font.BOLD, 14));
+		lblNewLabel_1_1.setFont(new Font("Arial", Font.PLAIN, 14));
 		
 		custpayfield = new JTextField();
 		custpayfield.setFont(new Font("SansSerif", Font.PLAIN, 16));
@@ -129,13 +129,13 @@ public class Paymentwindow extends JFrame {
 		
 		
 		JRadioButton creditcardtype = new JRadioButton("Credit Card");
-		creditcardtype.setFont(new Font("SansSerif", Font.BOLD, 16));
+		creditcardtype.setFont(new Font("Arial", Font.PLAIN, 16));
 		creditcardtype.setBackground(new Color(200, 213, 220));
 		JRadioButton cashtype = new JRadioButton("Cash");
-		cashtype.setFont(new Font("SansSerif", Font.BOLD, 16));
+		cashtype.setFont(new Font("Arial", Font.PLAIN, 16));
 		cashtype.setBackground(new Color(200, 213, 220));
 		JRadioButton debittype = new JRadioButton("Debit");
-		debittype.setFont(new Font("SansSerif", Font.BOLD, 16));
+		debittype.setFont(new Font("Arial", Font.PLAIN, 16));
 		debittype.setBackground(new Color(200, 213, 220));
 		
 		cashtype.setActionCommand("Cash");
@@ -251,7 +251,7 @@ public class Paymentwindow extends JFrame {
 			}
 		});
 		btnNewButton.setBackground(new Color(204, 183, 174));
-		btnNewButton.setFont(new Font("SansSerif", Font.BOLD, 16));
+		btnNewButton.setFont(new Font("Arial", Font.PLAIN, 16));
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
 			gl_contentPane.createParallelGroup(Alignment.TRAILING)
@@ -287,10 +287,10 @@ public class Paymentwindow extends JFrame {
 		);
 		
 		JLabel lblNewLabel_1 = new JLabel("Total");
-		lblNewLabel_1.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblNewLabel_1.setFont(new Font("Arial", Font.PLAIN, 14));
 		
 		JLabel pricedisplay = new JLabel("RM " + priceformatter.format(payment));
-		pricedisplay.setFont(new Font("SansSerif", Font.BOLD, 18));
+		pricedisplay.setFont(new Font("Arial Black", Font.PLAIN, 18));
 		GroupLayout gl_panel_2 = new GroupLayout(panel_2);
 		gl_panel_2.setHorizontalGroup(
 			gl_panel_2.createParallelGroup(Alignment.TRAILING)
@@ -313,7 +313,7 @@ public class Paymentwindow extends JFrame {
 		panel_2.setLayout(gl_panel_2);
 		
 		JLabel lblNewLabel = new JLabel("Choose Payment Type");
-		lblNewLabel.setFont(new Font("SansSerif", Font.PLAIN, 17));
+		lblNewLabel.setFont(new Font("Arial", Font.PLAIN, 17));
 		
 		GroupLayout gl_panel_1 = new GroupLayout(panel_1);
 		gl_panel_1.setHorizontalGroup(

@@ -1,0 +1,36 @@
+PASTRIES-Donut Choc,2.00
+PASTRIES-Donut Vanilla,2.00
+PASTRIES-Donut Blueberry,2.00
+PASTRIES-Croissant,2.00
+PASTRIES-Floss Chicken,2.50
+PASTRIES-Beef,3.50
+PASTRIES-HotdogBread,2.50
+PASTRIES-SweetBread,3.00
+PASTRIES-Baugette,3.00
+PASTRIES-Bagel,2.00
+PASTRIES-Banana Bread,3.50
+CAKES-Red Velvet,9.90
+CAKES-Red Velvet Whole,95.00
+CAKES-Oreo CheeseCake,7.90
+CAKES-Oreo CheeseCake Whole,75.00
+CAKES-Indulgence,9.90
+CAKES-Indulgence Whole,95.00
+CAKES-Absolute Durian,9.90
+CAKES-Absolute Durian Whole,95.00
+CAKES-American Brownies,8.90
+CAKES-American Brownies Whole,85.00
+CAKES-BlackForest,7.90
+CAKES-BlackForest Whole,75.00
+CAKES-VanillaCream,7.90
+CAKES-VanillaCream Whole,75.00
+CAKES-Choc Mud cakes,5.90
+CAKES-Choc Mud cakes Whole,55.00
+CAKES-Choc Fudge,7.90
+CAKES-Choc Fudge Whole,75.00
+CAKES-White NutMacadamia,7.90
+CAKES-White NutMacadamia Whole,75.00
+TART-Cheese tart,1.50
+TART-Baked egg tart,1.50
+TART-Blueberry tart,1.50
+TART-Apple Tart,1.50
+TART-Choc Tart,1.50
