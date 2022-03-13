@@ -146,6 +146,8 @@ public class Cashierwindow extends JFrame {
 			String maxId = result1.getString("lastid");
 			if(maxId!=null) {				
 				lastiddisplay.setText("Last Order ID: " + maxId);
+			}else {
+				lastiddisplay.setText("Last Order ID: No order");
 			}
 			conn.close();
 
@@ -658,7 +660,5 @@ public class Cashierwindow extends JFrame {
 		if(recoverystateglobal == true) {			
 			setState(JFrame.ICONIFIED);
 		}
-		
-		//MAKE CASHIERFRAME UNFOCUS WHEN NEW WINDOW OPENED
 	}
 }

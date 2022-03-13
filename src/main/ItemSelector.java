@@ -318,7 +318,7 @@ public class ItemSelector extends JFrame {
 
 		JLabel lblNewLabel_2 = new JLabel("Items for order ID: " + orderid);
 
-		lblNewLabel_2.setIcon(new ImageIcon(ItemSelector.class.getResource("/main/logo/contract.png")));
+		lblNewLabel_2.setIcon(new ImageIcon(ItemSelector.class.getResource("/main/logo/card-payment.png")));
 		lblNewLabel_2.setForeground(Color.WHITE);
 		lblNewLabel_2.setFont(new Font("Comic Sans MS", Font.PLAIN, 17));
 		GroupLayout gl_panel = new GroupLayout(panel);

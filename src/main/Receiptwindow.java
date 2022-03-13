@@ -19,6 +19,10 @@ import javax.swing.SwingConstants;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.JButton;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.IOException;
 
 public class Receiptwindow extends JFrame {
 
@@ -121,13 +125,13 @@ public class Receiptwindow extends JFrame {
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 936, 727);
 		contentPane = new JPanel();
-		contentPane.setBackground(new Color(230, 184, 156));
+		contentPane.setBackground(new Color(204, 153, 153));
 		setContentPane(contentPane);
 		setTitle("Bakery Shop");
 		setLocationRelativeTo(null);
 
 		JPanel panel = new JPanel();
-		panel.setBackground(new Color(140, 47, 57));
+		panel.setBackground(new Color(102, 0, 51));
 
 		JLabel lblNewLabel_4 = new JLabel("Customer Details");
 		lblNewLabel_4.setBackground(Color.WHITE);
@@ -186,14 +190,17 @@ public class Receiptwindow extends JFrame {
 		JScrollPane scrollPane = new JScrollPane();
 
 		JLabel lblNewLabel_4_1 = new JLabel("Total: RM" + priceformatter.format(totalprice));
+		lblNewLabel_4_1.setHorizontalAlignment(SwingConstants.RIGHT);
 		lblNewLabel_4_1.setForeground(Color.BLACK);
 		lblNewLabel_4_1.setFont(new Font("SansSerif", Font.BOLD, 18));
 		lblNewLabel_4_1.setBackground(Color.WHITE);
 
 		JLabel custpaiddisplay = new JLabel("Customer paid: RM" + priceformatter.format(customerpay));
+		custpaiddisplay.setHorizontalAlignment(SwingConstants.RIGHT);
 		custpaiddisplay.setFont(new Font("Tahoma", Font.PLAIN, 14));
 
 		JLabel balancedisp = new JLabel("Balance: RM" + priceformatter.format(customerpay - totalprice));
+		balancedisp.setHorizontalAlignment(SwingConstants.RIGHT);
 		balancedisp.setFont(new Font("Tahoma", Font.PLAIN, 14));
 
 		JLabel lblNewLabel_2_1 = new JLabel("Address:");
@@ -221,133 +228,146 @@ public class Receiptwindow extends JFrame {
 
 		JLabel regularcustdisp = new JLabel(regularcustomer);
 		regularcustdisp.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		
+		JButton btnNewButton = new JButton("Save As PDF");
+		btnNewButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				try {
+					new ReceiptPDF(orderid);
+				} catch (IOException e1) {
+					System.out.println("ERROR PDF PRINT: " + e1.getMessage());
+				}
+			}
+		});
+		btnNewButton.setBackground(new Color(255, 204, 255));
+		btnNewButton.setIcon(new ImageIcon(Receiptwindow.class.getResource("/main/logo/document.png")));
+		btnNewButton.setFont(new Font("SansSerif", Font.BOLD, 13));
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
-		gl_contentPane
-				.setHorizontalGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addComponent(panel, GroupLayout.DEFAULT_SIZE, 920, Short.MAX_VALUE)
-						.addGroup(gl_contentPane
-								.createSequentialGroup().addContainerGap().addComponent(lblNewLabel_4).addGap(626)
-								.addComponent(lblNewLabel_4_2, GroupLayout.PREFERRED_SIZE, 137,
-										GroupLayout.PREFERRED_SIZE)
-								.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-						.addGroup(gl_contentPane
-								.createSequentialGroup().addContainerGap()
-								.addComponent(
-										lblNewLabel_4_1, GroupLayout.PREFERRED_SIZE, 289, GroupLayout.PREFERRED_SIZE)
-								.addContainerGap(621, Short.MAX_VALUE))
-						.addGroup(gl_contentPane.createSequentialGroup().addContainerGap()
-								.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING, false)
-										.addComponent(custpaiddisplay, Alignment.LEADING, GroupLayout.DEFAULT_SIZE,
-												GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-										.addComponent(balancedisp, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 598,
-												Short.MAX_VALUE))
-								.addContainerGap(312, Short.MAX_VALUE))
-						.addGroup(gl_contentPane.createSequentialGroup().addContainerGap().addGroup(gl_contentPane
-								.createParallelGroup(Alignment.LEADING)
-								.addGroup(gl_contentPane.createSequentialGroup()
-										.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-												.addComponent(lblNewLabel_2_2, GroupLayout.PREFERRED_SIZE, 108,
-														GroupLayout.PREFERRED_SIZE)
-												.addComponent(lblNewLabel_2_1, GroupLayout.PREFERRED_SIZE, 73,
-														GroupLayout.PREFERRED_SIZE))
-										.addPreferredGap(ComponentPlacement.UNRELATED)
-										.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-												.addComponent(addressdisplay, GroupLayout.PREFERRED_SIZE, 465,
-														GroupLayout.PREFERRED_SIZE)
-												.addComponent(lblGendeDisp, GroupLayout.PREFERRED_SIZE, 207,
-														GroupLayout.PREFERRED_SIZE)))
-								.addGroup(gl_contentPane.createSequentialGroup()
-										.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-												.addComponent(lblNewLabel_2).addComponent(lblNewLabel_1))
-										.addPreferredGap(ComponentPlacement.UNRELATED)
-										.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-												.addComponent(phonenodisplay, GroupLayout.PREFERRED_SIZE, 207,
-														GroupLayout.PREFERRED_SIZE)
-												.addComponent(namedisplay, GroupLayout.PREFERRED_SIZE, 333,
-														GroupLayout.PREFERRED_SIZE))))
-								.addGap(16)
-								.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-										.addGroup(gl_contentPane.createSequentialGroup().addComponent(lblNewLabel_1_2)
-												.addPreferredGap(ComponentPlacement.UNRELATED)
-												.addComponent(orderdatedisplay, GroupLayout.PREFERRED_SIZE, 209,
-														GroupLayout.PREFERRED_SIZE))
-										.addGroup(gl_contentPane.createSequentialGroup()
-												.addComponent(lblNewLabel_1_2_1, GroupLayout.PREFERRED_SIZE, 82,
-														GroupLayout.PREFERRED_SIZE)
-												.addPreferredGap(ComponentPlacement.RELATED)
-												.addComponent(orderiddisplay, GroupLayout.PREFERRED_SIZE, 211,
-														GroupLayout.PREFERRED_SIZE))
-										.addGroup(gl_contentPane.createSequentialGroup()
-												.addComponent(lblNewLabel_1_2_2, GroupLayout.PREFERRED_SIZE, 113,
-														GroupLayout.PREFERRED_SIZE)
-												.addGap(90).addComponent(paymenttypedisplay, GroupLayout.PREFERRED_SIZE,
-														96, GroupLayout.PREFERRED_SIZE)))
-								.addContainerGap())
-						.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 920, Short.MAX_VALUE)
-						.addGroup(gl_contentPane.createSequentialGroup().addContainerGap()
-								.addComponent(lblNewLabel_2_1_1, GroupLayout.PREFERRED_SIZE, 138,
-										GroupLayout.PREFERRED_SIZE)
-								.addPreferredGap(ComponentPlacement.RELATED).addComponent(regularcustdisp,
-										GroupLayout.PREFERRED_SIZE, 107, GroupLayout.PREFERRED_SIZE)
-								.addContainerGap(659, Short.MAX_VALUE)));
-		gl_contentPane.setVerticalGroup(gl_contentPane.createParallelGroup(Alignment.LEADING).addGroup(gl_contentPane
-				.createSequentialGroup().addComponent(panel, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
-				.addPreferredGap(ComponentPlacement.UNRELATED)
-				.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE).addComponent(lblNewLabel_4)
+		gl_contentPane.setHorizontalGroup(
+			gl_contentPane.createParallelGroup(Alignment.TRAILING)
+				.addComponent(panel, GroupLayout.DEFAULT_SIZE, 920, Short.MAX_VALUE)
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(lblNewLabel_4)
+					.addGap(626)
+					.addComponent(lblNewLabel_4_2, GroupLayout.PREFERRED_SIZE, 137, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addContainerGap()
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+								.addComponent(lblNewLabel_2_2, GroupLayout.PREFERRED_SIZE, 108, GroupLayout.PREFERRED_SIZE)
+								.addComponent(lblNewLabel_2_1, GroupLayout.PREFERRED_SIZE, 73, GroupLayout.PREFERRED_SIZE))
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+								.addComponent(addressdisplay, GroupLayout.PREFERRED_SIZE, 465, GroupLayout.PREFERRED_SIZE)
+								.addComponent(lblGendeDisp, GroupLayout.PREFERRED_SIZE, 207, GroupLayout.PREFERRED_SIZE)))
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+								.addComponent(lblNewLabel_2)
+								.addComponent(lblNewLabel_1))
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+								.addComponent(phonenodisplay, GroupLayout.PREFERRED_SIZE, 207, GroupLayout.PREFERRED_SIZE)
+								.addComponent(namedisplay, GroupLayout.PREFERRED_SIZE, 333, GroupLayout.PREFERRED_SIZE))))
+					.addGap(16)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addComponent(lblNewLabel_1_2)
+							.addPreferredGap(ComponentPlacement.UNRELATED)
+							.addComponent(orderdatedisplay, GroupLayout.PREFERRED_SIZE, 209, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addComponent(lblNewLabel_1_2_1, GroupLayout.PREFERRED_SIZE, 82, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(orderiddisplay, GroupLayout.PREFERRED_SIZE, 211, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addComponent(lblNewLabel_1_2_2, GroupLayout.PREFERRED_SIZE, 113, GroupLayout.PREFERRED_SIZE)
+							.addGap(90)
+							.addComponent(paymenttypedisplay, GroupLayout.PREFERRED_SIZE, 96, GroupLayout.PREFERRED_SIZE)))
+					.addContainerGap())
+				.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 920, Short.MAX_VALUE)
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(lblNewLabel_2_1_1, GroupLayout.PREFERRED_SIZE, 138, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(regularcustdisp, GroupLayout.PREFERRED_SIZE, 107, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(659, Short.MAX_VALUE))
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addContainerGap(410, Short.MAX_VALUE)
+					.addComponent(lblNewLabel_4_1, GroupLayout.PREFERRED_SIZE, 500, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap())
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addContainerGap()
+					.addComponent(btnNewButton)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addGap(213)
+							.addComponent(custpaiddisplay, GroupLayout.DEFAULT_SIZE, 598, Short.MAX_VALUE))
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addPreferredGap(ComponentPlacement.RELATED, 213, Short.MAX_VALUE)
+							.addComponent(balancedisp, GroupLayout.PREFERRED_SIZE, 598, GroupLayout.PREFERRED_SIZE)))
+					.addContainerGap())
+		);
+		gl_contentPane.setVerticalGroup(
+			gl_contentPane.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_contentPane.createSequentialGroup()
+					.addComponent(panel, GroupLayout.PREFERRED_SIZE, 68, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+						.addComponent(lblNewLabel_4)
 						.addComponent(lblNewLabel_4_2, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE))
-				.addPreferredGap(ComponentPlacement.RELATED)
-				.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE).addComponent(lblNewLabel_1)
-								.addComponent(namedisplay))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-								.addComponent(orderdatedisplay, GroupLayout.PREFERRED_SIZE, 21,
-										GroupLayout.PREFERRED_SIZE)
-								.addComponent(lblNewLabel_1_2, GroupLayout.PREFERRED_SIZE, 21,
-										GroupLayout.PREFERRED_SIZE)))
-				.addGap(6)
-				.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING, false)
+							.addComponent(lblNewLabel_1)
+							.addComponent(namedisplay))
+						.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+							.addComponent(orderdatedisplay, GroupLayout.PREFERRED_SIZE, 21, GroupLayout.PREFERRED_SIZE)
+							.addComponent(lblNewLabel_1_2, GroupLayout.PREFERRED_SIZE, 21, GroupLayout.PREFERRED_SIZE)))
+					.addGap(6)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING, false)
 						.addGroup(gl_contentPane.createSequentialGroup()
-								.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-										.addComponent(lblNewLabel_1_2_1, GroupLayout.PREFERRED_SIZE, 21,
-												GroupLayout.PREFERRED_SIZE)
-										.addComponent(orderiddisplay, GroupLayout.PREFERRED_SIZE, 21,
-												GroupLayout.PREFERRED_SIZE))
-								.addPreferredGap(ComponentPlacement.RELATED)
-								.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-										.addComponent(lblNewLabel_1_2_2, GroupLayout.PREFERRED_SIZE, 21,
-												GroupLayout.PREFERRED_SIZE)
-										.addComponent(
-												paymenttypedisplay, GroupLayout.PREFERRED_SIZE, 21,
-												GroupLayout.PREFERRED_SIZE)))
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
+								.addComponent(lblNewLabel_1_2_1, GroupLayout.PREFERRED_SIZE, 21, GroupLayout.PREFERRED_SIZE)
+								.addComponent(orderiddisplay, GroupLayout.PREFERRED_SIZE, 21, GroupLayout.PREFERRED_SIZE))
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+								.addComponent(lblNewLabel_1_2_2, GroupLayout.PREFERRED_SIZE, 21, GroupLayout.PREFERRED_SIZE)
+								.addComponent(paymenttypedisplay, GroupLayout.PREFERRED_SIZE, 21, GroupLayout.PREFERRED_SIZE)))
 						.addGroup(gl_contentPane.createSequentialGroup()
-								.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-										.addComponent(lblNewLabel_2).addComponent(phonenodisplay,
-												GroupLayout.PREFERRED_SIZE, 21, GroupLayout.PREFERRED_SIZE))
-								.addPreferredGap(ComponentPlacement.RELATED)
-								.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-										.addComponent(lblNewLabel_2_2, GroupLayout.PREFERRED_SIZE, 21,
-												GroupLayout.PREFERRED_SIZE)
-										.addComponent(lblGendeDisp, GroupLayout.PREFERRED_SIZE, 21,
-												GroupLayout.PREFERRED_SIZE))
-								.addPreferredGap(ComponentPlacement.RELATED)
-								.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-										.addComponent(lblNewLabel_2_1, GroupLayout.PREFERRED_SIZE, 21,
-												GroupLayout.PREFERRED_SIZE)
-										.addComponent(addressdisplay, GroupLayout.PREFERRED_SIZE, 65,
-												GroupLayout.PREFERRED_SIZE))))
-				.addPreferredGap(ComponentPlacement.UNRELATED)
-				.addGroup(
-						gl_contentPane.createParallelGroup(Alignment.BASELINE)
-								.addComponent(lblNewLabel_2_1_1, GroupLayout.PREFERRED_SIZE, 21,
-										GroupLayout.PREFERRED_SIZE)
-								.addComponent(regularcustdisp))
-				.addGap(20).addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 293, Short.MAX_VALUE)
-				.addPreferredGap(ComponentPlacement.RELATED)
-				.addComponent(lblNewLabel_4_1, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE)
-				.addPreferredGap(ComponentPlacement.RELATED).addComponent(custpaiddisplay)
-				.addPreferredGap(ComponentPlacement.RELATED)
-				.addComponent(balancedisp, GroupLayout.PREFERRED_SIZE, 15, GroupLayout.PREFERRED_SIZE)
-				.addContainerGap()));
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+								.addComponent(lblNewLabel_2)
+								.addComponent(phonenodisplay, GroupLayout.PREFERRED_SIZE, 21, GroupLayout.PREFERRED_SIZE))
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+								.addComponent(lblNewLabel_2_2, GroupLayout.PREFERRED_SIZE, 21, GroupLayout.PREFERRED_SIZE)
+								.addComponent(lblGendeDisp, GroupLayout.PREFERRED_SIZE, 21, GroupLayout.PREFERRED_SIZE))
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
+								.addComponent(lblNewLabel_2_1, GroupLayout.PREFERRED_SIZE, 21, GroupLayout.PREFERRED_SIZE)
+								.addComponent(addressdisplay, GroupLayout.PREFERRED_SIZE, 65, GroupLayout.PREFERRED_SIZE))))
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
+						.addComponent(lblNewLabel_2_1_1, GroupLayout.PREFERRED_SIZE, 21, GroupLayout.PREFERRED_SIZE)
+						.addComponent(regularcustdisp))
+					.addGap(20)
+					.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 293, Short.MAX_VALUE)
+					.addPreferredGap(ComponentPlacement.UNRELATED)
+					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addComponent(lblNewLabel_4_1, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(custpaiddisplay)
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addComponent(balancedisp, GroupLayout.PREFERRED_SIZE, 15, GroupLayout.PREFERRED_SIZE)
+							.addGap(6))
+						.addGroup(gl_contentPane.createSequentialGroup()
+							.addComponent(btnNewButton)
+							.addContainerGap())))
+		);
 
 		table = new JTable();
 		table.setModel(listitemmodel);

@@ -42,7 +42,7 @@ public class Paymentwindow extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public Paymentwindow(int orderid, double payment) {
+	public Paymentwindow(int orderid, double payment, boolean recoverystate) {
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
@@ -69,7 +69,7 @@ public class Paymentwindow extends JFrame {
 		panel.setBackground(new Color(100, 30, 57));
 		
 		JLabel lblPayment = new JLabel("Payment for Order ID: " + orderid);
-		lblPayment.setIcon(new ImageIcon(Paymentwindow.class.getResource("/main/logo/mobile-payment.png")));
+		lblPayment.setIcon(new ImageIcon(Paymentwindow.class.getResource("/main/logo/card-payment.png")));
 		lblPayment.setForeground(Color.WHITE);
 		lblPayment.setFont(new Font("Comic Sans MS", Font.PLAIN, 17));
 		GroupLayout gl_panel = new GroupLayout(panel);
@@ -228,7 +228,10 @@ public class Paymentwindow extends JFrame {
 						NewOrderwindow.regularcustomer = false;
 						NewOrderwindow.gender = "";
 						Cashierwindow.showlastorder();
-						Main.getcashierframe().setState(JFrame.NORMAL);
+						
+						if(recoverystate == true) {							
+							Main.getcashierframe().setState(JFrame.NORMAL);
+						}
 						
 						//DELETE RECOVERY FILE
 						try {							

@@ -543,7 +543,11 @@ public class NewOrderwindow extends JFrame {
 							String insertnewcust = "INSERT INTO customer(name,phoneno,address,gender,regularcustomer,orderid) VALUES (?,?,?,?,?,?)";
 							if (duplicateorderid) {
 								if (paymentframe == null) {
-									paymentframe = new Paymentwindow(orderid, finalprice);
+									if(recoverystate == true) {										
+										paymentframe = new Paymentwindow(orderid, finalprice, true);
+									}else {
+										paymentframe = new Paymentwindow(orderid, finalprice, false);
+									}
 									paymentframe.setVisible(true);
 								} else {
 									paymentframe.setVisible(true);
@@ -565,7 +569,11 @@ public class NewOrderwindow extends JFrame {
 									System.out.println(e1.getMessage());
 								}
 								if (paymentframe == null) {
-									paymentframe = new Paymentwindow(orderid, finalprice);
+									if(recoverystate == true) {										
+										paymentframe = new Paymentwindow(orderid, finalprice, true);
+									}else {
+										paymentframe = new Paymentwindow(orderid, finalprice, false);
+									}
 									paymentframe.setVisible(true);
 								} else {
 									paymentframe.setVisible(true);
@@ -593,7 +601,7 @@ public class NewOrderwindow extends JFrame {
 		);
 
 		lblNewLabel_2 = new JLabel("New order for ID: " + orderid);
-		lblNewLabel_2.setIcon(new ImageIcon(NewOrderwindow.class.getResource("/main/logo/contract.png")));
+		lblNewLabel_2.setIcon(new ImageIcon(NewOrderwindow.class.getResource("/main/logo/notepad.png")));
 		lblNewLabel_2.setForeground(Color.WHITE);
 		lblNewLabel_2.setFont(new Font("Comic Sans MS", Font.PLAIN, 17));
 		GroupLayout gl_panel = new GroupLayout(panel);
