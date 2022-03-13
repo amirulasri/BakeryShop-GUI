@@ -9,13 +9,13 @@ public class Main {
 	//SETTING
 	static private double discount = 0.10;
 	static String url = "jdbc:sqlite::resource:db/bakeryorderdata.db";
-	private static Cashierframe cashier;
+	private static Cashierwindow cashier;
 	
 	static public double getdiscountvalue() {
 		return discount;
 	}
 	
-	static public Cashierframe getcashierframe() {
+	static public Cashierwindow getcashierframe() {
 		return cashier;
 	}
 	
@@ -94,22 +94,22 @@ public class Main {
 	public static void main(String[] args) {
 		
 		createTable();
-		Welcomeframe welcomeframe;
+		Splashscreen welcomeframe;
 		try {
-			welcomeframe = new Welcomeframe();
+			welcomeframe = new Splashscreen();
 
 			welcomeframe.setVisible(true);
 			Thread.sleep(2000);
 			welcomeframe.progressBar.setVisible(true);
 			try {
-				for (int i = 0; i <= 100; i += 4) {
-					Thread.sleep(20);
+				for (int i = 0; i <= 100; i += 20) {
+					Thread.sleep(250);
 					welcomeframe.progressBar.setValue(i);
 					welcomeframe.lblNewLabel_3.setText("Welcome! Starting up " + i + "%");
 				}
 				Thread.sleep(1000);
 				welcomeframe.setVisible(false);
-				cashier = new Cashierframe();
+				cashier = new Cashierwindow();
 				cashier.setVisible(true);
 			} catch (Exception e) {
 				e.printStackTrace();

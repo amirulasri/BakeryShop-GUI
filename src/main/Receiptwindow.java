@@ -20,7 +20,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-public class Receipt extends JFrame {
+public class Receiptwindow extends JFrame {
 
 	/**
 	 * 
@@ -35,7 +35,7 @@ public class Receipt extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public Receipt(int orderid) {
+	public Receiptwindow(int orderid) {
 		// DECLARE ALL DATA FOR RECEIPT
 		String name = null;
 		String phoneno = null;
@@ -117,7 +117,7 @@ public class Receipt extends JFrame {
 			regularcustomer = "Yes";
 		}
 
-		setIconImage(Toolkit.getDefaultToolkit().getImage(Receipt.class.getResource("/main/logo/logo.png")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(Receiptwindow.class.getResource("/main/logo/logo.png")));
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 936, 727);
 		contentPane = new JPanel();
@@ -358,7 +358,7 @@ public class Receipt extends JFrame {
 
 		JLabel lblNewLabel = new JLabel("Receipt for Order ID " + orderid);
 		lblNewLabel.setForeground(Color.WHITE);
-		lblNewLabel.setIcon(new ImageIcon(Receipt.class.getResource("/main/logo/receiptframe.png")));
+		lblNewLabel.setIcon(new ImageIcon(Receiptwindow.class.getResource("/main/logo/receiptframe.png")));
 		lblNewLabel.setFont(new Font("Comic Sans MS", Font.PLAIN, 17));
 		GroupLayout gl_panel = new GroupLayout(panel);
 		gl_panel.setHorizontalGroup(gl_panel.createParallelGroup(Alignment.LEADING)

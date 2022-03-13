@@ -379,7 +379,7 @@ public class ReceiptPDF {
 		table.draw();
 
 		JFrame saveframe = new JFrame();
-		saveframe.setIconImage(new ImageIcon(Cashierframe.class.getResource("/main/logo/logo.png")).getImage());
+		saveframe.setIconImage(new ImageIcon(Cashierwindow.class.getResource("/main/logo/logo.png")).getImage());
 		JFileChooser fileChooser = new JFileChooser() {
 			/**
 			 * 

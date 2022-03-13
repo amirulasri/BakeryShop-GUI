@@ -10,7 +10,7 @@ import javax.swing.JPanel;
 import java.awt.Color;
 import javax.swing.JProgressBar;
 
-public class Welcomeframe extends JFrame {
+public class Splashscreen extends JFrame {
 	/**
 	 * 
 	 */
@@ -21,7 +21,7 @@ public class Welcomeframe extends JFrame {
 	 */
 	JProgressBar progressBar = new JProgressBar();
 	JLabel lblNewLabel_3 = new JLabel("Welcome!");
-	public Welcomeframe() {
+	public Splashscreen() {
 		setUndecorated(true);
 		setResizable(false);
 		setTitle("Bakery Shop");

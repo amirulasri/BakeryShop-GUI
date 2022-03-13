@@ -368,7 +368,7 @@ public class ItemSelector extends JFrame {
 			System.out.println(e.getMessage());
 		}
 		totalpricedisplay.setText("Total Price: RM " + priceformatter.format(listpricecust));
-		NewOrder.calctotalprice(listpricecust);
+		NewOrderwindow.calctotalprice(listpricecust);
 	}
 	
 	private void showdata() {

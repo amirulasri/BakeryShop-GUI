@@ -27,7 +27,7 @@ import java.text.DecimalFormat;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class Payment extends JFrame {
+public class Paymentwindow extends JFrame {
 	
 	/**
 	 * 
@@ -42,7 +42,7 @@ public class Payment extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public Payment(int orderid, double payment) {
+	public Paymentwindow(int orderid, double payment) {
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
@@ -51,11 +51,11 @@ public class Payment extends JFrame {
 		        if(PromptResult==JOptionPane.YES_OPTION)
 		        {
 		            dispose();
-		            NewOrder.setpaymentframenull();
+		            NewOrderwindow.setpaymentframenull();
 		        }
 			}
 		});
-		setIconImage(Toolkit.getDefaultToolkit().getImage(Payment.class.getResource("/main/logo/logo.png")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(Paymentwindow.class.getResource("/main/logo/logo.png")));
 		setTitle("Bakery Shop");
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setBounds(100, 100, 844, 479);
@@ -69,7 +69,7 @@ public class Payment extends JFrame {
 		panel.setBackground(new Color(100, 30, 57));
 		
 		JLabel lblPayment = new JLabel("Payment for Order ID: " + orderid);
-		lblPayment.setIcon(new ImageIcon(Payment.class.getResource("/main/logo/mobile-payment.png")));
+		lblPayment.setIcon(new ImageIcon(Paymentwindow.class.getResource("/main/logo/mobile-payment.png")));
 		lblPayment.setForeground(Color.WHITE);
 		lblPayment.setFont(new Font("Comic Sans MS", Font.PLAIN, 17));
 		GroupLayout gl_panel = new GroupLayout(panel);
@@ -149,7 +149,7 @@ public class Payment extends JFrame {
 		
 		
 		JButton btnNewButton = new JButton("Pay");
-		btnNewButton.setIcon(new ImageIcon(Payment.class.getResource("/main/logo/payment-method.png")));
+		btnNewButton.setIcon(new ImageIcon(Paymentwindow.class.getResource("/main/logo/payment-method.png")));
 		btnNewButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -217,17 +217,17 @@ public class Payment extends JFrame {
 						stmt.execute(updatepaidstatus);
 						conn.close();
 						
-						Receipt receiptframe = new Receipt(orderid);
+						Receiptwindow receiptframe = new Receiptwindow(orderid);
 						receiptframe.setVisible(true);
-						Cashierframe.getorderframe().dispose();
-						Cashierframe.showdata();
+						Cashierwindow.getorderframe().dispose();
+						Cashierwindow.showdata();
 						dispose();
-			            NewOrder.setpaymentframenull();
-			            NewOrder.listpricecust = 0;
-						NewOrder.finalprice = 0;
-						NewOrder.regularcustomer = false;
-						NewOrder.gender = "";
-						Cashierframe.showlastorder();
+			            NewOrderwindow.setpaymentframenull();
+			            NewOrderwindow.listpricecust = 0;
+						NewOrderwindow.finalprice = 0;
+						NewOrderwindow.regularcustomer = false;
+						NewOrderwindow.gender = "";
+						Cashierwindow.showlastorder();
 						Main.getcashierframe().setState(JFrame.NORMAL);
 						
 						//DELETE RECOVERY FILE

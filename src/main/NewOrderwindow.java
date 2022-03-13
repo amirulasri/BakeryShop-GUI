@@ -43,7 +43,7 @@ import javax.swing.JRadioButton;
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
 
-public class NewOrder extends JFrame {
+public class NewOrderwindow extends JFrame {
 
 	/**
 	 * 
@@ -59,7 +59,7 @@ public class NewOrder extends JFrame {
 	static double finalprice = 0;
 	static private JLabel titletotalprice;
 	static private JLabel totalpricedisplay;
-	static Payment paymentframe = null;
+	static Paymentwindow paymentframe = null;
 
 	static String gender = "";
 	static boolean regularcustomer = false;
@@ -127,7 +127,7 @@ public class NewOrder extends JFrame {
 		return duplicatestate;
 	}
 
-	public NewOrder(int orderid, boolean recoverystate) throws IOException {
+	public NewOrderwindow(int orderid, boolean recoverystate) throws IOException {
 		ItemSelector itemselector;
 		if(recoverystate == true) {
 			itemselector = new ItemSelector(orderid, true);
@@ -139,7 +139,7 @@ public class NewOrder extends JFrame {
 			@Override
 			public void windowClosed(WindowEvent e) {
 				itemselector.dispose();
-				Cashierframe.getbuttoncreate().setEnabled(true);
+				Cashierwindow.getbuttoncreate().setEnabled(true);
 			}
 
 			@Override
@@ -168,7 +168,7 @@ public class NewOrder extends JFrame {
 					} catch (SQLException e1) {
 						System.out.println(e1.getMessage());
 					}
-					Cashierframe.showdata();
+					Cashierwindow.showdata();
 					if (paymentframe != null) {
 						paymentframe.dispose();
 						paymentframe = null;
@@ -178,7 +178,7 @@ public class NewOrder extends JFrame {
 					finalprice = 0;
 					regularcustomer = false;
 					gender = "";
-					Cashierframe.setorderframenull();
+					Cashierwindow.setorderframenull();
 					System.out.println("SQL orders DELETED");
 
 					// DELETE RECOVERY FILE
@@ -211,7 +211,7 @@ public class NewOrder extends JFrame {
 			java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
 		}
 		setTitle("Bakery Shop");
-		setIconImage(Toolkit.getDefaultToolkit().getImage(NewOrder.class.getResource("/main/logo/logo.png")));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(NewOrderwindow.class.getResource("/main/logo/logo.png")));
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setBounds(100, 100, 1023, 549);
 		contentPane = new JPanel();
@@ -319,140 +319,6 @@ public class NewOrder extends JFrame {
 			}
 		});
 
-		JButton btnNewButton = new JButton("Pay");
-		btnNewButton.setIcon(new ImageIcon(NewOrder.class.getResource("/main/logo/payment-method.png")));
-		btnNewButton.setBackground(new Color(102, 102, 255));
-		btnNewButton.setFont(new Font("SansSerif", Font.BOLD, 17));
-		btnNewButton.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				String customername = custnamefield.getText();
-				String phoneno = phonenofield.getText();
-				String address = addressfield.getText();
-				boolean regularcustomer = false;
-				if (regularcustomercheck.isSelected()) {
-					regularcustomer = true;
-				}
-
-				// ERROR HANDLING FOR RADIO GET ACTION COMMAND
-				try {
-					gender = genderselector.getSelection().getActionCommand();
-				} catch (Exception e1) {
-					System.out.println(e1.getMessage());
-				}
-
-				// PROCESS STATE
-				boolean process = false;
-
-				// ERROR STATE
-				boolean customernameerror = false;
-				boolean phonenoerror = false;
-				boolean addresserror = false;
-				boolean gendererror = false;
-				boolean quantityerror = false;
-
-				// CHECK NAME
-				if (customername.isEmpty()) {
-					customernameerror = true;
-				}
-
-				// CHECK PHONE NO
-				if (phoneno.isEmpty()) {
-					phonenoerror = true;
-				}
-
-				// CHECK ADDRESS
-				if (address.isEmpty()) {
-					addresserror = true;
-				}
-
-				// CHECK GENDER
-				if (gender.isEmpty()) {
-					gendererror = true;
-				}
-
-				// CHECK IF ITEM ADDED
-				int quantitycount = 0;
-				String checkid = "SELECT orderid,itemnumber,quantity FROM item WHERE orderid='" + orderid + "'";
-				try (Connection conn = Main.connect();
-						Statement stmt = conn.createStatement();
-						ResultSet result = stmt.executeQuery(checkid)) {
-
-					// loop through the result set
-					while (result.next()) {
-						quantitycount = quantitycount + result.getInt("quantity");
-					}
-					conn.close();
-				} catch (SQLException e1) {
-					System.out.println(e1.getMessage());
-				}
-
-				// CHECK QUANTITY ITEMS ADDED
-				if (quantitycount == 0) {
-					quantityerror = true;
-				}
-
-				// ERROR MESSAGE
-				if (customernameerror || phonenoerror || addresserror || gendererror || quantityerror) {
-					String error = "Check your required field:";
-					if (customernameerror) {
-						error += "\nName is empty";
-					}
-					if (phonenoerror) {
-						error += "\nPhone number is empty";
-					}
-					if (addresserror) {
-						error += "\nAddress is empty";
-					}
-					if (gendererror) {
-						error += "\nGender is empty";
-					}
-					if (quantityerror) {
-						error += "\nItems is empty";
-					}
-					JOptionPane.showMessageDialog(null, error, "Error. ID: " + orderid, JOptionPane.ERROR_MESSAGE);
-				} else {
-					process = true;
-				}
-
-				// IF TRUE, SAVE THE RECORD
-				if (process == true) {
-					boolean duplicateorderid = containsOrderId(orderid);
-					String insertnewcust = "INSERT INTO customer(name,phoneno,address,gender,regularcustomer,orderid) VALUES (?,?,?,?,?,?)";
-					if (duplicateorderid) {
-						if (paymentframe == null) {
-							paymentframe = new Payment(orderid, finalprice);
-							paymentframe.setVisible(true);
-						} else {
-							paymentframe.setVisible(true);
-						}
-					} else {
-						try (Connection conn = Main.connect();
-								PreparedStatement pstmt = conn.prepareStatement(insertnewcust)) {
-							pstmt.setString(1, customername);
-							pstmt.setString(2, phoneno);
-							pstmt.setString(3, address);
-							pstmt.setString(4, gender);
-							pstmt.setBoolean(5, regularcustomer);
-							pstmt.setInt(6, orderid);
-							pstmt.executeUpdate();
-
-						} catch (SQLException e1) {
-							System.out.println(e1.getMessage());
-						} catch (Exception e1) {
-							System.out.println(e1.getMessage());
-						}
-						if (paymentframe == null) {
-							paymentframe = new Payment(orderid, finalprice);
-							paymentframe.setVisible(true);
-						} else {
-							paymentframe.setVisible(true);
-						}
-					}
-				}
-			}
-		});
-
 		JButton btnNewButton_1 = new JButton("Add Items");
 		btnNewButton_1.setBackground(new Color(51, 204, 255));
 		btnNewButton_1.setFont(new Font("SansSerif", Font.BOLD, 14));
@@ -486,6 +352,9 @@ public class NewOrder extends JFrame {
 		
 				JLabel lblNewLabel_5 = new JLabel("Regular Customer");
 				lblNewLabel_5.setFont(new Font("SansSerif", Font.BOLD, 14));
+		
+		JPanel panel_3 = new JPanel();
+		panel_3.setOpaque(false);
 
 		GroupLayout gl_panel_1 = new GroupLayout(panel_1);
 		gl_panel_1.setHorizontalGroup(
@@ -494,32 +363,32 @@ public class NewOrder extends JFrame {
 					.addComponent(panel_2, GroupLayout.PREFERRED_SIZE, 18, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.UNRELATED)
 					.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
-						.addGroup(gl_panel_1.createSequentialGroup()
-							.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
-								.addGroup(gl_panel_1.createSequentialGroup()
-									.addComponent(malevalueradio)
-									.addPreferredGap(ComponentPlacement.UNRELATED)
-									.addComponent(femalevalueradio))
-								.addComponent(btnNewButton_1, GroupLayout.PREFERRED_SIZE, 188, GroupLayout.PREFERRED_SIZE))
-							.addGap(143)
-							.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
-								.addGroup(gl_panel_1.createSequentialGroup()
-									.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
-										.addComponent(titletotalprice)
-										.addComponent(totalpricedisplay))
-									.addGap(383)
-									.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 168, GroupLayout.PREFERRED_SIZE))
-								.addComponent(lblNewLabel_5, GroupLayout.PREFERRED_SIZE, 153, GroupLayout.PREFERRED_SIZE)
-								.addComponent(regularcustomercheck, GroupLayout.PREFERRED_SIZE, 117, GroupLayout.PREFERRED_SIZE)))
 						.addComponent(custnamefield, GroupLayout.DEFAULT_SIZE, 969, Short.MAX_VALUE)
 						.addComponent(lblNewLabel_1)
 						.addComponent(lblNewLabel_3)
 						.addComponent(phonenofield, GroupLayout.DEFAULT_SIZE, 969, Short.MAX_VALUE)
 						.addComponent(lblNewLabel)
 						.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 969, Short.MAX_VALUE)
-						.addComponent(lblNewLabel_6)
-						.addComponent(lblNewLabel_4))
+						.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
+							.addGroup(gl_panel_1.createSequentialGroup()
+								.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
+									.addGroup(gl_panel_1.createSequentialGroup()
+										.addComponent(malevalueradio)
+										.addPreferredGap(ComponentPlacement.UNRELATED)
+										.addComponent(femalevalueradio))
+									.addComponent(btnNewButton_1, GroupLayout.PREFERRED_SIZE, 188, GroupLayout.PREFERRED_SIZE))
+								.addGap(143)
+								.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
+									.addComponent(titletotalprice)
+									.addComponent(totalpricedisplay)
+									.addComponent(regularcustomercheck, GroupLayout.PREFERRED_SIZE, 117, GroupLayout.PREFERRED_SIZE)
+									.addComponent(lblNewLabel_5, GroupLayout.PREFERRED_SIZE, 153, GroupLayout.PREFERRED_SIZE)))
+							.addComponent(lblNewLabel_6)
+							.addComponent(lblNewLabel_4)))
 					.addContainerGap())
+				.addGroup(Alignment.TRAILING, gl_panel_1.createSequentialGroup()
+					.addContainerGap(687, Short.MAX_VALUE)
+					.addComponent(panel_3, GroupLayout.PREFERRED_SIZE, 320, GroupLayout.PREFERRED_SIZE))
 		);
 		gl_panel_1.setVerticalGroup(
 			gl_panel_1.createParallelGroup(Alignment.LEADING)
@@ -555,19 +424,156 @@ public class NewOrder extends JFrame {
 							.addComponent(lblNewLabel_4)
 							.addGroup(gl_panel_1.createParallelGroup(Alignment.LEADING)
 								.addGroup(gl_panel_1.createSequentialGroup()
+									.addPreferredGap(ComponentPlacement.RELATED)
+									.addComponent(btnNewButton_1, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE))
+								.addGroup(gl_panel_1.createSequentialGroup()
 									.addGap(10)
 									.addComponent(titletotalprice)
 									.addPreferredGap(ComponentPlacement.RELATED)
-									.addComponent(totalpricedisplay))
-								.addGroup(gl_panel_1.createSequentialGroup()
-									.addPreferredGap(ComponentPlacement.RELATED)
-									.addComponent(btnNewButton_1, GroupLayout.PREFERRED_SIZE, 40, GroupLayout.PREFERRED_SIZE))))
+									.addComponent(totalpricedisplay))))
 						.addGroup(gl_panel_1.createSequentialGroup()
-							.addGap(137)
-							.addComponent(btnNewButton, GroupLayout.PREFERRED_SIZE, 45, GroupLayout.PREFERRED_SIZE)))
-					.addGap(142))
+							.addGap(36)
+							.addComponent(panel_3, GroupLayout.PREFERRED_SIZE, 158, GroupLayout.PREFERRED_SIZE)))
+					.addGap(130))
 				.addComponent(panel_2, GroupLayout.DEFAULT_SIZE, 544, Short.MAX_VALUE)
 		);
+		panel_3.setLayout(null);
+		
+				JButton btnNewButton = new JButton("Pay");
+				btnNewButton.setBounds(142, 102, 168, 45);
+				panel_3.add(btnNewButton);
+				btnNewButton.setIcon(new ImageIcon(NewOrderwindow.class.getResource("/main/logo/payment-method.png")));
+				btnNewButton.setBackground(new Color(102, 102, 255));
+				btnNewButton.setFont(new Font("SansSerif", Font.BOLD, 17));
+				btnNewButton.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						String customername = custnamefield.getText();
+						String phoneno = phonenofield.getText();
+						String address = addressfield.getText();
+						boolean regularcustomer = false;
+						if (regularcustomercheck.isSelected()) {
+							regularcustomer = true;
+						}
+
+						// ERROR HANDLING FOR RADIO GET ACTION COMMAND
+						try {
+							gender = genderselector.getSelection().getActionCommand();
+						} catch (Exception e1) {
+							System.out.println(e1.getMessage());
+						}
+
+						// PROCESS STATE
+						boolean process = false;
+
+						// ERROR STATE
+						boolean customernameerror = false;
+						boolean phonenoerror = false;
+						boolean addresserror = false;
+						boolean gendererror = false;
+						boolean quantityerror = false;
+
+						// CHECK NAME
+						if (customername.isEmpty()) {
+							customernameerror = true;
+						}
+
+						// CHECK PHONE NO
+						if (phoneno.isEmpty()) {
+							phonenoerror = true;
+						}
+
+						// CHECK ADDRESS
+						if (address.isEmpty()) {
+							addresserror = true;
+						}
+
+						// CHECK GENDER
+						if (gender.isEmpty()) {
+							gendererror = true;
+						}
+
+						// CHECK IF ITEM ADDED
+						int quantitycount = 0;
+						String checkid = "SELECT orderid,itemnumber,quantity FROM item WHERE orderid='" + orderid + "'";
+						try (Connection conn = Main.connect();
+								Statement stmt = conn.createStatement();
+								ResultSet result = stmt.executeQuery(checkid)) {
+
+							// loop through the result set
+							while (result.next()) {
+								quantitycount = quantitycount + result.getInt("quantity");
+							}
+							conn.close();
+						} catch (SQLException e1) {
+							System.out.println(e1.getMessage());
+						}
+
+						// CHECK QUANTITY ITEMS ADDED
+						if (quantitycount == 0) {
+							quantityerror = true;
+						}
+
+						// ERROR MESSAGE
+						if (customernameerror || phonenoerror || addresserror || gendererror || quantityerror) {
+							String error = "Check your required field:";
+							if (customernameerror) {
+								error += "\nName is empty";
+							}
+							if (phonenoerror) {
+								error += "\nPhone number is empty";
+							}
+							if (addresserror) {
+								error += "\nAddress is empty";
+							}
+							if (gendererror) {
+								error += "\nGender is empty";
+							}
+							if (quantityerror) {
+								error += "\nItems is empty";
+							}
+							JOptionPane.showMessageDialog(null, error, "Error. ID: " + orderid, JOptionPane.ERROR_MESSAGE);
+						} else {
+							process = true;
+						}
+
+						// IF TRUE, SAVE THE RECORD
+						if (process == true) {
+							boolean duplicateorderid = containsOrderId(orderid);
+							String insertnewcust = "INSERT INTO customer(name,phoneno,address,gender,regularcustomer,orderid) VALUES (?,?,?,?,?,?)";
+							if (duplicateorderid) {
+								if (paymentframe == null) {
+									paymentframe = new Paymentwindow(orderid, finalprice);
+									paymentframe.setVisible(true);
+								} else {
+									paymentframe.setVisible(true);
+								}
+							} else {
+								try (Connection conn = Main.connect();
+										PreparedStatement pstmt = conn.prepareStatement(insertnewcust)) {
+									pstmt.setString(1, customername);
+									pstmt.setString(2, phoneno);
+									pstmt.setString(3, address);
+									pstmt.setString(4, gender);
+									pstmt.setBoolean(5, regularcustomer);
+									pstmt.setInt(6, orderid);
+									pstmt.executeUpdate();
+
+								} catch (SQLException e1) {
+									System.out.println(e1.getMessage());
+								} catch (Exception e1) {
+									System.out.println(e1.getMessage());
+								}
+								if (paymentframe == null) {
+									paymentframe = new Paymentwindow(orderid, finalprice);
+									paymentframe.setVisible(true);
+								} else {
+									paymentframe.setVisible(true);
+								}
+							}
+						}
+					}
+				});
 
 		scrollPane.setViewportView(addressfield);
 		panel_1.setLayout(gl_panel_1);
@@ -587,7 +593,7 @@ public class NewOrder extends JFrame {
 		);
 
 		lblNewLabel_2 = new JLabel("New order for ID: " + orderid);
-		lblNewLabel_2.setIcon(new ImageIcon(NewOrder.class.getResource("/main/logo/contract.png")));
+		lblNewLabel_2.setIcon(new ImageIcon(NewOrderwindow.class.getResource("/main/logo/contract.png")));
 		lblNewLabel_2.setForeground(Color.WHITE);
 		lblNewLabel_2.setFont(new Font("Comic Sans MS", Font.PLAIN, 17));
 		GroupLayout gl_panel = new GroupLayout(panel);

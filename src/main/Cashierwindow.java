@@ -39,7 +39,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.SwingConstants;
 
-public class Cashierframe extends JFrame {
+public class Cashierwindow extends JFrame {
 
 	/**
 	 * 
@@ -52,7 +52,7 @@ public class Cashierframe extends JFrame {
 	private JTable orderlist;
 	static DefaultTableModel listordermodel;
 	private static JButton btnNewButton;
-	static NewOrder orderframe = null;
+	static NewOrderwindow orderframe = null;
 	
 	static boolean recoverystateglobal = false;
 	
@@ -90,7 +90,7 @@ public class Cashierframe extends JFrame {
 						
 						if (PromptResult == JOptionPane.YES_OPTION) {
 							System.out.println("IN RECOVERY");
-							orderframe = new NewOrder(Integer.parseInt(maxId), true);
+							orderframe = new NewOrderwindow(Integer.parseInt(maxId), true);
 							orderframe.setVisible(true);
 							btnNewButton.setEnabled(false);
 							orderframe.toFront();
@@ -198,7 +198,7 @@ public class Cashierframe extends JFrame {
 		}
 	}
 
-	static public NewOrder getorderframe() {
+	static public NewOrderwindow getorderframe() {
 		return orderframe;
 	}
 
@@ -224,7 +224,7 @@ public class Cashierframe extends JFrame {
 		return duplicatestate;
 	}
 
-	public Cashierframe() throws IOException {
+	public Cashierwindow() throws IOException {
 		setAutoRequestFocus(false);
 		addWindowListener(new WindowAdapter() {
 			@Override
@@ -305,9 +305,9 @@ public class Cashierframe extends JFrame {
 				showlastorder();
 			}
 		});
-		mntmNewMenuItem_5.setIcon(new ImageIcon(Cashierframe.class.getResource("/main/logo/refresh.png")));
+		mntmNewMenuItem_5.setIcon(new ImageIcon(Cashierwindow.class.getResource("/main/logo/refresh.png")));
 		mnNewMenu_2.add(mntmNewMenuItem_5);
-		mntmNewMenuItem_4.setIcon(new ImageIcon(Cashierframe.class.getResource("/main/logo/multiply.png")));
+		mntmNewMenuItem_4.setIcon(new ImageIcon(Cashierwindow.class.getResource("/main/logo/multiply.png")));
 		mnNewMenu_2.add(mntmNewMenuItem_4);
 
 		JMenu mnNewMenu = new JMenu("Order");
@@ -336,7 +336,7 @@ public class Cashierframe extends JFrame {
 						if(processstate == true) {
 							boolean duplicateorderid = containsOrderId(intorderid);
 							if (duplicateorderid) {
-								Receipt receiptframe = new Receipt(intorderid);
+								Receiptwindow receiptframe = new Receiptwindow(intorderid);
 								receiptframe.setVisible(true);
 							} else {
 								JOptionPane.showMessageDialog(null, "The Order ID you entered not found. Refer Order table",
@@ -350,7 +350,7 @@ public class Cashierframe extends JFrame {
 				}
 			}
 		});
-		mntmNewMenuItem.setIcon(new ImageIcon(Cashierframe.class.getResource("/main/logo/receipt.png")));
+		mntmNewMenuItem.setIcon(new ImageIcon(Cashierwindow.class.getResource("/main/logo/receipt.png")));
 		mnNewMenu.add(mntmNewMenuItem);
 		
 		JMenuItem mntmNewMenuItem_3 = new JMenuItem("Delete order");
@@ -452,9 +452,9 @@ public class Cashierframe extends JFrame {
 				}
 			}
 		});
-		savetopdf.setIcon(new ImageIcon(Cashierframe.class.getResource("/main/logo/document.png")));
+		savetopdf.setIcon(new ImageIcon(Cashierwindow.class.getResource("/main/logo/document.png")));
 		mnNewMenu.add(savetopdf);
-		mntmNewMenuItem_3.setIcon(new ImageIcon(Cashierframe.class.getResource("/main/logo/delete.png")));
+		mntmNewMenuItem_3.setIcon(new ImageIcon(Cashierwindow.class.getResource("/main/logo/delete.png")));
 		mnNewMenu.add(mntmNewMenuItem_3);
 
 		JMenu mnNewMenu_1 = new JMenu("Help");
@@ -475,7 +475,7 @@ public class Cashierframe extends JFrame {
 				}
 			}
 		});
-		mntmNewMenuItem_1.setIcon(new ImageIcon(Cashierframe.class.getResource("/main/logo/manual.png")));
+		mntmNewMenuItem_1.setIcon(new ImageIcon(Cashierwindow.class.getResource("/main/logo/manual.png")));
 		mnNewMenu_1.add(mntmNewMenuItem_1);
 
 		JMenuItem mntmNewMenuItem_2 = new JMenuItem("About");
@@ -487,7 +487,7 @@ public class Cashierframe extends JFrame {
 						"About App", JOptionPane.INFORMATION_MESSAGE);
 			}
 		});
-		mntmNewMenuItem_2.setIcon(new ImageIcon(Cashierframe.class.getResource("/main/logo/about.png")));
+		mntmNewMenuItem_2.setIcon(new ImageIcon(Cashierwindow.class.getResource("/main/logo/about.png")));
 		mnNewMenu_1.add(mntmNewMenuItem_2);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(70, 18, 32));
@@ -498,13 +498,13 @@ public class Cashierframe extends JFrame {
 		scrollPane.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 
 		JLabel lblNewLabel = new JLabel("Bakery Orders");
-		lblNewLabel.setIcon(new ImageIcon(Cashierframe.class.getResource("/main/logo/ordericon.png")));
+		lblNewLabel.setIcon(new ImageIcon(Cashierwindow.class.getResource("/main/logo/ordericon.png")));
 		lblNewLabel.setForeground(Color.WHITE);
 		lblNewLabel.setFont(new Font("Comic Sans MS", Font.PLAIN, 21));
 
 		//CREATE NEW ORDER HERE
 		btnNewButton = new JButton("New Order");
-		btnNewButton.setIcon(new ImageIcon(Cashierframe.class.getResource("/main/logo/plus.png")));
+		btnNewButton.setIcon(new ImageIcon(Cashierwindow.class.getResource("/main/logo/plus.png")));
 		btnNewButton.setFocusable(false);
 		btnNewButton.setBackground(new Color(0, 153, 255));
 		btnNewButton.addMouseListener(new MouseAdapter() {
@@ -547,7 +547,7 @@ public class Cashierframe extends JFrame {
 										pstmt.executeUpdate();
 										conn.close();
 										try {
-											orderframe = new NewOrder(intorderid, false);
+											orderframe = new NewOrderwindow(intorderid, false);
 										} catch (IOException e1) {
 											System.out.println(e1.getMessage());
 										}
@@ -578,7 +578,7 @@ public class Cashierframe extends JFrame {
 								int intMaxnewId = Integer.parseInt(maxId);
 								conn.close();
 								try {
-									orderframe = new NewOrder(intMaxnewId, false);
+									orderframe = new NewOrderwindow(intMaxnewId, false);
 								} catch (IOException e1) {
 									System.out.println(e1.getMessage());
 								}
