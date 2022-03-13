@@ -195,7 +195,7 @@ public class Paymentwindow extends JFrame {
 						error += "\nPayment type not selected";
 					}
 					if (insufficientbalance) {
-						error += "\nInsufficient balance";
+						error += "\nInsufficient amount/balance";
 					}
 					JOptionPane.showMessageDialog(null, error, "Error Payment. ID: " + orderid, JOptionPane.ERROR_MESSAGE);
 				} else {

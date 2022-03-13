@@ -95,6 +95,8 @@ public class Main {
 		
 		createTable();
 		Splashscreen welcomeframe;
+		String s = new String();
+		System.out.println(s.getClass().getPackage().getSpecificationVersion());
 		try {
 			welcomeframe = new Splashscreen();
 

@@ -341,7 +341,7 @@ public class Cashierwindow extends JFrame {
 								Receiptwindow receiptframe = new Receiptwindow(intorderid);
 								receiptframe.setVisible(true);
 							} else {
-								JOptionPane.showMessageDialog(null, "The Order ID you entered not found. Refer Order table",
+								JOptionPane.showMessageDialog(null, "The Order ID you entered not exists. Refer Order table",
 										"Order ID not found", JOptionPane.ERROR_MESSAGE);
 							}
 						}
@@ -407,7 +407,7 @@ public class Cashierwindow extends JFrame {
 									showlastorder();
 								}
 							} else {
-								JOptionPane.showMessageDialog(null, "The Order ID you entered not found. Refer Order table",
+								JOptionPane.showMessageDialog(null, "The Order ID you entered not exists. Refer Order table",
 										"Order ID not found", JOptionPane.ERROR_MESSAGE);
 							}
 						}
@@ -443,7 +443,7 @@ public class Cashierwindow extends JFrame {
 							if (duplicateorderid) {
 								savereceipt(intorderid);
 							} else {
-								JOptionPane.showMessageDialog(null, "The Order ID you entered not found. Refer Order table",
+								JOptionPane.showMessageDialog(null, "The Order ID you entered not exists. Refer Order table",
 										"Order ID not found", JOptionPane.ERROR_MESSAGE);
 							}
 						}

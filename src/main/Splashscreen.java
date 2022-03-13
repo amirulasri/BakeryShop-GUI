@@ -9,6 +9,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import java.awt.Color;
 import javax.swing.JProgressBar;
+import javax.swing.SwingConstants;
 
 public class Splashscreen extends JFrame {
 	/**
@@ -46,31 +47,32 @@ public class Splashscreen extends JFrame {
 		lblNewLabel_2.setFont(new Font("SansSerif", Font.BOLD, 54));
 
 		JLabel lblNewLabel = new JLabel("By: Amirul Asri, Harris Irfan, Sholihin Ilias, Aliff Redzuan, Mifzal Dini");
-		lblNewLabel.setBounds(88, 360, 509, 27);
+		lblNewLabel.setBounds(59, 349, 559, 27);
 		lblNewLabel.setForeground(Color.WHITE);
-		lblNewLabel.setFont(new Font("Calibri Light", Font.PLAIN, 17));
+		lblNewLabel.setFont(new Font("SansSerif", Font.BOLD, 15));
 		
 				JPanel panel = new JPanel();
-				panel.setBounds(0, 0, 78, 387);
+				panel.setBounds(0, 0, 49, 387);
 				panel.setBackground(new Color(255, 204, 102));
 				
 						
 						GroupLayout gl_panel = new GroupLayout(panel);
 						gl_panel.setHorizontalGroup(
 							gl_panel.createParallelGroup(Alignment.LEADING)
-								.addComponent(progressBar, GroupLayout.DEFAULT_SIZE, 766, Short.MAX_VALUE)
+								.addGroup(gl_panel.createSequentialGroup()
+									.addComponent(progressBar, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+									.addContainerGap(32, Short.MAX_VALUE))
 						);
 						gl_panel.setVerticalGroup(
 							gl_panel.createParallelGroup(Alignment.TRAILING)
-								.addGroup(gl_panel.createSequentialGroup()
-									.addContainerGap(373, Short.MAX_VALUE)
-									.addComponent(progressBar, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+								.addComponent(progressBar, GroupLayout.DEFAULT_SIZE, 387, Short.MAX_VALUE)
 						);
+						progressBar.setOrientation(SwingConstants.VERTICAL);
 						progressBar.setBackground(new Color(255, 204, 0));
 						progressBar.setVisible(false);
-						progressBar.setForeground(new Color(204, 0, 0));
+						progressBar.setForeground(new Color(128, 0, 0));
 						panel.setLayout(gl_panel);
-		lblNewLabel_3.setBounds(88, 340, 347, 17);
+		lblNewLabel_3.setBounds(59, 330, 347, 17);
 		
 		lblNewLabel_3.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		lblNewLabel_3.setForeground(new Color(255, 255, 255));
