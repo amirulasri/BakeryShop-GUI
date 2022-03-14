@@ -695,7 +695,7 @@ public class NewOrderwindow extends JFrame {
 						custnamefield.setText(customername);
 					}
 					if(!phoneno.equalsIgnoreCase("nodata")) {						
-						phonenofield.setText("nodata");
+						phonenofield.setText(phoneno);
 					}
 					if(!address.equalsIgnoreCase("nodata")) {						
 						addressfield.setText(address.replace("\\n", "\n"));
