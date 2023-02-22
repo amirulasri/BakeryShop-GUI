@@ -7,7 +7,7 @@ import java.sql.Statement;
 public class Main {
 	
 	//SETTING
-	static private double discount = 0.10;
+	static private double discount = 0.20;
 	static String url = "jdbc:sqlite:src/db/bakeryorderdata.db";
 	private static Cashierwindow cashier;
 	
